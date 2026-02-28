@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "LogOut";
+}
+<h1>LogOut</h1>
+<script>
+    localStorage.removeItem('authToken');
+    console.log('Auth token deleted in localStorage');
+    window.location.href = '/Home/Index';
+</script>
+
+else
+{
+    <p>Logout failed</p>
+}
+

@@ -1,0 +1,192 @@
+﻿@using InventoryManagementSystem.Models;
+@model List<UserViewModel>
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>Users</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Has admin privileges?</th>
+            <th>Inventory items</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+	</tbody>
+</table>
+
+<div class="modal fade" id="userModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>User info</h5>
+            </div>
+            <div class="modal-body">
+                <div class="card-body">
+                    <div class="row mb-3 align-items-center">
+                        <label class="col-sm-3 col-form-label">User email</label>
+                        <div class="col-sm-9">
+                            <input type="email" class="form-control" value="" readonly id="inputEmail">
+                        </div>
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        <label class="col-sm-3 col-form-label">User name</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" placeholder="Enter user name" id="inputName">
+                        </div>
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        <label class="col-sm-4 col-form-label">Make user admin?</label>
+                        <div class="col-sm-8">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="isAdmin">
+                                <label class="form-check-label" for="isAdmin">Admin privileges</label>
+                            </div>
+                        </div
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        <div class="hstack gap-3" id="chosenInvents">                            
+                        </div>
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        <label class="col-sm-4 col-form-label">Give access to inventories</label>
+                        <div class="col-sm-8">
+                            <select class="form-select" id="ddlInventories">
+                                <option selected disabled>Choose inventory...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSave">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const token = localStorage.getItem('authToken');
+        var userId = null;
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetUsers", "Users")',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                method: 'GET',
+                success: function (data) {
+                    console.log("Test:" + data);
+                    var tbody = $('table tbody');
+                    data.forEach(function (user) {
+                        var statusClass = user.emailConfirmed ? 'text-success' : 'text-danger';
+                        var statusText = user.emailConfirmed ? 'Active' : 'Inactive';
+                        var adminText = user.isAdmin ? 'Yes' : 'No';
+                        var row = `<tr data-toggle="modal" data-target="#userModalCenter" data-userId="${user.id}">
+                            <td>${user.userName}</td>
+                            <td>${user.email}</td>
+                            <td class="${statusClass}">${statusText}</td>
+                            <td>${adminText}</td>
+                            <td>${user.inventories}</td>
+                        </tr>`;
+                        tbody.append(row);
+                    });
+                },
+                error: function (response) {
+                    console.log('Failed to load users.'+response.message);
+                }
+            });
+        });
+
+        $(document).on('click', 'table tbody tr', function () {
+            userId = $(this).data('userid');
+            
+            $('#userModalCenter').modal('show');        
+            const selectElement = $('#ddlInventories');
+            selectElement.find('option:not(:first)').remove();
+            $('.inventoryBtn').remove();
+
+            $.ajax({
+                url: '@Url.Action("GetUserInfo", "Users")' + '?id=' + userId,
+                headers: {'Authorization': 'Bearer ' + token},
+                method: 'GET',
+                success: function (data) {
+                    console.log(data);
+                    $('#inputEmail').val(data.email);
+                    $('#inputName').val(data.userName);
+                    $('#isAdmin').prop('checked', data.isAdmin);
+                    
+                    $.each(data.inventories, function(index, item) {
+                        selectElement.append($('<option>', {
+                            value: index,
+                            text: item
+                        }));
+                    });
+
+                    $.each(data.selectedInventories, function(index, item) {
+                        $('#chosenInvents').append(`<span class="btn btn-secondary inventoryBtn" data-value="${index}">${item}</span>`);
+                    });
+                },
+                error: function () {
+                    console.log('Failed to load user info.');
+                }
+            });
+        });
+
+        $('#ddlInventories').change(function() {
+            var selectedIndex = $(this).val();
+            var selectedText = $(this).find('option:selected').text();
+            $('#chosenInvents').append(`<span class="btn btn-secondary inventoryBtn" data-value="${selectedIndex}">${selectedText}</span>`);
+        });
+
+        $(document).on('click', '.inventoryBtn', function() {
+            var value = $(this).data('value');
+            $(this).remove();
+        });
+
+        $('#btnSave').click(function() {
+            var inventories = {};
+            
+            $('#chosenInvents .inventoryBtn').each(function() {
+                inventories[$(this).data('value')] = "";
+            });
+
+            var userData = {
+                "id": userId,
+                "email": $('#inputEmail').val(),
+                "userName": $('#inputName').val(),
+                "isAdmin": $('#isAdmin').prop('checked'),
+                "inventories": inventories
+            };
+
+            console.log(userData);
+
+            $.ajax({
+                url: '@Url.Action("UpdateUserInfo", "Users")',
+                headers: {'Authorization': 'Bearer ' + token},
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(userData),
+                success: function (response) {
+                    console.log('User info updated successfully:', response);
+                    $('#userModalCenter').modal('hide');
+                    window.location.reload();
+                },
+                error: function (error) {
+                    console.log('Failed to update user info.' + error);
+                    $('.modal-body').prepend('<div class="alert alert-danger" role="alert">Failed to update user info. Please try again. '+error.message+'</div>');
+                }
+            });
+        });
+    </script>
+}
+
+
+

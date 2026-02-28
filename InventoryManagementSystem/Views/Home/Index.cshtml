@@ -1,0 +1,167 @@
+﻿@using InventoryManagementSystem.Models
+@using System.Data
+@model List<InventoryItemViewModel>
+@{
+    ViewData["Title"] = "Home Page";	
+}
+<div class="alert alert-danger" role="alert" style="display:none" id="errorLabel">
+    <div asp-validation-summary="All" class="mb-0">Some errors here</div>
+</div>
+<h4>Inventories</h4>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                
+                <li class="nav-item authenticated">
+                    <button class="btn btn-primary" type="button">Create inventory</button>
+                </li>
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Choose category
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Book</a></li>
+                        <li><a class="dropdown-item" href="#">Laptop</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+
+<ul class="nav nav-tabs authenticated">
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#">My created inventories</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">Other inventories</a>
+    </li>    
+</ul>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Desciption</th>
+            <th scope="col">Created By</th>
+            <th scope="col">Created At</th>
+            <th scope="col">Is public</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr class="clickable-row" data-target="#detail-@item.Number">
+                <th scope="row">@item.Number</th>
+                <td>
+                    <a href="#" data-inventoryid="@item.Id">
+                    @item.Title
+                    </a>
+                </td>
+                <td>@item.Description</td>
+                <td>@item.CreatedBy</td>
+                <td>@item.CreatedAt.ToString("yyyy-MM-dd")</td>
+				<td>@(item.IsPublic ? "Yes" : "No")</td>
+            </tr>
+            @if (item.ValuesDT != null)
+	        {
+                <tr class="collapse detail-row" id="detail-@item.Number">
+                    <td colspan="6">
+                        @* <button class="btn btn-secondary mb-2 authenticated editBtnClass" type="button" data-inventoryid="@item.Id">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                            </svg> View in full page
+                        </button> *@
+                        <table class="table table-sm table-bordered mt-2 table-secondary">
+                            <thead class="table-light">
+                                <tr>
+                                    @foreach (DataColumn column in item.ValuesDT.Columns)
+                                    {
+                                        <th>@column.ColumnName</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(DataRow stock in item.ValuesDT.Rows)
+                                {
+                                    <tr>
+                                        @foreach (DataColumn column in item.ValuesDT.Columns)
+                                        {
+                                            <td>@stock[column]</td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+				    </td>
+			    </tr>
+            }
+        }        
+    </tbody>
+</table>
+
+@* <div class="row">
+    <h4 class="page-header">Comments</h4>
+    <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Comment title</h5>
+                <small>3 days ago</small>
+            </div>
+            <p class="mb-1">Comment content goes here. This is a sample comment.</p>
+            <small>By User123</small>
+        </a>	  
+        <a href="#" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Comment title</h5>
+                <small>3 days ago</small>
+            </div>
+            <p class="mb-1">Comment content goes here. This is a sample comment.</p>
+            <small>By User123</small>
+        </a>
+    </div>    
+</div> *@
+@section Scripts {
+    <script>
+        $(document).ready(function () {            
+			const token = localStorage.getItem("authToken");
+            if (!token) {
+                $(".authenticated").hide();
+			}
+
+            $(".clickable-row td a").click(function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                var inventoryId = $(this).data("inventoryid");
+
+                var url = "@Url.Action("Index", "Inventory")"+"?inventoryId="+inventoryId;
+                window.location.href = url;
+            });
+        });
+        document.querySelectorAll(".clickable-row").forEach(row => {
+            row.addEventListener("click", function (e) {
+                console.log("From event ",e.target.tagName);
+
+                if (e.target.closest("a")) return;
+                const selector = this.dataset.target;
+                if (!selector) return;
+
+                const target = document.querySelector(selector);
+                if (!target) return;
+
+                const collapse = bootstrap.Collapse.getOrCreateInstance(target);
+                collapse.toggle();
+            });
+        });
+    </script>
+}

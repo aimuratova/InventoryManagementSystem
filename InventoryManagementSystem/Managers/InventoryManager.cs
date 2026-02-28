@@ -1,0 +1,118 @@
+﻿
+using AutoMapper;
+using InventoryManagementSystem.BLL.Interfaces;
+using InventoryManagementSystem.BLL.Models;
+using InventoryManagementSystem.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Configuration;
+using System.Data;
+
+namespace InventoryManagementSystem.Managers
+{
+    public class InventoryManager
+    {
+        private readonly IInventoryService _inventoryService;
+        private readonly IInventoryFieldService _inventoryFieldService;
+        private readonly IInventoryValueService _inventoryValueService;
+        private readonly IUserService _userService;
+        private readonly IDictionaryService _dictionaryService;
+        private readonly IInventoryUserService _inventoryUserService;
+
+        private readonly IMapper _mapper;
+
+        public InventoryManager(IInventoryService inventoryService, IInventoryFieldService inventoryFieldService, 
+            IInventoryValueService valueService, IMapper mapper, 
+            IUserService userService, IDictionaryService dictionaryService, IInventoryUserService inventoryUserService)
+        {
+            _inventoryService = inventoryService;
+            _inventoryFieldService = inventoryFieldService;
+            _inventoryValueService = valueService;
+            _mapper = mapper;
+            _userService = userService;
+            _dictionaryService = dictionaryService;
+            _inventoryUserService = inventoryUserService;
+        }
+
+        public async Task<List<InventoryItemViewModel>> GetAllItemsAsync()
+        {
+            var items = new List<InventoryItemViewModel>();
+
+            var inventoryItems = await _inventoryService.GetInventoryItems();
+            var dataSet = await _inventoryService.GetInventoryValues();
+
+            if (inventoryItems == null || inventoryItems.Data == null)
+            {
+                return items;
+            }
+
+            items = _mapper.Map<List<InventoryItemViewModel>>(inventoryItems.Data);
+
+            int i = 1;
+            items.ForEach(x =>
+            {
+                x.Number = i++;
+            });
+
+            if(dataSet == null || dataSet.Data == null)
+            {
+                return items;
+            }
+
+            foreach (DataTable dataTable in dataSet.Data.Tables)
+            {
+                if (dataTable.Rows.Count > 0)
+                {
+                    var itemId = dataTable.Rows[0]["ItemId"].ToString();
+                    var item = items.FirstOrDefault(i => i.Id.ToString() == itemId);
+                    if (item != null)
+                    {
+                        item.ValuesDT = dataTable;
+                    }
+                }
+            }
+
+            return items;
+        }
+
+        public async Task<InventoryItemDetailVM> GetInventoryInfoByIdAsync(int id)
+        {
+            var inventoryItem = await _inventoryService.GetInventoryItemById(id);
+            var inventoryFields = (await _inventoryFieldService.GetInventoryItemFieldsById(id)).OrderBy(x=>x.OrderNum);
+            var inventoryValues = await _inventoryValueService.GetInventoryValueDTById(id);
+
+            var result = new InventoryItemDetailVM();
+            result = _mapper.Map<InventoryItemDetailVM>(inventoryItem);
+            result.Fields = _mapper.Map<List<FieldVM>>(inventoryFields);
+            result.ValuesDT = inventoryValues;
+
+            return result;
+        }
+
+        public async Task<InventoryEditViewModel> GetInventoryInfoByIdForEdit(int id)
+        {
+            var inventoryItem = await _inventoryService.GetInventoryItemById(id);
+            var inventoryFields = (await _inventoryFieldService.GetInventoryItemFieldsById(id)).OrderBy(x => x.OrderNum);
+            var inventoryValues = await _inventoryValueService.GetInventoryValueDTById(id);
+            
+            //selected user ids
+            var inventoryUsers = await _inventoryUserService.GetInventoryUsersByInventoryId(id);
+
+            // dictionaries
+            var allUsers = (await _userService.ListUsers()).Data;
+            var categories = (await _dictionaryService.GetCategoriesAsync());
+
+            var result = new InventoryEditViewModel();
+            result = _mapper.Map<InventoryEditViewModel>(inventoryItem);
+            result.Fields = _mapper.Map<List<FieldVM>>(inventoryFields);
+            result.ValuesDT = inventoryValues;
+
+            result.SelectedUserIds = new List<string>();
+            result.SelectedUserIds.AddRange(inventoryUsers);
+
+            result.RegisteredUsers = _mapper.Map<List<UserViewModel>>(allUsers);
+            result.Categories = categories;
+
+            return result;
+        }
+    }
+}

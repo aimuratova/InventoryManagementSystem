@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "View";
+    var authToken = ViewBag.AccessToken as string;
+}
+<h1>Log in</h1>
+@if (!String.IsNullOrEmpty(authToken))
+{
+    <script>
+        localStorage.setItem('authToken', '@Html.Raw(authToken)');
+        console.log('Auth token stored in localStorage');
+        window.location.href = '/Home/Index';
+    </script>
+}
+else
+{
+    <p>Authentication failed</p>
+}
