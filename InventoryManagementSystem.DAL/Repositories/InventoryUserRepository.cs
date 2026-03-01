@@ -51,33 +51,33 @@ namespace InventoryManagementSystem.DAL.Repositories
             }
         }
 
-        public async Task AddInventoryUserInventoryId(List<string> userList, int inventoryId)
-        {
-            // Create a DataTable to hold the inventory item IDs
-            var table = new DataTable();
-            table.Columns.Add("UserId", typeof(string));
-            // Populate the DataTable with the user ID and inventory item IDs
-            foreach (var userId in userList)
-            {
-                table.Rows.Add(userId);
-            }
+        //public async Task AddInventoryUserInventoryId(List<string> userList, int inventoryId)
+        //{
+        //    // Create a DataTable to hold the inventory item IDs
+        //    var table = new DataTable();
+        //    table.Columns.Add("UserId", typeof(string));
+        //    // Populate the DataTable with the user ID and inventory item IDs
+        //    foreach (var userId in userList)
+        //    {
+        //        table.Rows.Add(userId);
+        //    }
 
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
+        //    using (var connection = new SqlConnection(_connectionString))
+        //    {
+        //        await connection.OpenAsync();
 
-                using (var command = new SqlCommand("dbo.[spInsertInventoryUserInventoryBatch]", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add(new SqlParameter("@InventoryId", inventoryId));
-                    var parameter = command.Parameters.AddWithValue("@UserIds", table);
-                    parameter.SqlDbType = SqlDbType.Structured;
-                    parameter.TypeName = "dbo.UserInventoryItemTableType2";
+        //        using (var command = new SqlCommand("dbo.[spInsertInventoryUserInventoryBatch]", connection))
+        //        {
+        //            command.CommandType = CommandType.StoredProcedure;
+        //            command.Parameters.Add(new SqlParameter("@InventoryId", inventoryId));
+        //            var parameter = command.Parameters.AddWithValue("@UserIds", table);
+        //            parameter.SqlDbType = SqlDbType.Structured;
+        //            parameter.TypeName = "dbo.UserInventoryItemTableType2";
 
-                    await command.ExecuteNonQueryAsync();
-                }
-            }
-        }
+        //            await command.ExecuteNonQueryAsync();
+        //        }
+        //    }
+        //}
 
         public async Task<List<InventoryItemUserModel>> GetInventoryItemsUserModels(string? userId = null)
         {
@@ -120,19 +120,19 @@ namespace InventoryManagementSystem.DAL.Repositories
             }
         }
 
-        public async Task RemoveInventoryUserInventoryId(int inventoryId)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                using (var command = new SqlCommand("[dbo].[spDeleteInventoryUsersByInventoryId]", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add(new SqlParameter("@InventoryId", inventoryId));
+        //public async Task RemoveInventoryUserInventoryId(int inventoryId)
+        //{
+        //    using (SqlConnection connection = new SqlConnection(_connectionString))
+        //    {
+        //        await connection.OpenAsync();
+        //        using (var command = new SqlCommand("[dbo].[spDeleteInventoryUsersByInventoryId]", connection))
+        //        {
+        //            command.CommandType = CommandType.StoredProcedure;
+        //            command.Parameters.Add(new SqlParameter("@InventoryId", inventoryId));
 
-                    await command.ExecuteNonQueryAsync();
-                }
-            }
-        }
+        //            await command.ExecuteNonQueryAsync();
+        //        }
+        //    }
+        //}
     }
 }

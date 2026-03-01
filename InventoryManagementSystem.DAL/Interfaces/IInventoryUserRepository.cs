@@ -13,7 +13,7 @@ namespace InventoryManagementSystem.DAL.Interfaces
         Task AddInventoryItemUserId(string userId, List<int> inventoryItems);
         Task<List<InventoryItemUserModel>> GetInventoryItemsUserModels(string? userId = null);
         Task RemoveInventoryItemUserId(string userId);
-        Task AddInventoryUserInventoryId(List<string> userList, int inventoryId);
-        Task RemoveInventoryUserInventoryId(int inventoryId);
+        //Task AddInventoryUserInventoryId(List<string> userList, int inventoryId);
+        //Task RemoveInventoryUserInventoryId(int inventoryId);
     }
 }

@@ -14,18 +14,71 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 
                 <li class="nav-item authenticated">
-                    <button class="btn btn-primary" type="button">Create inventory</button>
+                    <button class="btn btn-primary" type="button" id="createNewBtn" data-bs-toggle="modal" data-bs-target="#createNewModal">Create inventory</button>
+                    <div class="modal fade" id="createNewModal" tabindex="-1" aria-labelledby="createNewModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="createNewModalLabel">Create new inventory</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="card shadow-sm p-4">
+                                        <div class="row mb-4 align-items-center">
+                                            <div class="col-md-3">
+                                                <label for="titleInpt" class="form-label text-muted mb-0">
+                                                    Title
+                                                </label>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control"
+                                                       name="Title" id="titleInpt"
+                                                       placeholder="Enter inventory title" />
+                                            </div>
+                                        </div>
+                                        <div class="row mb-4 align-items-center">
+                                            <div class="col-md-3">
+                                                <label for="categorySelect" class="form-label text-muted mb-0">
+                                                    Category
+                                                </label>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <select class="form-select selectpicker" id="categorySelect"
+                                                        name="CategoryId" data-live-search="true"
+                                                        data-width="100%">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-check mt-2">
+                                                    <input type="checkbox" class="form-check-input"
+                                                           id="isPublicCheckbox" name="IsPublic" />
+                                                    <label class="form-check-label ms-2" for="isPublicCheckbox">
+                                                        Make Inventory Public
+                                                        <span class="text-muted d-block small">
+                                                            Any authenticated user can add items
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" id="btnAddNew">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </li>
                 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Choose category
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Book</a></li>
-                        <li><a class="dropdown-item" href="#">Laptop</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
+                    <ul class="dropdown-menu" id="ddmCategory"></ul>
                 </li>
             </ul>
             <form class="d-flex" role="search">
@@ -75,13 +128,7 @@
             @if (item.ValuesDT != null)
 	        {
                 <tr class="collapse detail-row" id="detail-@item.Number">
-                    <td colspan="6">
-                        @* <button class="btn btn-secondary mb-2 authenticated editBtnClass" type="button" data-inventoryid="@item.Id">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                            </svg> View in full page
-                        </button> *@
+                    <td colspan="6">                        
                         <table class="table table-sm table-bordered mt-2 table-secondary">
                             <thead class="table-light">
                                 <tr>
@@ -110,27 +157,7 @@
     </tbody>
 </table>
 
-@* <div class="row">
-    <h4 class="page-header">Comments</h4>
-    <div class="list-group">
-        <a href="#" class="list-group-item list-group-item-action">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">Comment title</h5>
-                <small>3 days ago</small>
-            </div>
-            <p class="mb-1">Comment content goes here. This is a sample comment.</p>
-            <small>By User123</small>
-        </a>	  
-        <a href="#" class="list-group-item list-group-item-action">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">Comment title</h5>
-                <small>3 days ago</small>
-            </div>
-            <p class="mb-1">Comment content goes here. This is a sample comment.</p>
-            <small>By User123</small>
-        </a>
-    </div>    
-</div> *@
+
 @section Scripts {
     <script>
         $(document).ready(function () {            
@@ -147,6 +174,62 @@
                 var url = "@Url.Action("Index", "Inventory")"+"?inventoryId="+inventoryId;
                 window.location.href = url;
             });
+
+            const selectElement = $('#categorySelect');
+            selectElement.find('option:not(:first)').remove();
+
+            var $dropdown = $("#ddmCategory");
+            $dropdown.empty();   // clear old items
+            
+            $.ajax({
+                url: '@Url.Action("GetCategories", "Dictionary")',
+                method: 'GET',
+                success: function (data) {
+
+                    $.each(data, function(index, item) {
+                        selectElement.append($('<option>', {
+                            value: index,
+                            text: item
+                        }));
+
+                        var itemAppend = `<li><a class="dropdown-item" href="#" data-value="${index}">${item}</a></li>`;
+
+                        $dropdown.append(itemAppend);
+                    });
+                },
+                error: function () {
+                    console.log('Failed to load categories.');
+                }
+            });
+
+            $('#btnAddNew').click(function() {
+                
+                var inventoryData = {
+                    "title": $('#titleInpt').val(),
+                    "categoryId": $('#categorySelect').val(),
+                    "isPublic": $('#isPublicCheckbox').prop('checked'),
+                };
+
+                console.log(inventoryData);
+
+                $.ajax({
+                    url: '@Url.Action("Add", "Inventory")',
+                    headers: {'Authorization': 'Bearer ' + token},
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(inventoryData),
+                    success: function (response) {
+                        $('#createNewModal').modal('hide');
+                        window.location.reload();
+                    },
+                    error: function (error) {
+                        console.log('Failed to add inventory.' + error);
+                        $('.modal-body').prepend('<div class="alert alert-danger" role="alert">Failed to add new inventory. Please try again. '+error.message+'</div>');
+                    }
+                });
+            });
+
+
         });
         document.querySelectorAll(".clickable-row").forEach(row => {
             row.addEventListener("click", function (e) {

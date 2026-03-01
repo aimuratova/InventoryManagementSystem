@@ -54,6 +54,30 @@ namespace InventoryManagementSystem.BLL.Services
             return result;
         }
 
+        public async Task<ResultModel> UpdateInventory(InventoryItemModel inventory, List<string> inventoryUsers, List<InventoryFieldModel> fieldsList)
+        {
+            var result = new ResultModel();
 
+            if (inventory != null && inventory.InventoryItemId > 0)
+            {
+                var updateResult = await _inventoryRepository.UpdateInventoryItem(inventory, inventoryUsers, fieldsList);
+                if(updateResult.IsUpdated)
+                {
+                    result.Success = true;
+                }
+                else
+                {
+                    result.Success = false;
+                    result.Message = updateResult.ErrorMessage;
+                }
+            }
+            else
+            {
+                result.Success = false;
+                result.Message = "Unable to update empty model";
+            }
+            
+            return result;
+        }
     }
 }

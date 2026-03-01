@@ -2,6 +2,7 @@
 using AutoMapper;
 using InventoryManagementSystem.BLL.Interfaces;
 using InventoryManagementSystem.BLL.Models;
+using InventoryManagementSystem.DAL.Models;
 using InventoryManagementSystem.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Configuration;
@@ -117,8 +118,21 @@ namespace InventoryManagementSystem.Managers
 
         public async Task<ResultModel> Save(InventoryEditViewModel inventory)
         {
-            //_inventoryUserService. save inventoryId with usersList
-            // save inventory info
+            var inventoryModel = _mapper.Map<InventoryItemModel>(inventory);
+            var fieldListModel = _mapper.Map<List<InventoryFieldModel>>(inventory.Fields);
+
+            var result = await _inventoryService.UpdateInventory(inventoryModel, inventory.SelectedUserIds, fieldListModel);
+
+            return result;
+        }
+
+        public async Task<ResultModel> Delete(int inventoryId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<ResultModel> Add(InventoryItemViewModel inventory)
+        {
             throw new NotImplementedException();
         }
     }

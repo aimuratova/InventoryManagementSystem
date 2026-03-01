@@ -44,33 +44,7 @@ namespace InventoryManagementSystem.BLL.Services
 
             return result;
         }
-
-        public async Task<ResultModel> AddInventoryItemUser(List<string> userList, int inventoryId)
-        {
-            var result = new ResultModel();
-            try
-            {
-                if (userList != null && userList.Any())
-                {
-                    await _inventoryUserRepository.AddInventoryUserInventoryId(userList, inventoryId);
-                }
-                else
-                {
-                    await _inventoryUserRepository.RemoveInventoryUserInventoryId(inventoryId);
-                }
-                result.Success = true;
-                result.Message = "Inventory items added successfully.";
-            }
-            catch (Exception ex)
-            {
-                result.Success = false;
-                result.Message = "An error occurred while adding inventory items.";
-                result.Errors = new List<string> { ex.Message };
-            }
-
-            return result;
-        }
-
+        
         public async Task<List<InventoryItemUserModel>> GetInventoryItemsUserModels(string? userId = null)
         {
             var inventoryItemUserModels = await _inventoryUserRepository.GetInventoryItemsUserModels(userId);

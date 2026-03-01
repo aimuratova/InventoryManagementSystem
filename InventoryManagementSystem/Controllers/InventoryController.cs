@@ -37,8 +37,44 @@ namespace InventoryManagementSystem.Controllers
         public async Task<IActionResult> Save(InventoryEditViewModel inventory)
         {
             var result = await _inventoryManager.Save(inventory);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result.Message);
+            }
+        }
 
-            return Ok(result);
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int inventoryId)
+        {
+            var result = await _inventoryManager.Delete(inventoryId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result.Message);
+            }
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody]InventoryItemViewModel inventoryModel)
+        {
+            var result = await _inventoryManager.Add(inventoryModel);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result.Message);
+            }
         }
     }
 }

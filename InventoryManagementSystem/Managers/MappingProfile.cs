@@ -13,7 +13,7 @@ namespace InventoryManagementSystem.Managers
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.InventoryItemTitle))
                 .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedByEmail));
 
-            CreateMap<InventoryFieldModel, FieldVM>();
+            CreateMap<InventoryFieldModel, FieldVM>().ReverseMap();
 
             CreateMap<InventoryItemModel, InventoryItemViewModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.InventoryItemId))
@@ -23,7 +23,8 @@ namespace InventoryManagementSystem.Managers
             CreateMap<InventoryItemModel, InventoryEditViewModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.InventoryItemId))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.InventoryItemTitle))
-                .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedByEmail));
+                .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedByEmail))
+                .ReverseMap();
 
             CreateMap<UsersModel, UserViewModel>();
         }
