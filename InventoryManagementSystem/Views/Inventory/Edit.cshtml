@@ -434,7 +434,7 @@
         });
 
         $(document).ready(function() {
-            var saveInterval = 10000;
+            var saveInterval = 120000;
 
             function autoSave() {
                  var statusDiv = $('#statusText');
@@ -457,11 +457,12 @@
 
                  statusDiv.removeClass().addClass('badge bg-secondary rounded-pill small mt-1').text('Saving changes...').show().fadeIn();
                  
-                 console.log("Form post " + formData);
+                 console.log(formData);
 
                  $.ajax({
                     url: 'Save', // Uses the form's action URL
                     type: 'POST',
+                    contentType: 'application/json',
                     headers: {
                         'Authorization': 'Bearer ' + token
                     },

@@ -220,7 +220,11 @@
                     data: JSON.stringify(inventoryData),
                     success: function (response) {
                         $('#createNewModal').modal('hide');
-                        window.location.reload();
+
+                        if(response.success) {
+                            
+                            window.location.href = '@Url.Action("Index", "Inventory")'+'?inventoryId='+response.data;
+                        }
                     },
                     error: function (error) {
                         console.log('Failed to add inventory.' + error);

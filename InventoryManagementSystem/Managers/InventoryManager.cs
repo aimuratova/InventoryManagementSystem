@@ -128,12 +128,13 @@ namespace InventoryManagementSystem.Managers
 
         public async Task<ResultModel> Delete(int inventoryId)
         {
-            throw new NotImplementedException();
+            return await _inventoryService.DeleteInventory(inventoryId);
         }
 
-        public async Task<ResultModel> Add(InventoryItemViewModel inventory)
+        public async Task<ResultModel<int>> Add(InventoryItemViewModel inventory)
         {
-            throw new NotImplementedException();
+            var inventoryModel = _mapper.Map<InventoryItemModel>(inventory);
+            return await _inventoryService.AddInventory(inventoryModel);
         }
     }
 }

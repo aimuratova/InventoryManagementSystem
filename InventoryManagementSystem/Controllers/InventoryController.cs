@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Security.Claims;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -34,7 +35,7 @@ namespace InventoryManagementSystem.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
-        public async Task<IActionResult> Save(InventoryEditViewModel inventory)
+        public async Task<IActionResult> Save([FromBody]InventoryEditViewModel inventory)
         {
             var result = await _inventoryManager.Save(inventory);
             if (result.Success)
@@ -66,6 +67,9 @@ namespace InventoryManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody]InventoryItemViewModel inventoryModel)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            inventoryModel.CreatedBy = userId;
+
             var result = await _inventoryManager.Add(inventoryModel);
             if (result.Success)
             {

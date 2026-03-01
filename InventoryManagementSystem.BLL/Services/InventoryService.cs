@@ -14,14 +14,61 @@ namespace InventoryManagementSystem.BLL.Services
     public class InventoryService : IInventoryService
     {
         private readonly IInventoryRepository _inventoryRepository;
-        private readonly IInventoryUserRepository _inventoryUserRepository;
-
-        public InventoryService(IInventoryRepository inventoryRepository, IInventoryUserRepository inventoryUserRepository)
+        public InventoryService(IInventoryRepository inventoryRepository)
         {
             _inventoryRepository = inventoryRepository;
-            _inventoryUserRepository = inventoryUserRepository;
         }
-                
+
+        public async Task<ResultModel<int>> AddInventory(InventoryItemModel inventory)
+        {
+            var result = new ResultModel<int>();
+
+            if (inventory == null)
+            {
+                result.Success = false;
+                result.Message = "Unable to add empty inventory";
+            }
+            else if (inventory.CategoryId == 0 || string.IsNullOrEmpty(inventory.InventoryItemTitle) ||
+                string.IsNullOrEmpty(inventory.CreatedBy))
+            {
+                result.Success = false;
+                result.Message = "Unable to add inventory, fields not provided";
+            }
+            else
+            {
+                try
+                {
+                    int insertedInvId = await _inventoryRepository.Add(inventory);
+                    result.Success = true;
+                    result.Data = insertedInvId;
+                }
+                catch (Exception ex)
+                {
+                    result.Success = false;
+                    result.Message = ex.Message;
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<ResultModel> DeleteInventory(int inventoryId)
+        {
+            var result = new ResultModel();
+            if (inventoryId == 0)
+            {
+                result.Success = false;
+                result.Message = "Id not provided";
+            }
+            else
+            {
+                await _inventoryRepository.Delete(inventoryId);
+                result.Success = true;
+            }
+
+            return result;
+        }
+
         public async Task<InventoryItemModel> GetInventoryItemById(int id)
         {
             var item = await _inventoryRepository.GetInventoryItemById(id);
@@ -78,6 +125,6 @@ namespace InventoryManagementSystem.BLL.Services
             }
             
             return result;
-        }
+        }                
     }
 }

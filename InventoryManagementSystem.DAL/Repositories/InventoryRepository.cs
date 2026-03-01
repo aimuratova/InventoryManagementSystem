@@ -24,6 +24,51 @@ namespace InventoryManagementSystem.DAL.Repositories
             _connectionString = _configuration.GetConnectionString("DefaultConnection");
         }
 
+        public async Task<int> Add(InventoryItemModel inventory)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand command = new SqlCommand("[dbo].[spInsertInventory]", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.Add(new SqlParameter("@Title", inventory.InventoryItemTitle));
+                    command.Parameters.Add(new SqlParameter("@CategoryId", inventory.CategoryId));
+                    command.Parameters.Add(new SqlParameter("@IsPublic", inventory.IsPublic));
+                    command.Parameters.Add(new SqlParameter("@CreatedBy", inventory.CreatedBy));
+                    command.Parameters.Add(new SqlParameter("@CreatedAt", DateTime.Now));
+
+                    await connection.OpenAsync();
+
+                    object? result = await command.ExecuteScalarAsync();
+
+                    if (result != null && result != DBNull.Value)
+                    {
+                        return Convert.ToInt32(result);
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+            }
+        }
+
+        public async Task Delete(int inventoryId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand command = new SqlCommand("[dbo].[spDeleteInventory]", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new SqlParameter("@InventoryItemId", inventoryId));
+
+                    await connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
         public async Task<InventoryItemModel?> GetInventoryItemById(int inventoryId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -91,6 +136,8 @@ namespace InventoryManagementSystem.DAL.Repositories
                             command.Parameters.Add(new SqlParameter("@Description", inventoryModel.Description));
                             command.Parameters.Add(new SqlParameter("@IsPublic", inventoryModel.IsPublic));
 
+                            command.Transaction = (SqlTransaction)transaction;
+
                             await command.ExecuteNonQueryAsync();
                         }
 
@@ -101,6 +148,8 @@ namespace InventoryManagementSystem.DAL.Repositories
                             {
                                 command.CommandType = CommandType.StoredProcedure;
                                 command.Parameters.Add(new SqlParameter("@InventoryId", inventoryModel.InventoryItemId));
+
+                                command.Transaction = (SqlTransaction)transaction;
 
                                 await command.ExecuteNonQueryAsync();
                             }
@@ -122,6 +171,8 @@ namespace InventoryManagementSystem.DAL.Repositories
                                 var parameter = command.Parameters.AddWithValue("@UserIds", table);
                                 parameter.SqlDbType = SqlDbType.Structured;
                                 parameter.TypeName = "dbo.UserInventoryItemTableType2";
+
+                                command.Transaction = (SqlTransaction)transaction;
 
                                 await command.ExecuteNonQueryAsync();
                             }
