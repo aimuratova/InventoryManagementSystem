@@ -42,8 +42,14 @@
 
         <div class="col-md-3 left-panel p-4 scrollable">
             <h4 class="mb-4">Inventory Details</h4>
-            <span class="badge rounded-pill text-bg-secondary">Secondary</span>
-            <span class="badge rounded-pill text-bg-success">Success</span>
+            <div class="mt-3 text-end">
+                <a href="@string.Format("/{0}/{1}?inventoryId={2}", "Inventory", "Index", Model.Id)"
+                   class="btn btn-outline-secondary btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
+                    </svg>
+                </a>
+            </div>
             
             <div class="mb-3">
                 <label class="form-label text-muted">Title</label>
@@ -86,10 +92,9 @@
         <div class="col-md-9 p-4 scrollable">
             <div class="d-flex align-items-start mb-4 gap-2">
                 <h4 class="mb-0">Inventory</h4>
-                <span class="badge bg-secondary rounded-pill small mt-1">Not updated</span>
-                <span class="badge bg-success rounded-pill small mt-1 d-none">Synced</span>
-            </div>
-      
+                <div id="statusText"></div>
+            </div>          
+                    
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-tab-pane" type="button" role="tab" aria-controls="settings-tab-pane" aria-selected="true">General settings</button>
@@ -113,7 +118,8 @@
                     <button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats-tab-pane" type="button" role="tab" aria-controls="stats-tab-pane" aria-selected="false">Statistics/Aggregation</button>
                 </li>
             </ul>
-            <div class="tab-content" id="myTabContent" style="min-height: 50%;">
+
+            <div class="tab-content" id="myTabContent" style="min-height: 50%;">                
                 <div class="tab-pane fade show active" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab" tabindex="0">
                     <div class="card shadow-sm">
                         <div class="card-header bg-white">
@@ -121,14 +127,15 @@
                         </div>
                         <div class="card-body">
                             <div class="row mb-3">
+                                <input type="hidden" value="@Model.Id" id="idInpt"/>
                                 <div class="col-md-6">
                                     <label class="form-label text-muted">Title</label>
-                                    <input type="text" class="form-control" name="Title" value="@Model.Title" />
+                                    <input type="text" class="form-control" name="Title" value="@Model.Title" id="titleInpt" />
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label text-muted">Category</label>
-                                    <select class="form-select selectpicker"
+                                    <select class="form-select selectpicker" id="categorySelect"
                                             name="CategoryId"
                                             data-live-search="true"
                                             data-width="100%">
@@ -147,104 +154,104 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label text-muted">Description</label>
-                                <textarea id="descriptionEditor" name="Description" class="form-control" rows="6">@Model.Description</textarea>
+                                <textarea id="descriptionEditor" name="Description" class="form-control" rows="6" >@Model.Description</textarea>
                             </div>                                                        
                         </div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">Fields Table</h5>
-                        </div>
-
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered align-middle">
-                                    <thead class="table text-center">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Field Type</th>
-                                            <th>Title</th>
-                                            <th>Description</th>
-                                            <th>IsDisplayed</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                       @*  @if (Model.Fields != null && Model.Fields.Count > 0)
-                                        {
-                                            @foreach (var field in Model.Fields)
-                                            {
-                                                <tr>
-                                                    <td>@field.OrderNum</td>
-                                                    <td>@field.TypeTitle</td>
-                                                    <td>@field.Title</td>
-                                                    <td>@field.Description</td>
-                                                    <td class="text-center">
-                                                        @if (field.IsDisplayed)
-                                                        {
-                                                            <span class="badge bg-success">Yes</span>
-                                                        }
-                                                        else
-                                                        {
-                                                            <span class="badge bg-secondary">No</span>
-                                                        }
-                                                    </td>
-                                                </tr>
-
-                                            }
-                                        } *@
-                                    </tbody>
-                                </table>
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Fields Table</h5>
                             </div>
 
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered align-middle">
+                                        <thead class="table text-center">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Field Type</th>
+                                                <th>Title</th>
+                                                <th>Description</th>
+                                                <th>IsDisplayed</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            @if (Model.Fields != null && Model.Fields.Count > 0)
+                                            {
+                                                @foreach (var field in Model.Fields)
+                                                {
+                                                    <tr>
+                                                        <td>@field.OrderNum</td>
+                                                        <td>@field.TypeTitle</td>
+                                                        <td>@field.Title</td>
+                                                        <td>@field.Description</td>
+                                                        <td class="text-center">
+                                                            @if (field.IsDisplayed)
+                                                            {
+                                                                <span class="badge bg-success">Yes</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="badge bg-secondary">No</span>
+                                                            }
+                                                        </td>
+                                                    </tr>
+
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
-                </div>
                 <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">Values Table</h5>
-                        </div>
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Values Table</h5>
+                            </div>
 
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered align-middle">
-                                    <thead class="table text-center">
-                                        <tr>
-                                            @* @if (Model.ValuesDT != null && Model.ValuesDT.Columns != null)
-                                            {
-                                                @foreach (DataColumn column in Model.ValuesDT.Columns)
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered align-middle">
+                                        <thead class="table text-center">
+                                            <tr>
+                                                @if (Model.ValuesDT != null && Model.ValuesDT.Columns != null)
                                                 {
-                                                    <th>@column.ColumnName</th>
-                                                }
-                                            } *@
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        @* @if (Model.ValuesDT != null && Model.ValuesDT.Rows != null)
-                                        {
-                                            @foreach (DataRow stock in Model.ValuesDT.Rows)
-                                            {
-                                                <tr>
                                                     @foreach (DataColumn column in Model.ValuesDT.Columns)
                                                     {
-                                                        <td>@stock[column]</td>
+                                                        <th>@column.ColumnName</th>
                                                     }
-                                                </tr>
+                                                }
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            @if (Model.ValuesDT != null && Model.ValuesDT.Rows != null)
+                                            {
+                                                @foreach (DataRow stock in Model.ValuesDT.Rows)
+                                                {
+                                                    <tr>
+                                                        @foreach (DataColumn column in Model.ValuesDT.Columns)
+                                                        {
+                                                            <td>@stock[column]</td>
+                                                        }
+                                                    </tr>
+                                                }
                                             }
-                                        } *@
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="mt-3">
-                                <button class="btn btn-primary">Add New Value</button>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="mt-3">
+                                    <button class="btn btn-primary">Add New Value</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 <div class="tab-pane fade" id="access-tab-pane" role="tabpanel" aria-labelledby="access-tab" tabindex="0">
                     <div class="card shadow-sm">
                         <div class="card-header bg-white">
@@ -256,8 +263,7 @@
                                        class="form-check-input"
                                        id="isPublicCheckbox"
                                        name="IsPublic"
-                                       value="true"
-                                       @(Model.IsPublic ? "checked" : "") />
+                                       value="@Model.IsPublic" />
                                 <label class="form-check-label" for="isPublicCheckbox">
                                     Make Inventory Public (any authenticated user can add items)
                                 </label>
@@ -299,36 +305,54 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="custom-tab-pane" role="tabpanel" aria-labelledby="custom-tab" tabindex="0">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">Custom ID</h5>
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Custom ID</h5>
+                            </div>
+                            <div class="card-body"></div>
                         </div>
-                        <div class="card-body"></div>
                     </div>
-                </div>
                 <div class="tab-pane fade" id="discussion-tab-pane" role="tabpanel" aria-labelledby="discussion-tab" tabindex="0">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">Discussion</h5>
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Comments</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="col-12">
+                                    <div class="list-group">
+                                        <a href="#" class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1">Comment title</h5>
+                                                <small>3 days ago</small>
+                                            </div>
+                                            <p class="mb-1">Comment content goes here. This is a sample comment.</p>
+                                            <small>By User123</small>
+                                        </a>
+                                        <a href="#" class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1">Comment title</h5>
+                                                <small>3 days ago</small>
+                                            </div>
+                                            <p class="mb-1">Comment content goes here. This is a sample comment.</p>
+                                            <small>By User123</small>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body"></div>
                     </div>
-                </div>
                 <div class="tab-pane fade" id="stats-tab-pane" role="tabpanel" aria-labelledby="stats-tab" tabindex="0">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">Statistics/Aggregation</h5>
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Statistics/Aggregation</h5>
+                            </div>
+                            <div class="card-body"></div>
                         </div>
-                        <div class="card-body"></div>
                     </div>
-                </div>
-            </div>
-            <div class="row comment-section p-3">
-            </div>
-        </div>
-            </div>
-
-        </div>
+            
+            </div>  
+            
+        </div>            
     </div>
 </div>
 @section Scripts {
@@ -406,6 +430,57 @@
                 $(this).closest(".user-tag").remove();
             });
 
+        });
+
+        $(document).ready(function() {
+            var saveInterval = 10000;
+
+            function autoSave() {
+                 var statusDiv = $('#statusText');
+                 const token = localStorage.getItem('authToken');
+
+                 var userIds = [];
+
+                 $("#selectedUsers .user-tag").each(function () {
+                    userIds.push($(this).data("id"));
+                 });
+
+                 var formData = {
+                     id:$('#idInpt').val(),
+                     title:$('#titleInpt').val(),
+                     categoryId:$('#categorySelect').val(),
+                     description:easyMDE.value(),
+                     selectedUserIds:userIds,
+                     isPublic:$('#isPublicCheckbox').prop("checked"),
+                 };
+
+                 statusDiv.removeClass().addClass('badge bg-secondary rounded-pill small mt-1').text('Saving changes...').show().fadeIn();
+                 
+                 console.log("Form post " + formData);
+
+                 $.ajax({
+                    url: 'Save', // Uses the form's action URL
+                    type: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    data: JSON.stringify(formData),
+                    success: function (response) {
+                        if (response.success) {
+                            statusDiv.removeClass().addClass('badge bg-success rounded-pill small mt-1').text('Synced').delay(2000).show().fadeIn();
+                        } else {
+                            statusDiv.removeClass().addClass('badge bg-danger rounded-pill small mt-1').text('Error:' + response.message).delay(3000).show().fadeIn();
+                        }
+                    },
+                    error: function (error) {
+                        statusDiv.removeClass().addClass('badge bg-danger rounded-pill small mt-1').text('Error:' + error).delay(3000).show().fadeIn();
+                        console.error(error);
+                    }
+                 });
+
+            }
+
+            setInterval(autoSave, saveInterval);
         });
     </script>
 }

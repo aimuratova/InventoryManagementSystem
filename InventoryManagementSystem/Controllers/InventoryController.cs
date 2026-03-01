@@ -31,5 +31,14 @@ namespace InventoryManagementSystem.Controllers
             
             return View(result);
         }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost]
+        public async Task<IActionResult> Save(InventoryEditViewModel inventory)
+        {
+            var result = await _inventoryManager.Save(inventory);
+
+            return Ok(result);
+        }
     }
 }

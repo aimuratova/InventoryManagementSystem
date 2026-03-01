@@ -11,6 +11,7 @@ namespace InventoryManagementSystem.BLL.Interfaces
     public interface IInventoryUserService
     {
         Task<ResultModel> AddInventoryItemUser(string userId, List<int> inventoryIds);
+        Task<ResultModel> AddInventoryItemUser(List<string> userList, int inventoryId);
         Task<List<InventoryItemUserModel>> GetInventoryItemsUserModels(string? userId = null);
         Task<List<string>> GetInventoryUsersByInventoryId(int id);
     }

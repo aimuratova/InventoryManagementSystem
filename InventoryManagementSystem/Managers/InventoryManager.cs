@@ -114,5 +114,12 @@ namespace InventoryManagementSystem.Managers
 
             return result;
         }
+
+        public async Task<ResultModel> Save(InventoryEditViewModel inventory)
+        {
+            //_inventoryUserService. save inventoryId with usersList
+            // save inventory info
+            throw new NotImplementedException();
+        }
     }
 }
