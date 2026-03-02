@@ -7,6 +7,8 @@
 }
 @section Styles {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
         html, body {
             height: 100%;
@@ -168,36 +170,78 @@
 
                             <div class="card-body">
                                 <div class="table-responsive">
+                                    <div class="card shadow-sm mb-3">
+                                        <div class="card-body d-flex gap-2">
+                                            <button class="btn btn-sm btn-outline-success me-2" type="button" id="btnAddField">
+                                                <i class="bi bi-plus-lg me-2"></i>
+                                                Add Field
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger me-2" type="button" id="btnDeleteSelected">
+                                                <i class="bi bi-trash3 me-2"></i>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <table class="table table-bordered align-middle">
                                         <thead class="table text-center">
                                             <tr>
+                                                <th>
+                                                    <input type="checkbox" id="selectAll" />
+                                                </th>
                                                 <th>#</th>
                                                 <th>Field Type</th>
+                                                <th>Data Type</th>
                                                 <th>Title</th>
                                                 <th>Description</th>
                                                 <th>IsDisplayed</th>
                                             </tr>
                                         </thead>
 
-                                        <tbody>
+                                        <tbody id="sortableFields">
                                             @if (Model.Fields != null && Model.Fields.Count > 0)
                                             {
                                                 @foreach (var field in Model.Fields)
                                                 {
-                                                    <tr>
-                                                        <td>@field.OrderNum</td>
-                                                        <td>@field.TypeTitle</td>
-                                                        <td>@field.Title</td>
-                                                        <td>@field.Description</td>
+                                                    <tr data-id="@field.Id">
                                                         <td class="text-center">
-                                                            @if (field.IsDisplayed)
-                                                            {
-                                                                <span class="badge bg-success">Yes</span>
-                                                            }
-                                                            else
-                                                            {
-                                                                <span class="badge bg-secondary">No</span>
-                                                            }
+                                                            <input type="checkbox" class="row-checkbox" />
+                                                        </td>
+                                                        <td class="order-num">@field.OrderNum
+                                                            <input type="hidden"
+                                                                   name="Fields[@field.Id].OrderNum"
+                                                                   value="@field.OrderNum"
+                                                                   class="order-input" />
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-select fieldType"
+                                                                    name="Fields[@field.Id].TypeId">
+                                                            @foreach (var type in Model.FieldTypeOptions)
+                                                                {
+                                                                <option value="@type.Id" selected="@(type.Id == field.TypeId)" data-datatype="@type.DataType">
+                                                                        @type.Title
+                                                                    </option>
+                                                                }
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" disabled name="Fields[@field.Id].DataType" class="form-control dataTypeInput" value="@field.DataType" />
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="Fields[@field.Id].Title"
+                                                                   value="@field.Title"
+                                                                   class="form-control" />
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="Fields[@field.Id].Description"
+                                                                   value="@field.Description"
+                                                                   class="form-control" />
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <input type="checkbox"
+                                                                   name="Fields[@field.Id].IsDisplayed"
+                                                                   value="true"
+                                                                   @(field.IsDisplayed ? "checked" : "") />
                                                         </td>
                                                     </tr>
 
@@ -358,6 +402,7 @@
 </div>
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <script>
         var easyMDE = new EasyMDE({
             element: document.getElementById("descriptionEditor"),
@@ -365,6 +410,9 @@
             placeholder: "Write description using Markdown...",
             status: false
         });
+
+        var fieldTypeOptions = @Html.Raw(Json.Serialize(Model.FieldTypeOptions));
+
         $(document).ready(function () {
 
             function toggleUserAccess() {
@@ -386,6 +434,55 @@
 
             // Run on page load
             toggleUserAccess();
+
+            // Add new row
+            $("#btnAddField").click(function () {
+
+                var optionsText = "";
+
+                fieldTypeOptions.forEach(function(type) {
+                    // Assuming each type has Id and Title
+                    optionsText += `<option value="${type.id}" data-datatype="${type.dataType}">${type.title}</option>`;
+                });
+
+                var rowCount = $("#sortableFields tr").length + 1;
+
+                var newRow = `
+                    <tr>
+                        <td class="text-center">
+                            <input type="checkbox" class="row-checkbox" />
+                        </td>
+                        <td class="order-num">${rowCount}</td>
+                        <td>
+                            <select class="form-select fieldType">${optionsText}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control dataTypeInput" disabled />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" />
+                        </td>
+                        <td class="text-center">
+                            <input type="checkbox" />
+                        </td>
+                    </tr>`;
+
+                $("#sortableFields").append(newRow);
+            });
+        });
+        $(document).on("change", ".fieldType", function () {
+
+            var selectedOption = $(this).find("option:selected");
+            var dataType = selectedOption.data("datatype");
+
+            // Find the input in the same row
+            var input = $(this).closest("tr").find(".dataTypeInput");
+
+            input.val(dataType);
         });
         $(function () {
 
@@ -446,6 +543,33 @@
                     userIds.push($(this).data("id"));
                  });
 
+                 var fieldsTableData = [];
+
+                // Iterate over each row in the table body
+                $('#sortableFields tr').each(function() {
+                    var $row = $(this);
+                    // Collect data from cells (td)
+                    var id =$row.data('id');
+                    var orderNum = $row.find('td:eq(1)').text();
+                    var dataTypeId = $row.find('td:eq(2)').val();
+                    var title = $row.find('td:eq(4) input').text();
+                    var description = $row.find('td:eq(5) input').text();
+                    var isDisplayed = $row.find('td:eq(6) input').prop('checked');
+
+                    // Create an object for the row data
+                    var rowObject = {
+                        id: id,
+                        typeId: dataTypeId,
+                        title: title,
+                        description: description,
+                        isDisplayed: isDisplayed,
+                        orderNum: orderNum
+                    };
+
+                    // Push the object into the array
+                    fieldsTableData.push(rowObject);
+                });
+
                  var formData = {
                      id:$('#idInpt').val(),
                      title:$('#titleInpt').val(),
@@ -453,6 +577,7 @@
                      description:easyMDE.value(),
                      selectedUserIds:userIds,
                      isPublic:$('#isPublicCheckbox').prop("checked"),
+                     fields: fieldsTableData
                  };
 
                  statusDiv.removeClass().addClass('badge bg-secondary rounded-pill small mt-1').text('Saving changes...').show().fadeIn();
@@ -484,5 +609,68 @@
 
             setInterval(autoSave, saveInterval);
         });
+        $(function () {
+
+            $("#sortableFields").sortable({
+                helper: fixWidthHelper,
+                update: function (event, ui) {
+                    updateOrderNumbers();
+                }
+            }).disableSelection();
+
+
+            function updateOrderNumbers() {
+                $("#sortableFields tr").each(function (index) {
+
+                    var newOrder = index + 1;
+
+                    // Update visible number
+                    $(this).find(".order-num").text(newOrder);
+
+                    // If you have hidden input for posting to backend:
+                    $(this).find(".order-input").val(newOrder);
+                });
+            }
+
+            // Keeps column width while dragging
+            function fixWidthHelper(e, ui) {
+                ui.children().each(function () {
+                    $(this).width($(this).width());
+                });
+                return ui;
+            }
+
+        });
+        
+        $(document).on("click", "#btnDeleteSelected", function () {
+
+            var checkedRows = $(".row-checkbox:checked");
+
+            if (checkedRows.length === 0) {
+                alert("Please select at least one row to delete.");
+                return;
+            }
+
+            if (!confirm("Are you sure you want to delete selected fields?"))
+                return;
+
+            checkedRows.closest("tr").remove();
+
+            updateOrderNumbers();
+        });
+
+
+        // Select / Deselect All
+        $(document).on("change", "#selectAll", function () {
+            $(".row-checkbox").prop("checked", $(this).prop("checked"));
+        });
+
+
+        // Recalculate order numbers after delete
+        function updateOrderNumbers() {
+            $("#sortableFields tr").each(function (index) {
+                $(this).find(".order-num").text(index + 1);
+            });
+        }
     </script>
 }

@@ -101,6 +101,7 @@ namespace InventoryManagementSystem.Managers
             // dictionaries
             var allUsers = (await _userService.ListUsers()).Data;
             var categories = (await _dictionaryService.GetCategoriesAsync());
+            var fieldTypes = (await _dictionaryService.GetFieldTypesAsync());
 
             var result = new InventoryEditViewModel();
             result = _mapper.Map<InventoryEditViewModel>(inventoryItem);
@@ -112,6 +113,7 @@ namespace InventoryManagementSystem.Managers
 
             result.RegisteredUsers = _mapper.Map<List<UserViewModel>>(allUsers);
             result.Categories = categories;
+            result.FieldTypeOptions = _mapper.Map<List<FieldTypeViewModel>>(fieldTypes);
 
             return result;
         }

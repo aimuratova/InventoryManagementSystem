@@ -41,6 +41,18 @@ namespace InventoryManagementSystem.DAL.Repositories
             }
         }
 
+        public async Task<List<FieldTypeModel>> GetFieldTypesAsync()
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                var result = (await connection.QueryAsync<FieldTypeModel>(
+                    "[dbo].[spGetFieldTypes]",
+                    commandType: CommandType.StoredProcedure)).ToList();
+
+                return result;
+            }
+        }
+
         public async Task<Dictionary<int, string>> GetInventoriesAsync()
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))

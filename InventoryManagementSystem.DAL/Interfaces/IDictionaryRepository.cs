@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InventoryManagementSystem.DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace InventoryManagementSystem.DAL.Interfaces
     public interface IDictionaryRepository
     {
         Task<Dictionary<int, string>> GetCategoriesAsync();
+        Task<List<FieldTypeModel>> GetFieldTypesAsync();
         Task<Dictionary<int, string>> GetInventoriesAsync();
         Task<Dictionary<int, string>> GetRolesAsync(string filter);
     }

@@ -1,6 +1,7 @@
 ﻿using InventoryManagementSystem.BLL.Interfaces;
 using InventoryManagementSystem.BLL.Models;
 using InventoryManagementSystem.DAL.Interfaces;
+using InventoryManagementSystem.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,11 @@ namespace InventoryManagementSystem.BLL.Services
         public async Task<Dictionary<int, string>> GetCategoriesAsync()
         {
             return await _dictionaryRepository.GetCategoriesAsync();
+        }
+
+        public async Task<List<FieldTypeModel>> GetFieldTypesAsync()
+        {
+            return await _dictionaryRepository.GetFieldTypesAsync();
         }
 
         public async Task<Dictionary<int, string>> GetInventoriesAsync()
