@@ -548,22 +548,16 @@
                 // Iterate over each row in the table body
                 $('#sortableFields tr').each(function() {
                     var $row = $(this);
-                    // Collect data from cells (td)
-                    var id =$row.data('id');
-                    var orderNum = $row.find('td:eq(1)').text();
-                    var dataTypeId = $row.find('td:eq(2)').val();
-                    var title = $row.find('td:eq(4) input').text();
-                    var description = $row.find('td:eq(5) input').text();
-                    var isDisplayed = $row.find('td:eq(6) input').prop('checked');
-
+                    console.log($row);
+                                        
                     // Create an object for the row data
                     var rowObject = {
-                        id: id,
-                        typeId: dataTypeId,
-                        title: title,
-                        description: description,
-                        isDisplayed: isDisplayed,
-                        orderNum: orderNum
+                        id: $row.data('id') || 0, // or .val() if needed
+                        orderNum: parseInt($row.find('.order-num').text().trim()),
+                        typeId: parseInt($row.find('.fieldType').val()),
+                        title: $row.find('td:eq(4) input').val(),
+                        description: $row.find('td:eq(5) input').val(),
+                        isDisplayed: $row.find('td:eq(6) input[type="checkbox"]').is(':checked')
                     };
 
                     // Push the object into the array
@@ -600,7 +594,7 @@
                         }
                     },
                     error: function (error) {
-                        statusDiv.removeClass().addClass('badge bg-danger rounded-pill small mt-1').text('Error:' + error).delay(3000).show().fadeIn();
+                        statusDiv.removeClass().addClass('badge bg-danger rounded-pill small mt-1').text('Error:' + error.responseText).delay(3000).show().fadeIn();
                         console.error(error);
                     }
                  });

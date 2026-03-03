@@ -179,6 +179,42 @@ namespace InventoryManagementSystem.DAL.Repositories
                         }
 
                         //fields update
+                        var fieldsTable = new DataTable();
+                        fieldsTable.Columns.Add("Id", typeof(int));
+                        fieldsTable.Columns.Add("InventoryId", typeof(int));
+                        fieldsTable.Columns.Add("FieldTypeId", typeof(int));
+                        fieldsTable.Columns.Add("Title", typeof(string));
+                        fieldsTable.Columns.Add("Description", typeof(string));
+                        fieldsTable.Columns.Add("IsDisplayed", typeof(bool));
+                        fieldsTable.Columns.Add("OrderNum", typeof(int));
+
+                        // Populate the DataTable with the user ID and inventory item IDs
+                        foreach (var field in fieldsList)
+                        {
+                            DataRow newRow = fieldsTable.NewRow();
+                            newRow["Id"] = field.Id;
+                            newRow["InventoryId"] = inventoryModel.InventoryItemId;
+                            newRow["FieldTypeId"] = field.TypeId;
+                            newRow["Title"] = field.Title;
+                            newRow["Description"] = field.Description;
+                            newRow["IsDisplayed"] = field.IsDisplayed;
+                            newRow["OrderNum"] = field.OrderNum;
+
+                            fieldsTable.Rows.Add(newRow);
+                        }
+
+                        using (var command = new SqlCommand("dbo.spInsertOrUpdateInventoryFields", connection))
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            
+                            var parameter = command.Parameters.AddWithValue("@FieldsDataTable", fieldsTable);
+                            parameter.SqlDbType = SqlDbType.Structured;
+                            parameter.TypeName = "dbo.UserInventoryFieldsTableType";
+
+                            command.Transaction = (SqlTransaction)transaction;
+
+                            await command.ExecuteNonQueryAsync();
+                        }
 
                         await transaction.CommitAsync();
 

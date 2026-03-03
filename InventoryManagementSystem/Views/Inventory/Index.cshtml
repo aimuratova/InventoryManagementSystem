@@ -43,7 +43,7 @@
         <div class="col-md-3 left-panel p-4 scrollable">
             <h4 class="mb-4">Inventory Details</h4>
             
-            <div class="mt-3 text-end">
+            <div class="mt-3 text-end authenticate">
                 <a href="@string.Format("/{0}/{1}?inventoryId={2}", "Inventory", "Edit", Model.Id)"
                    class="btn btn-outline-secondary btn-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -160,10 +160,6 @@
                                 </table>
                             </div>
 
-                            @* <div class="mt-3">
-                                <button class="btn btn-primary">Add New Field</button>
-                            </div>
- *@
                         </div>
                     </div>
                 </div>
@@ -209,33 +205,8 @@
                     </div>
                  
                 </div>
-               @*  <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-					Custom ID tab here
-                </div>       *@          
-            </div>
-            <div class="row comment-section p-3">
-                @* <div class="col-12">
-                    <h4 class="page-header">Comments</h4>
-                    <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">Comment title</h5>
-                                <small>3 days ago</small>
-                            </div>
-                            <p class="mb-1">Comment content goes here. This is a sample comment.</p>
-                            <small>By User123</small>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">Comment title</h5>
-                                <small>3 days ago</small>
-                            </div>
-                            <p class="mb-1">Comment content goes here. This is a sample comment.</p>
-                            <small>By User123</small>
-                        </a>
-                    </div>
-                </div> *@
-            </div>
+              
+            </div>            
         </div>
     </div>
 
@@ -246,6 +217,10 @@
         $(document).ready(function () {
 
 			var token = localStorage.getItem('authToken');
+
+            if(!token) {
+                $('.authenticate').hide();
+            }
             
             $('#deleteBtn').click(function(e) {
                 e.preventDefault();
