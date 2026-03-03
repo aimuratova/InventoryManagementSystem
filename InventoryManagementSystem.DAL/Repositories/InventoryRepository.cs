@@ -211,6 +211,8 @@ namespace InventoryManagementSystem.DAL.Repositories
                             parameter.SqlDbType = SqlDbType.Structured;
                             parameter.TypeName = "dbo.UserInventoryFieldsTableType";
 
+                            command.Parameters.Add(new SqlParameter("@InventoryId", inventoryModel.InventoryItemId));
+
                             command.Transaction = (SqlTransaction)transaction;
 
                             await command.ExecuteNonQueryAsync();
