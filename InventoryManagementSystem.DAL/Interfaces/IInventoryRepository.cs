@@ -10,8 +10,8 @@ namespace InventoryManagementSystem.DAL.Interfaces
 {
     public interface IInventoryRepository
     {
-        Task<List<InventoryItemModel>> GetInventoryItems();
-        Task<DataSet> GetInventoryValues();
+        Task<List<InventoryItemModel>> GetInventoryItems(string? userId, int? categoryId, string? searchText, bool? isPublic);
+        Task<DataSet> GetInventoryValues(List<int>? inventoryIds);
         Task<InventoryItemModel?> GetInventoryItemById(int inventoryId);
         Task<ResultDbModel> UpdateInventoryItem(InventoryItemModel inventoryModel, List<string> inventoryUsers, 
             List<InventoryFieldModel> fieldsList);

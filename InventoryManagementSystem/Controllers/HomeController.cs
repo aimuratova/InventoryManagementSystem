@@ -1,6 +1,8 @@
 using InventoryManagementSystem.BLL.Interfaces;
 using InventoryManagementSystem.Managers;
 using InventoryManagementSystem.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -18,16 +20,34 @@ namespace InventoryManagementSystem.Controllers
             _inventoryManager = inventoryManager;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public IActionResult Index()
         {
-            var resultList = await _inventoryManager.GetAllItemsAsync();
-            if(resultList == null)
+            return View();
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ListAll([FromQuery] ListQueryParam queryParam)
+        {
+            var resultList = await _inventoryManager.GetAllItemsAsync(categoryId: queryParam.CategoryId, searchText: queryParam.SearchText);
+            
+            return Ok(resultList);
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet]
+        public async Task<IActionResult> ListAuth([FromQuery] ListQueryParam queryParam)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!string.IsNullOrEmpty(userId))
             {
-                _logger.LogError("Failed to retrieve inventory items.");
-                return View(new List<InventoryItemViewModel>());
+                var result = await _inventoryManager.GetAllItemsAsync(userId: userId, 
+                    categoryId: queryParam.CategoryId, searchText: queryParam.SearchText, inventoryType: queryParam.InventoryType);
+                return Ok(result);
             }
 
-            return View(resultList);
+            return BadRequest("Index");
         }
 
         public IActionResult Privacy()

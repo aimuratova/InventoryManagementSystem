@@ -1,6 +1,4 @@
-﻿@using InventoryManagementSystem.Models
-@using System.Data
-@model List<InventoryItemViewModel>
+﻿@using System.Data
 @{
     ViewData["Title"] = "Home Page";	
 }
@@ -82,8 +80,8 @@
                 </li>
             </ul>
             <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                <button class="btn btn-outline-success" type="submit">Search</button>
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="searchInput" />
+                @* <button class="btn btn-outline-success" type="submit">Search</button> *@
             </form>
         </div>
     </div>
@@ -92,10 +90,10 @@
 
 <ul class="nav nav-tabs authenticated">
     <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="#">My created inventories</a>
+        <a class="nav-link inventory-tab active" aria-current="page" href="#" data-type="my">My created inventories</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">Other inventories</a>
+        <a class="nav-link inventory-tab" href="#" data-type="all">Other inventories</a>
     </li>    
 </ul>
 
@@ -110,50 +108,8 @@
             <th scope="col">Is public</th>
         </tr>
     </thead>
-    <tbody>
-        @foreach(var item in Model)
-        {
-            <tr class="clickable-row" data-target="#detail-@item.Number">
-                <th scope="row">@item.Number</th>
-                <td>
-                    <a href="#" data-inventoryid="@item.Id">
-                    @item.Title
-                    </a>
-                </td>
-                <td>@item.Description</td>
-                <td>@item.CreatedBy</td>
-                <td>@item.CreatedAt.ToString("yyyy-MM-dd")</td>
-				<td>@(item.IsPublic ? "Yes" : "No")</td>
-            </tr>
-            @if (item.ValuesDT != null)
-	        {
-                <tr class="collapse detail-row" id="detail-@item.Number">
-                    <td colspan="6">                        
-                        <table class="table table-sm table-bordered mt-2 table-secondary">
-                            <thead class="table-light">
-                                <tr>
-                                    @foreach (DataColumn column in item.ValuesDT.Columns)
-                                    {
-                                        <th>@column.ColumnName</th>
-                                    }
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach(DataRow stock in item.ValuesDT.Rows)
-                                {
-                                    <tr>
-                                        @foreach (DataColumn column in item.ValuesDT.Columns)
-                                        {
-                                            <td>@stock[column]</td>
-                                        }
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-				    </td>
-			    </tr>
-            }
-        }        
+    <tbody id="inventoryTableBody">
+        
     </tbody>
 </table>
 
@@ -166,7 +122,88 @@
                 $(".authenticated").hide();
 			}
 
-            $(".clickable-row td a").click(function(e) {
+            loadInventories();
+
+            function loadInventories() {
+                var isAuthenticated = token && token.trim() !== "";
+                var selectedTab = $('.inventory-tab.active').data('type'); // "all" or "my"
+                var categoryId = $('#ddmCategory').val();
+                var searchText = $('#searchInput').val();
+
+                var requestData = {
+                    categoryId: categoryId || null,
+                    searchText: searchText || null,
+                    inventoryType: selectedTab // "all" or "my"
+                };
+
+                var url = isAuthenticated ? '@Url.Action("ListAuth", "Home")' : '@Url.Action("ListAll", "Home")';
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: requestData,
+                    headers: isAuthenticated ? {'Authorization': 'Bearer ' + token} : {},
+                    success: function(response) {
+
+                        var tbody = $('#inventoryTableBody');
+                        tbody.empty();
+
+                        if (!response || response.length === 0) {
+                            tbody.append('<tr><td colspan="6" class="text-center">No data found</td></tr>');
+                            return;
+                        }
+
+                        $.each(response, function (index, item) {
+
+                            var btnText = item.isPublic ? `<span class="badge bg-success">Yes</span>` : `<span class="badge bg-secondary">No</span>`;
+
+                            var row = `
+                                <tr class="clickable-row" data-target="#detail-${item.number}">
+                                    <th scope="row">${item.number}</th>
+                                    <td>
+                                        <a href="#" data-inventoryid="${item.id}">${item.title}</a>
+                                    </td>
+                                    <td>${item.description}</td>
+                                    <td>${item.createdBy}</td>
+                                    <td>${formatDate(item.createdAt)}</td>
+                                    <td>${btnText}</td>
+                                </tr>`;
+
+                            tbody.append(row);
+                        });
+
+                    },
+                    error: function () {
+                        alert("Error loading inventories.");
+                    }
+                });
+            }
+
+            function formatDate(dateString) {
+                var date = new Date(dateString);
+                return date.toLocaleDateString();
+            }
+
+            $(document).on('click', '.inventory-tab', function (e) {
+                e.preventDefault();
+                $('.inventory-tab').removeClass('active');
+                $(this).addClass('active');
+                loadInventories();
+            });
+
+            $('#categorySelect').on('change', function () {
+                loadInventories();
+            });
+
+            var searchTimeout;
+            $('#searchInput').on('keyup', function () {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(function () {
+                    loadInventories();
+                }, 500);
+            });
+
+            $(document).on("click", ".clickable-row td a", function (e) {
                 e.stopPropagation();
                 e.preventDefault();
                 var inventoryId = $(this).data("inventoryid");

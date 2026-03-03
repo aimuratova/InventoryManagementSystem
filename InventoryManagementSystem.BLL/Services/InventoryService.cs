@@ -79,9 +79,11 @@ namespace InventoryManagementSystem.BLL.Services
             return item;
         }
 
-        public async Task<ResultModel<List<InventoryItemModel>>> GetInventoryItems()
+        public async Task<ResultModel<List<InventoryItemModel>>> GetInventoryItems(string? userId, int? categoryId, string? searchText, string? inventoryType)
         {
-            var invItems = await _inventoryRepository.GetInventoryItems();
+            var invItems = await _inventoryRepository.GetInventoryItems(
+                !string.IsNullOrEmpty(inventoryType) && inventoryType == "my" ? userId : null, categoryId, searchText,
+                !string.IsNullOrEmpty(inventoryType) && inventoryType == "all" ? true : null);
             var result = new ResultModel<List<InventoryItemModel>>
             {
                 Success = true,
@@ -90,9 +92,9 @@ namespace InventoryManagementSystem.BLL.Services
             return result;
         }
                
-        public async Task<ResultModel<DataSet>> GetInventoryValues()
+        public async Task<ResultModel<DataSet>> GetInventoryValues(List<int>? inventoryIds)
         {
-            var dataTables = await _inventoryRepository.GetInventoryValues();
+            var dataTables = await _inventoryRepository.GetInventoryValues(inventoryIds);
             var result = new ResultModel<DataSet>
             {
                 Success = true,

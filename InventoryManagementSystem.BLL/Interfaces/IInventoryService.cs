@@ -11,8 +11,8 @@ namespace InventoryManagementSystem.BLL.Interfaces
 {
     public interface IInventoryService
     {        
-        Task<ResultModel<List<InventoryItemModel>>> GetInventoryItems();
-        Task<ResultModel<DataSet>> GetInventoryValues();
+        Task<ResultModel<List<InventoryItemModel>>> GetInventoryItems(string? userId, int? categoryId, string? searchText, string? inventoryType);
+        Task<ResultModel<DataSet>> GetInventoryValues(List<int>? inventoryIds);
         Task<InventoryItemModel> GetInventoryItemById(int id);
         Task<ResultModel> UpdateInventory(InventoryItemModel inventory, List<string> inventoryUsers,
             List<InventoryFieldModel> fieldsList);

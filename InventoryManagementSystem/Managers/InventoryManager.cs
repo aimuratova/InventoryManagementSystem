@@ -34,12 +34,15 @@ namespace InventoryManagementSystem.Managers
             _inventoryUserService = inventoryUserService;
         }
 
-        public async Task<List<InventoryItemViewModel>> GetAllItemsAsync()
+        public async Task<List<InventoryItemViewModel>> GetAllItemsAsync(string? userId = null, 
+            int? categoryId = null, string? searchText = null, string? inventoryType = null)
         {
             var items = new List<InventoryItemViewModel>();
 
-            var inventoryItems = await _inventoryService.GetInventoryItems();
-            var dataSet = await _inventoryService.GetInventoryValues();
+            var inventoryItems = await _inventoryService.GetInventoryItems(userId, categoryId, searchText, inventoryType);
+
+            //var inventoryIds = inventoryItems.Data?.Select(x => x.InventoryItemId).ToList();
+            //var dataSet = await _inventoryService.GetInventoryValues(inventoryIds);
 
             if (inventoryItems == null || inventoryItems.Data == null)
             {
@@ -54,23 +57,23 @@ namespace InventoryManagementSystem.Managers
                 x.Number = i++;
             });
 
-            if(dataSet == null || dataSet.Data == null)
-            {
-                return items;
-            }
+            //if(dataSet == null || dataSet.Data == null)
+            //{
+            //    return items;
+            //}
 
-            foreach (DataTable dataTable in dataSet.Data.Tables)
-            {
-                if (dataTable.Rows.Count > 0)
-                {
-                    var itemId = dataTable.Rows[0]["ItemId"].ToString();
-                    var item = items.FirstOrDefault(i => i.Id.ToString() == itemId);
-                    if (item != null)
-                    {
-                        item.ValuesDT = dataTable;
-                    }
-                }
-            }
+            //foreach (DataTable dataTable in dataSet.Data.Tables)
+            //{
+            //    if (dataTable.Rows.Count > 0)
+            //    {
+            //        var itemId = dataTable.Rows[0]["ItemId"].ToString();
+            //        var item = items.FirstOrDefault(i => i.Id.ToString() == itemId);
+            //        if (item != null)
+            //        {
+            //            item.ValuesDT = dataTable;
+            //        }
+            //    }
+            //}
 
             return items;
         }
