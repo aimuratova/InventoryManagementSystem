@@ -95,40 +95,40 @@ namespace InventoryManagementSystem.DAL.Repositories
             }
         }
         
-        public async Task<DataSet> GetInventoryValues(List<int>? inventoryIds)
-        {
-            DataSet dataSet = new DataSet();
+        //public async Task<DataSet> GetInventoryValues(List<int>? inventoryIds)
+        //{
+        //    DataSet dataSet = new DataSet();
 
-            // Create a DataTable to hold the inventory item IDs
-            var table = new DataTable();
-            table.Columns.Add("Id", typeof(int));
-            // Populate the DataTable with the user ID and inventory item IDs
-            foreach (var itemId in inventoryIds)
-            {
-                table.Rows.Add(itemId);
-            }
+        //    // Create a DataTable to hold the inventory item IDs
+        //    var table = new DataTable();
+        //    table.Columns.Add("Id", typeof(int));
+        //    // Populate the DataTable with the user ID and inventory item IDs
+        //    foreach (var itemId in inventoryIds)
+        //    {
+        //        table.Rows.Add(itemId);
+        //    }
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
+        //    using (SqlConnection connection = new SqlConnection(_connectionString))
+        //    {
+        //        await connection.OpenAsync();
 
-                using (SqlCommand command = new SqlCommand("[dbo].[spGetInventoryValues]", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
+        //        using (SqlCommand command = new SqlCommand("[dbo].[spGetInventoryValues]", connection))
+        //        {
+        //            command.CommandType = CommandType.StoredProcedure;
 
-                    var parameter = command.Parameters.AddWithValue("@InventIds", table);
-                    parameter.SqlDbType = SqlDbType.Structured;
-                    parameter.TypeName = "dbo.UserInventoryItemTableType";
+        //            var parameter = command.Parameters.AddWithValue("@InventIds", table);
+        //            parameter.SqlDbType = SqlDbType.Structured;
+        //            parameter.TypeName = "dbo.UserInventoryItemTableType";
 
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
-                    {
-                        adapter.Fill(dataSet);
-                    }
-                }
-            }
+        //            using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+        //            {
+        //                adapter.Fill(dataSet);
+        //            }
+        //        }
+        //    }
 
-            return dataSet;
-        }
+        //    return dataSet;
+        //}
 
         public async Task<ResultDbModel> UpdateInventoryItem(InventoryItemModel inventoryModel, List<string> inventoryUsers, 
             List<InventoryFieldModel> fieldsList)

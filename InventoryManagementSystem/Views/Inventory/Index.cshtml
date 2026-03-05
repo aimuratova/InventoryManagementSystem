@@ -164,46 +164,7 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">Values Table</h5>
-                        </div>
-
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered align-middle">
-                                    <thead class="table text-center">
-                                        <tr>
-                                            @if(Model.ValuesDT != null && Model.ValuesDT.Columns != null) {
-                                                @foreach (DataColumn column in Model.ValuesDT.Columns)
-                                                {
-												    <th>@column.ColumnName</th>                                                
-                                                }
-                                            }
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        @if (Model.ValuesDT != null && Model.ValuesDT.Rows != null) {
-                                            @foreach (DataRow stock in Model.ValuesDT.Rows)
-                                            {
-                                                <tr>
-                                                    @foreach (DataColumn column in Model.ValuesDT.Columns)
-                                                    {
-                                                        <td>@stock[column]</td>
-                                                    }
-                                                </tr>
-                                            }
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="mt-3">
-                                <button class="btn btn-primary authenticate">Add New Value</button>
-                            </div>
-                        </div>
-                    </div>
-                 
+                    <partial name="_Value" model="Model" />
                 </div>
               
             </div>            
@@ -250,6 +211,44 @@
                 error: function (error) {
                     console.log('Failed to get inventory access info' + error);                    
                 }
+            });
+
+            $('#addValueButton').click(function() {
+                var inputs = $('.addValue');
+                var inventoryId = @Model.Id;
+
+                var listObject = []
+
+                $.each(inputs, function(index, item) {
+                    var fieldId = $(item).data('field');
+                    var value = $(item).val();
+
+                    if ($(item).is(':checkbox')) {
+                        value = $(item).prop('checked');
+                    }
+
+                    listObject.push({
+                        inventoryId: inventoryId,
+                        fieldId: fieldId,
+                        value: value
+                    });
+                });
+
+                $.ajax({
+                    url: 'Inventory/AddValue', // Uses the form's action URL
+                    type: 'POST',
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    data: JSON.stringify(listObject),
+                    success: function (response) {
+                        window.location.reload();
+                    },
+                    error: function (error) {
+                        
+                    }
+                 });
             });
                        
 		});

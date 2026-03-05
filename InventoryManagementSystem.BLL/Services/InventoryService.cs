@@ -91,16 +91,16 @@ namespace InventoryManagementSystem.BLL.Services
             return result;
         }
                
-        public async Task<ResultModel<DataSet>> GetInventoryValues(List<int>? inventoryIds)
-        {
-            var dataTables = await _inventoryRepository.GetInventoryValues(inventoryIds);
-            var result = new ResultModel<DataSet>
-            {
-                Success = true,
-                Data = dataTables
-            };
-            return result;
-        }
+        //public async Task<ResultModel<DataSet>> GetInventoryValues(List<int>? inventoryIds)
+        //{
+        //    var dataTables = await _inventoryRepository.GetInventoryValues(inventoryIds);
+        //    var result = new ResultModel<DataSet>
+        //    {
+        //        Success = true,
+        //        Data = dataTables
+        //    };
+        //    return result;
+        //}
 
         public async Task<ResultModel> UpdateInventory(InventoryItemModel inventory, List<string> inventoryUsers, List<InventoryFieldModel> fieldsList)
         {
