@@ -10,6 +10,7 @@ namespace InventoryManagementSystem.DAL.Interfaces
     public interface IUserRepository
     {
         Task Add(UsersModel user);
+        Task<bool> GetAccessInventory(string? userId, int inventoryId);
         Task<UsersModel?> GetByEmail(string email);
         Task<UsersModel?> GetUserById(string userId);
         Task<List<UsersModel>> GetUsers();

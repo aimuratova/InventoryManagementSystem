@@ -2,6 +2,11 @@
 @{
     ViewData["Title"] = "Home Page";	
 }
+@section Styles {
+    <style>
+        
+    </style>
+}
 <div class="alert alert-danger" role="alert" style="display:none" id="errorLabel">
     <div asp-validation-summary="All" class="mb-0">Some errors here</div>
 </div>
@@ -9,7 +14,7 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-md-3">
                 
                 <li class="nav-item authenticated">
                     <button class="btn btn-primary" type="button" id="createNewBtn" data-bs-toggle="modal" data-bs-target="#createNewModal">Create inventory</button>
@@ -72,11 +77,10 @@
                     </div>
                 </li>
                 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Choose category
-                    </a>
-                    <ul class="dropdown-menu" id="ddmCategory"></ul>
+                <li class="nav-item">                    
+                    <select class="form-select rounded-3" id="ddmCategory">
+                        <option selected>All</option>
+                    </select>
                 </li>
             </ul>
             <form class="d-flex" role="search">
@@ -191,7 +195,8 @@
                 loadInventories();
             });
 
-            $('#categorySelect').on('change', function () {
+            $(document).on('change', '#ddmCategory', function (e) {
+                console.log("ddmCategory on change");
                 loadInventories();
             });
 
@@ -215,8 +220,8 @@
             const selectElement = $('#categorySelect');
             selectElement.find('option:not(:first)').remove();
 
-            var $dropdown = $("#ddmCategory");
-            $dropdown.empty();   // clear old items
+            const selectDdm = $('#ddmCategory');
+            selectDdm.find('option:not(:first)').remove();
             
             $.ajax({
                 url: '@Url.Action("GetCategories", "Dictionary")',
@@ -229,9 +234,11 @@
                             text: item
                         }));
 
-                        var itemAppend = `<li><a class="dropdown-item" href="#" data-value="${index}">${item}</a></li>`;
+                        selectDdm.append($('<option>', {
+                            value: index,
+                            text: item
+                        }));
 
-                        $dropdown.append(itemAppend);
                     });
                 },
                 error: function () {

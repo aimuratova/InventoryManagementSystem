@@ -112,6 +112,23 @@ namespace InventoryManagementSystem.Controllers
                 return BadRequest(result);
             }
         }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet]
+        public async Task<IActionResult> GetAccessForInventory(int inventoryId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var hasAccess = await _userService.GetAccessInventory(userId, inventoryId);
+
+            if (hasAccess)
+            {
+                return Ok(hasAccess);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 
 }

@@ -81,8 +81,7 @@ namespace InventoryManagementSystem.BLL.Services
 
         public async Task<ResultModel<List<InventoryItemModel>>> GetInventoryItems(string? userId, int? categoryId, string? searchText, string? inventoryType)
         {
-            var invItems = await _inventoryRepository.GetInventoryItems(
-                !string.IsNullOrEmpty(inventoryType) && inventoryType == "my" ? userId : null, categoryId, searchText,
+            var invItems = await _inventoryRepository.GetInventoryItems(userId, categoryId, searchText,
                 !string.IsNullOrEmpty(inventoryType) && inventoryType == "all" ? true : null);
             var result = new ResultModel<List<InventoryItemModel>>
             {

@@ -95,6 +95,11 @@ namespace InventoryManagementSystem.BLL.Services
             return result;
         }
 
+        public async Task<bool> GetAccessInventory(string? userId, int inventoryId)
+        {
+            return await _userRepository.GetAccessInventory(userId, inventoryId);
+        }
+
         public async Task<ResultModel<UsersModel>> GetUserById(string userId)
         {
             var result = new ResultModel<UsersModel>();

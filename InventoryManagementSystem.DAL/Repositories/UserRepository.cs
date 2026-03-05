@@ -44,6 +44,21 @@ namespace InventoryManagementSystem.DAL.Repositories
             }
         }
 
+        public async Task<bool> GetAccessInventory(string? userId, int inventoryId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                return await connection.QuerySingleOrDefaultAsync<bool>(
+                    "[dbo].[spGetInventoryAccess]",
+                    new { 
+                        UserId = userId, 
+                        InventoryId = inventoryId 
+                    },
+                    commandType: CommandType.StoredProcedure
+                );
+            }
+        }
+
         public async Task<UsersModel?> GetByEmail(string email)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))

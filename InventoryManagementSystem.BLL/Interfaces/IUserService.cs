@@ -15,5 +15,6 @@ namespace InventoryManagementSystem.BLL.Interfaces
         Task<ResultModel<UsersModel>> GetUserById(string userId);
         Task<ResultModel<List<UsersModel>>> ListUsers();        
         Task<ResultModel> UpdateUserAsync(UsersModel user);
+        Task<bool> GetAccessInventory(string? userId, int inventoryId);
     }
 }
