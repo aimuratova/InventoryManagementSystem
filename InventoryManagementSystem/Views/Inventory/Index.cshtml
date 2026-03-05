@@ -221,6 +221,7 @@
 
                 $.each(inputs, function(index, item) {
                     var fieldId = $(item).data('field');
+                    var typeId = $(item).data('type');
                     var value = $(item).val();
 
                     if ($(item).is(':checkbox')) {
@@ -230,12 +231,13 @@
                     listObject.push({
                         inventoryId: inventoryId,
                         fieldId: fieldId,
+                        typeId: typeId,
                         value: value
                     });
                 });
 
                 $.ajax({
-                    url: 'Inventory/AddValue', // Uses the form's action URL
+                    url: 'InventoryValue/Add', // Uses the form's action URL
                     type: 'POST',
                     contentType: 'application/json',
                     headers: {

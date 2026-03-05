@@ -60,7 +60,7 @@
                                             case (int)DataTypeEnum.Singleline3:
                                                 <label for="title" class="col-3 col-form-label">@field.Title</label>
                                                 <div class="col-9">
-                                                    <input type="text" class="form-control addValue" placeholder="Enter value" data-field="@field.Id">
+                                                    <input type="text" class="form-control addValue" placeholder="Enter value" data-field="@field.Id" data-type="@field.TypeId">
                                                 </div>
                                                 break;
                                             case (int)DataTypeEnum.Multiline1:
@@ -68,7 +68,7 @@
                                             case (int)DataTypeEnum.Multiline3:
                                                 <label class="col-3 col-form-label">@field.Title</label>
                                                 <div class="col-9">
-                                                    <textarea class="form-control addValue" rows="6" placeholder="Enter value" data-field="@field.Id"></textarea>
+                                                    <textarea class="form-control addValue" rows="6" placeholder="Enter value" data-field="@field.Id" data-type="@field.TypeId"></textarea>
                                                 </div>
                                                 break;
                                             case (int)DataTypeEnum.Num1:
@@ -77,7 +77,7 @@
                                                 <label for="quantity" class="col-3 col-form-label">@field.Title</label>
                                                 <div class="col-9">
                                                     <input type="number" class="form-control addValue" id="quantity" step="1" min="0"
-                                                           placeholder="Enter integer" data-field="@field.Id">
+                                                           placeholder="Enter integer" data-field="@field.Id" data-type="@field.TypeId">
                                                 </div>
                                                 break;
                                             case (int)DataTypeEnum.ImageUrl1:
@@ -85,7 +85,7 @@
                                             case (int)DataTypeEnum.ImageUrl3:
                                                 <label for="imageInput" class="col-3 col-form-label">@field.Title</label>
                                                 <div class="col-9">
-                                                    <input type="file" class="form-control addValue" accept="image/*" data-field="@field.Id">
+                                                    <input type="file" class="form-control addValue" accept="image/*" data-field="@field.Id" data-type="@field.TypeId">
                                                 </div>
                                                 break;
                                             case (int)DataTypeEnum.Check1:
@@ -94,7 +94,7 @@
                                                 <label class="col-3 col-form-label">@field.Title</label>
                                                 <div class="col-9 d-flex align-items-center">
                                                     <div class="form-check">
-                                                        <input class="form-check-input addValue" type="checkbox" id="isActive" data-field="@field.Id">
+                                                        <input class="form-check-input addValue" type="checkbox" id="isActive" data-field="@field.Id" data-type="@field.TypeId">
                                                         <label class="form-check-label" for="isActive">
                                                             Enable
                                                         </label>
@@ -104,7 +104,7 @@
                                             case (int)DataTypeEnum.Datetime:
                                                 <label for="eventDate" class="col-3 col-form-label">@field.Title</label>
                                                 <div class="col-9">
-                                                    <input type="date" class="form-control addValue" id="eventDate" name="eventDate" data-field="@field.Id">
+                                                    <input type="date" class="form-control addValue" id="eventDate" name="eventDate" data-field="@field.Id" data-type="@field.TypeId">
                                                 </div>
                                                 break;
                                         }

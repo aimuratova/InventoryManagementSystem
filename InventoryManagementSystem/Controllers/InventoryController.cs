@@ -24,7 +24,6 @@ namespace InventoryManagementSystem.Controllers
             return View(result);
         }
 
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public async Task<IActionResult> Edit(int inventoryId)
         {
@@ -80,12 +79,6 @@ namespace InventoryManagementSystem.Controllers
                 return BadRequest(result.Message);
             }
         }
-
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPost]
-        public async Task<IActionResult> AddValue([FromBody]List<ValueViewModel> values)
-        {
-            return Ok();
-        }
+                
     }
 }

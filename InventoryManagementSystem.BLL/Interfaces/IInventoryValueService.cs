@@ -1,4 +1,5 @@
 ﻿using InventoryManagementSystem.BLL.Models;
+using InventoryManagementSystem.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,5 +12,6 @@ namespace InventoryManagementSystem.BLL.Interfaces
     public interface IInventoryValueService
     {
         Task<DataTable> GetInventoryValueDTById(int inventoryId);
+        Task AddValues(List<InventoryItemValueModel> valuesList);
     }
 }

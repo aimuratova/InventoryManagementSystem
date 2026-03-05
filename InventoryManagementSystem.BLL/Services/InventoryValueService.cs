@@ -1,6 +1,7 @@
 ﻿using InventoryManagementSystem.BLL.Interfaces;
 using InventoryManagementSystem.BLL.Models;
 using InventoryManagementSystem.DAL.Interfaces;
+using InventoryManagementSystem.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,6 +17,11 @@ namespace InventoryManagementSystem.BLL.Services
         public InventoryValueService(IInventoryValueRepository valueRepository) 
         {
             this._valueRepository = valueRepository;
+        }
+
+        public Task AddValues(List<InventoryItemValueModel> valuesList)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<DataTable> GetInventoryValueDTById(int inventoryId)

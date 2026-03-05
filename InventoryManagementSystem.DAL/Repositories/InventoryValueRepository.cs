@@ -1,4 +1,5 @@
 ﻿using InventoryManagementSystem.DAL.Interfaces;
+using InventoryManagementSystem.DAL.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -19,6 +20,11 @@ namespace InventoryManagementSystem.DAL.Repositories
         {
             this.configuration = configuration;
             this.connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
+
+        public Task AddValues(List<InventoryItemValueModel> inventoryValues)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<DataTable> GetInventoryValuesById(int inventoryId)
