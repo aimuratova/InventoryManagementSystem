@@ -8,7 +8,7 @@
 
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered align-middle">
+            <table class="table table-bordered align-middle" id="valueDataTable">
                 <thead class="table text-center">
                     <tr>
                         @if (Model.ValuesDT != null && Model.ValuesDT.Columns != null)
@@ -47,6 +47,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+                            <div class="alert alert-danger" role="alert" id="errorModalValue" style="display:none"></div>
                             <div class="container-fluid">
 
                                 @foreach(var field in Model.Fields)
@@ -101,7 +102,9 @@
                                                     </div>
                                                 </div>
                                                 break;
-                                            case (int)DataTypeEnum.Datetime:
+                                            case (int)DataTypeEnum.Datetime1:
+                                            case (int)DataTypeEnum.Datetime2:
+                                            case (int)DataTypeEnum.Datetime3:
                                                 <label for="eventDate" class="col-3 col-form-label">@field.Title</label>
                                                 <div class="col-9">
                                                     <input type="date" class="form-control addValue" id="eventDate" name="eventDate" data-field="@field.Id" data-type="@field.TypeId">

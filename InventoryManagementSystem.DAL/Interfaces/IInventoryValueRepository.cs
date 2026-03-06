@@ -11,6 +11,6 @@ namespace InventoryManagementSystem.DAL.Interfaces
     public interface IInventoryValueRepository
     {
         Task<DataTable> GetInventoryValuesById(int inventoryId);
-        Task AddValues(List<InventoryItemValueModel> inventoryValues);
+        Task AddValues(InventoryItemValueModel value);
     }
 }

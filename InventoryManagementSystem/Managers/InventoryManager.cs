@@ -141,44 +141,6 @@ namespace InventoryManagementSystem.Managers
             var inventoryModel = _mapper.Map<InventoryItemModel>(inventory);
             return await _inventoryService.AddInventory(inventoryModel);
         }
-
-        public async Task<ResultModel> AddValue(List<ValueViewModel> values)
-        {
-            var result = new ResultModel();
-            var errors = new List<string>();
-
-            foreach (var row in values)
-            {
-                if(row.FieldId == 0 || row.InventoryId == 0)
-                {
-                    errors.Add("Unable to add new value: not all parameter were provided");
-                }
-
-                if(row.Value == null || string.IsNullOrEmpty(row.Value.ToString()))
-                {
-                    errors.Add("Unable to add new value: value were not provided");
-                }
-            }
-
-            if (errors.Count == 0)
-            {
-                var fieldsModel = _mapper.Map<List<InventoryItemValueModel>>(values);
-
-                try
-                {
-                    await _inventoryValueService.AddValues(fieldsModel);
-
-                    result.Success = true;
-                }
-                catch (Exception ex)
-                {
-                    result.Success = false;
-                    result.Message = ex.Message;
-                }
-            }
-            
-            result.Errors = errors;
-            return result;
-        }
+               
     }
 }

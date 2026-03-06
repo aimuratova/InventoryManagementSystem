@@ -3,28 +3,30 @@ using InventoryManagementSystem.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace InventoryManagementSystem.Controllers
 {
     public class InventoryValueController : Controller
     {
-        private readonly InventoryManager _inventoryManager;
+        private readonly InventoryValueManager _inventoryValueManager;
 
-        public InventoryValueController(InventoryManager inventoryManager)
+        public InventoryValueController(InventoryValueManager inventoryValueManager)
         {
-            _inventoryManager = inventoryManager;            
+            _inventoryValueManager = inventoryValueManager;
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] List<ValueViewModel> values)
         {
-            var result = await _inventoryManager.AddValue(values);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = await _inventoryValueManager.AddValue(values, userId);
             if (result.Success)
             {
                 return Ok();
             }
-            return BadRequest(result.Errors);
+            return BadRequest(result);
         }
     }
 }

@@ -7,5 +7,6 @@
         public int FieldId { get; set; }
         public int TypeId { get; set; }
         public object Value { get; set; }
+        public int RowNum { get; set; }
     }
 }

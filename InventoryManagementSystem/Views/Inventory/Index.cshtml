@@ -219,6 +219,8 @@
 
                 var listObject = []
 
+                var rowNum = $('#valueDataTable tr').length;
+
                 $.each(inputs, function(index, item) {
                     var fieldId = $(item).data('field');
                     var typeId = $(item).data('type');
@@ -232,7 +234,8 @@
                         inventoryId: inventoryId,
                         fieldId: fieldId,
                         typeId: typeId,
-                        value: value
+                        value: value,
+                        rowNum: rowNum
                     });
                 });
 
@@ -247,8 +250,17 @@
                     success: function (response) {
                         window.location.reload();
                     },
-                    error: function (error) {
-                        
+                    error: function (error) {                        
+                        $('#errorModalValue').prepend('Failed to add value. Please try again.').show();
+
+                        if(error.message) {
+                            $('#errorModalValue').prepend(error.message);
+                        }
+
+                        $.each(error.errors, function(index, item) {
+                            console.log(item);
+                            $('#errorModalValue').prepend(item);
+                        });
                     }
                  });
             });

@@ -12,6 +12,6 @@ namespace InventoryManagementSystem.BLL.Interfaces
     public interface IInventoryValueService
     {
         Task<DataTable> GetInventoryValueDTById(int inventoryId);
-        Task AddValues(List<InventoryItemValueModel> valuesList);
+        Task AddValues(InventoryItemValueModel value);
     }
 }

@@ -26,6 +26,8 @@
         Check2,
         Check3,
 
-        Datetime = 19, // datetime
+        Datetime1 = 19, // datetime
+        Datetime2,
+        Datetime3,
     }
 }

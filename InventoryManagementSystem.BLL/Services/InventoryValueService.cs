@@ -19,9 +19,9 @@ namespace InventoryManagementSystem.BLL.Services
             this._valueRepository = valueRepository;
         }
 
-        public Task AddValues(List<InventoryItemValueModel> valuesList)
+        public async Task AddValues(InventoryItemValueModel value)
         {
-            throw new NotImplementedException();
+            await _valueRepository.AddValues(value);
         }
 
         public async Task<DataTable> GetInventoryValueDTById(int inventoryId)

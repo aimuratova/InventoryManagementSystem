@@ -34,6 +34,7 @@ services.AddScoped<IInventoryValueService, InventoryValueService>();
 
 services.AddScoped<UserManager>();
 services.AddScoped<InventoryManager>();
+services.AddScoped<InventoryValueManager>();
 
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 
