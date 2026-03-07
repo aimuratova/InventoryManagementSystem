@@ -28,5 +28,10 @@ namespace InventoryManagementSystem.Controllers
             }
             return BadRequest(result);
         }
+
+        public IActionResult Index(int id)
+        {
+            return View();
+        }
     }
 }

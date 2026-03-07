@@ -212,59 +212,7 @@
                     console.log('Failed to get inventory access info' + error);                    
                 }
             });
-
-            $('#addValueButton').click(function() {
-                var inputs = $('.addValue');
-                var inventoryId = @Model.Id;
-
-                var listObject = []
-
-                var rowNum = $('#valueDataTable tr').length;
-
-                $.each(inputs, function(index, item) {
-                    var fieldId = $(item).data('field');
-                    var typeId = $(item).data('type');
-                    var value = $(item).val();
-
-                    if ($(item).is(':checkbox')) {
-                        value = $(item).prop('checked');
-                    }
-
-                    listObject.push({
-                        inventoryId: inventoryId,
-                        fieldId: fieldId,
-                        typeId: typeId,
-                        value: value,
-                        rowNum: rowNum
-                    });
-                });
-
-                $.ajax({
-                    url: 'InventoryValue/Add', // Uses the form's action URL
-                    type: 'POST',
-                    contentType: 'application/json',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    },
-                    data: JSON.stringify(listObject),
-                    success: function (response) {
-                        window.location.reload();
-                    },
-                    error: function (error) {                        
-                        $('#errorModalValue').prepend('Failed to add value. Please try again.').show();
-
-                        if(error.message) {
-                            $('#errorModalValue').prepend(error.message);
-                        }
-
-                        $.each(error.errors, function(index, item) {
-                            console.log(item);
-                            $('#errorModalValue').prepend(item);
-                        });
-                    }
-                 });
-            });
-                       
+                      
 		});
 
         $(document).on("click", "#deleteBtn", function (e) {
@@ -295,4 +243,5 @@
             }
         });
     </script>
+	<script src="~/js/valuescript.js"></script>
 }

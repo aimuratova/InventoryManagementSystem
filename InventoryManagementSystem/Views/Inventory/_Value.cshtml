@@ -15,7 +15,9 @@
                         {
                             @foreach (DataColumn column in Model.ValuesDT.Columns)
                             {
-                                <th>@column.ColumnName</th>
+                                if(!string.Equals(column.ColumnName, "Id", StringComparison.InvariantCultureIgnoreCase)) {
+                                    <th>@column.ColumnName</th>
+                                }
                             }
                         }
                     </tr>
@@ -26,10 +28,12 @@
                     {
                         @foreach (DataRow stock in Model.ValuesDT.Rows)
                         {
-                            <tr>
+                            <tr data-rowid="@stock[0]">
                                 @foreach (DataColumn column in Model.ValuesDT.Columns)
                                 {
-                                    <td>@stock[column]</td>
+                                    if (!string.Equals(column.ColumnName, "Id", StringComparison.InvariantCultureIgnoreCase)) {
+                                        <td>@stock[column]</td>
+                                    }                                
                                 }
                             </tr>
                         }
@@ -38,7 +42,7 @@
             </table>
         </div>
         <div class="mt-3">
-            <button type="button" class="btn btn-primary authenticate" data-bs-toggle="modal" data-bs-target="#addValueModal">Add New Value</button>
+            <button type="button" class="btn btn-primary authenticate" data-bs-toggle="modal" data-bs-target="#addValueModal" data-inventoryId="@Model.Id">Add New Value</button>
             <div class="modal fade" id="addValueModal" tabindex="-1" aria-labelledby="addValueModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content" style="min-width:600px">
