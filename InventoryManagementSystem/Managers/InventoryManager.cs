@@ -85,7 +85,7 @@ namespace InventoryManagementSystem.Managers
             var inventoryValues = await _inventoryValueService.GetInventoryValueDTById(id);
 
             var result = new InventoryItemDetailVM();
-            result = _mapper.Map<InventoryItemDetailVM>(inventoryItem);
+            result.BasicInfo = _mapper.Map<InventoryItemViewModel>(inventoryItem);
             result.Fields = _mapper.Map<List<FieldVM>>(inventoryFields);
             result.ValuesDT = inventoryValues;
 
@@ -107,7 +107,7 @@ namespace InventoryManagementSystem.Managers
             var fieldTypes = (await _dictionaryService.GetFieldTypesAsync());
 
             var result = new InventoryEditViewModel();
-            result = _mapper.Map<InventoryEditViewModel>(inventoryItem);
+            result.BasicInfo = _mapper.Map<InventoryItemViewModel>(inventoryItem);
             result.Fields = _mapper.Map<List<FieldVM>>(inventoryFields);
             result.ValuesDT = inventoryValues;
 
