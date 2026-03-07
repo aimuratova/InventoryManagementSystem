@@ -29,10 +29,42 @@ namespace InventoryManagementSystem.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index(int id, int inventoryId)
         {
             var model = await _inventoryValueManager.GetInventoryValueInfo(id, inventoryId);
             return View(model);
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet]
+        public async Task<IActionResult> GetAccessForValue(int valueId)
+        {
+            // TODO: implement logic here
+            return Ok(true);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id, int inventoryId)
+        {
+            var model = await _inventoryValueManager.GetInventoryValueInfo(id, inventoryId);
+            return View(model);
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int valueId)
+        {
+            //var result = await _inventoryValueManager.Delete(inventoryId);
+            //if (result.Success)
+            //{
+            //    return Ok(result);
+            //}
+            //else
+            //{
+            //    return BadRequest(result.Message);
+            //}
+            return Ok(new { Success = true });
         }
     }
 }

@@ -1,0 +1,124 @@
+﻿@model InventoryValueViewModel;
+@{
+    ViewBag.Title = "Inventory value details";
+}
+@section Styles {
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .full-height {
+            height: 100vh;
+        }
+
+        .container {
+            margin-left: inherit;
+            padding: 0;
+        }
+
+        .left-panel {
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+
+        .comment-section {
+            border-top: 1px solid #dee2e6;
+            background: #ffffff;
+        }
+
+        .scrollable {
+            overflow-y: auto;
+        }
+
+        .row + .row {
+            margin-top: 8px;
+        }
+    </style>
+}
+
+<div class="container-fluid full-height d-flex flex-column">
+    <div class="row flex-grow-1">
+
+        <partial name="Inventory/_Info" model="Model.BasicInfo" />
+
+        <div class="col-md-9 p-4 scrollable">
+            <h4 class="mb-4">Inventory Value</h4>
+
+            <div class="container-fluid border rounded p-3 bg-light">
+
+                <div class="d-flex justify-content-end mb-3" id="valueSettings">
+                </div>
+
+                @foreach (var field in Model.Fields)
+                {
+                    <div class="row mb-3 align-items-center"> 
+                        <label class="col-md-3 col-form-label text-muted fw-semibold"> @field.Title </label> 
+                        <div class="col-md-9"> 
+                            @switch (field.TypeId)
+                            {
+                                case (int)DataTypeEnum.Singleline1:
+                                    <input class="form-control" asp-for="MainInfo.Singleline1" />
+                                    break;
+                                case (int)DataTypeEnum.Singleline2:
+                                    <input class="form-control" asp-for="MainInfo.Singleline2" />
+                                    break;
+                                case (int)DataTypeEnum.Singleline3:
+                                    <input class="form-control" asp-for="MainInfo.Singleline3" />
+                                    break;
+                                case (int)DataTypeEnum.Multiline1:
+                                    <textarea class="form-control" rows="3" asp-for="MainInfo.Multiline1"></textarea>
+                                    break;
+                                case (int)DataTypeEnum.Multiline2:
+                                    <textarea class="form-control" rows="3" asp-for="MainInfo.Multiline2"></textarea>
+                                    break;
+                                case (int)DataTypeEnum.Multiline3:
+                                    <textarea class="form-control" rows="3" asp-for="MainInfo.Multiline3"></textarea>
+                                    break;
+                                case (int)DataTypeEnum.Num1:
+                                    <input type="number" class="form-control" asp-for="MainInfo.Num1" />
+                                    break;
+                                case (int)DataTypeEnum.Num2:
+                                    <input type="number" class="form-control" asp-for="MainInfo.Num2" />
+                                    break;
+                                case (int)DataTypeEnum.Num3:
+                                    <input type="number" class="form-control" asp-for="MainInfo.Num3" />
+                                    break;
+                                case (int)DataTypeEnum.Check1:
+                                    <div class="form-check"> <input class="form-check-input" asp-for="MainInfo.Check1" /> </div>
+                                    break;
+                                case (int)DataTypeEnum.Check2:
+                                    <div class="form-check"> <input class="form-check-input" asp-for="MainInfo.Check2" /> </div>
+                                    break;
+                                case (int)DataTypeEnum.Check3:
+                                    <div class="form-check"> <input class="form-check-input" asp-for="MainInfo.Check3" /> </div>
+                                    break;
+                                case (int)DataTypeEnum.Datetime1:
+                                    <input type="datetime-local" class="form-control" asp-for="MainInfo.Datetime1" />
+                                    break;
+                                case (int)DataTypeEnum.Datetime2:
+                                    <input type="datetime-local" class="form-control" asp-for="MainInfo.Datetime2" />
+                                    break;
+                                case (int)DataTypeEnum.Datetime3:
+                                    <input type="datetime-local" class="form-control" asp-for="MainInfo.Datetime3" />
+                                    break;
+                                case (int)DataTypeEnum.CreatedBy:
+                                    <span>@Model.MainInfo.CreatedBy</span>
+                                    break;
+                                case (int)DataTypeEnum.CreatedAt:
+                                    <span>@Model.MainInfo.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
+                                    break;
+                            }
+                        </div> 
+                    </div>
+                }
+                <div class="mt-4 d-flex justify-content-end"> 
+                    <button type="submit" class="btn btn-primary me-2"> Save </button> 
+                    <a class="btn btn-outline-secondary"> Cancel </a> 
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

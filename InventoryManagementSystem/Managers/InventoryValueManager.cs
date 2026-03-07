@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using InventoryManagementSystem.BLL.Interfaces;
 using InventoryManagementSystem.BLL.Models;
+using InventoryManagementSystem.BLL.Services;
 using InventoryManagementSystem.DAL.Models;
 using InventoryManagementSystem.Models;
 
@@ -11,12 +12,14 @@ namespace InventoryManagementSystem.Managers
         private readonly IMapper _mapper;
         private readonly IInventoryValueService _inventoryValueService;
         private readonly IInventoryService _inventoryService;
+        private readonly IInventoryFieldService _inventoryFieldService;
 
-        public InventoryValueManager(IMapper mapper, IInventoryValueService inventoryValueService, IInventoryService inventoryService)
+        public InventoryValueManager(IMapper mapper, IInventoryValueService inventoryValueService, IInventoryService inventoryService, IInventoryFieldService inventoryFieldService)
         {
             _mapper = mapper;
             _inventoryValueService = inventoryValueService;
             _inventoryService = inventoryService;
+            _inventoryFieldService = inventoryFieldService;
         }
 
         public async Task<ResultModel> AddValue(List<ValueViewModel> values, string userId)
@@ -103,8 +106,12 @@ namespace InventoryManagementSystem.Managers
         {
             var result = new InventoryValueViewModel();
             var inventoryItem = await _inventoryService.GetInventoryItemById(inventoryId);
+            var inventoryFields = (await _inventoryFieldService.GetInventoryItemFieldsById(inventoryId)).OrderBy(x => x.OrderNum);
+            var inventoryValue = await _inventoryValueService.GetInventoryValueById(valueId);
 
             result.BasicInfo = _mapper.Map<InventoryItemViewModel>(inventoryItem);
+            result.Fields = _mapper.Map<List<FieldVM>>(inventoryFields);
+            result.MainInfo = _mapper.Map<RowValueViewModel>(inventoryValue);
 
             return result;
         }

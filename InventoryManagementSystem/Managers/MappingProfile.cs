@@ -36,8 +36,8 @@ namespace InventoryManagementSystem.Managers
                 .ForMember(dest => dest.InventoryItemTitle, opt => opt.MapFrom(src => src.Title));
 
             CreateMap<FieldTypeModel, FieldTypeViewModel>();
-                      
 
+            CreateMap<InventoryItemValueModel, RowValueViewModel>();
         }
     }
 }

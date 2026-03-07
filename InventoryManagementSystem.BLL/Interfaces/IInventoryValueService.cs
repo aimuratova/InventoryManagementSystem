@@ -13,5 +13,6 @@ namespace InventoryManagementSystem.BLL.Interfaces
     {
         Task<DataTable> GetInventoryValueDTById(int inventoryId);
         Task AddValues(InventoryItemValueModel value);
+        Task<InventoryItemValueModel> GetInventoryValueById(int valueId);
     }
 }

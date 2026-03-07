@@ -1,4 +1,5 @@
-﻿using InventoryManagementSystem.DAL.Interfaces;
+﻿using Dapper;
+using InventoryManagementSystem.DAL.Interfaces;
 using InventoryManagementSystem.DAL.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -55,6 +56,25 @@ namespace InventoryManagementSystem.DAL.Repositories
 
                     await command.ExecuteNonQueryAsync();
                 }
+            }
+        }
+
+        public async Task<InventoryItemValueModel> GetInventoryValueById(int valueId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                var result = await connection.QuerySingleOrDefaultAsync<InventoryItemValueModel>(
+                    "[dbo].[spGetInventoryValueById]",
+                    new { Id = valueId },
+                    commandType: CommandType.StoredProcedure
+                );
+
+                if (result == null)
+                {
+                    throw new InvalidOperationException($"Inventory value with Id {valueId} not found.");
+                }
+
+                return result;
             }
         }
 

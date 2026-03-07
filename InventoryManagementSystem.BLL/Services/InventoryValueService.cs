@@ -24,6 +24,12 @@ namespace InventoryManagementSystem.BLL.Services
             await _valueRepository.AddValues(value);
         }
 
+        public async Task<InventoryItemValueModel> GetInventoryValueById(int valueId)
+        {
+            var result = await _valueRepository.GetInventoryValueById(valueId);
+            return result;
+        }
+
         public async Task<DataTable> GetInventoryValueDTById(int inventoryId)
         {
             var resultDt = await _valueRepository.GetInventoryValuesById(inventoryId);
