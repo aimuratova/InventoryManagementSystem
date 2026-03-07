@@ -1,7 +1,10 @@
-﻿namespace InventoryManagementSystem.Models
+﻿using System.Data;
+
+namespace InventoryManagementSystem.Models
 {
     public class InventoryItemDetailVM : InventoryItemViewModel
     {
+        public DataTable ValuesDT { get; set; }
         public List<FieldVM>? Fields { get; set; }        
     }
 

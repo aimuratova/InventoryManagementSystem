@@ -13,7 +13,6 @@ namespace InventoryManagementSystem.Models
         public bool IsPublic { get; set; }
         public int CategoryId { get; set; }
         public string CategoryTitle { get; set; }
-        public DataTable ValuesDT { get; set; }
     }
 
 }

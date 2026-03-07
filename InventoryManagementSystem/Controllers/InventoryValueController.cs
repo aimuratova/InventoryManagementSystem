@@ -29,9 +29,10 @@ namespace InventoryManagementSystem.Controllers
             return BadRequest(result);
         }
 
-        public IActionResult Index(int id)
+        public async Task<IActionResult> Index(int id, int inventoryId)
         {
-            return View();
+            var model = await _inventoryValueManager.GetInventoryValueInfo(id, inventoryId);
+            return View(model);
         }
     }
 }

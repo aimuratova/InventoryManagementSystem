@@ -28,7 +28,7 @@
                     {
                         @foreach (DataRow stock in Model.ValuesDT.Rows)
                         {
-                            <tr data-rowid="@stock[0]">
+                            <tr data-rowid="@stock[0]" data-inventoryId="@Model.Id">
                                 @foreach (DataColumn column in Model.ValuesDT.Columns)
                                 {
                                     if (!string.Equals(column.ColumnName, "Id", StringComparison.InvariantCultureIgnoreCase)) {

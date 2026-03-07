@@ -1,0 +1,48 @@
+﻿@using InventoryManagementSystem.Models;
+@using Markdig;
+@model InventoryItemViewModel;
+
+
+<div class="col-md-3 left-panel p-4 scrollable">
+    <h4 class="mb-4">Inventory Details</h4>
+
+    <div class="mt-3 text-end authenticate" id="divSettings">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label text-muted">Title</label>
+        <div class="fw-bold" id="inventoryTitle">@Model.Title</div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label text-muted">Category</label>
+        <div class="fw-bold" id="categoryTitle">@Model.CategoryTitle</div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label text-muted">Access Status</label>
+        @if (Model.IsPublic)
+        {
+            <span class="badge bg-success">Public</span>
+        }
+        else
+        {
+            <span class="badge bg-secondary">Private</span>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label text-muted">Author</label>
+        <div id="authorTitle">@Model.CreatedBy</div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label text-muted">Created Date</label>
+        <div id="createDateTitle">@Model.CreatedAt.ToShortDateString()</div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label text-muted">Description</label>
+        <div id="descriptionTitle">@Html.Raw(Markdown.ToHtml(Model.Description))</div>
+    </div>
+</div>

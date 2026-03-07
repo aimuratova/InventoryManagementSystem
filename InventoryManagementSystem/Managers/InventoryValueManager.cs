@@ -10,11 +10,13 @@ namespace InventoryManagementSystem.Managers
     {
         private readonly IMapper _mapper;
         private readonly IInventoryValueService _inventoryValueService;
+        private readonly IInventoryService _inventoryService;
 
-        public InventoryValueManager(IMapper mapper, IInventoryValueService inventoryValueService)
+        public InventoryValueManager(IMapper mapper, IInventoryValueService inventoryValueService, IInventoryService inventoryService)
         {
             _mapper = mapper;
             _inventoryValueService = inventoryValueService;
+            _inventoryService = inventoryService;
         }
 
         public async Task<ResultModel> AddValue(List<ValueViewModel> values, string userId)
@@ -93,6 +95,17 @@ namespace InventoryManagementSystem.Managers
             }
 
             result.Errors = errors;
+            return result;
+        }
+
+
+        public async Task<InventoryValueViewModel> GetInventoryValueInfo(int valueId, int inventoryId)
+        {
+            var result = new InventoryValueViewModel();
+            var inventoryItem = await _inventoryService.GetInventoryItemById(inventoryId);
+
+            result.BasicInfo = _mapper.Map<InventoryItemViewModel>(inventoryItem);
+
             return result;
         }
     }

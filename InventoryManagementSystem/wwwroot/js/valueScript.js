@@ -53,8 +53,9 @@
 
     $('#valueDataTable tbody tr').click(function () {
         let rowId = $(this).data('rowid');
+        let inventoryId = $(this).data('inventoryid');
 
-        window.location.href = `/InventoryValue/Index?id=${rowId}`;
+        window.location.href = `/InventoryValue/Index?id=${rowId}&inventoryId=${inventoryId}`;
     });
 
 });

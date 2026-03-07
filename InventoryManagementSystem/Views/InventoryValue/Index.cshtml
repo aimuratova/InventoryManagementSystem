@@ -1,6 +1,49 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model InventoryValueViewModel;
 @{
+	ViewBag.Title = "Inventory value details";
 }
-<h4>Value page here</h4>
+@section Styles {
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .full-height {
+            height: 100vh;
+        }
+
+        .container {
+            margin-left: inherit;
+            padding: 0;
+        }
+
+        .left-panel {
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+
+        .comment-section {
+            border-top: 1px solid #dee2e6;
+            background: #ffffff;
+        }
+
+        .scrollable {
+            overflow-y: auto;
+        }
+    </style>
+}
+
+<div class="container-fluid full-height d-flex flex-column">
+    <div class="row flex-grow-1">
+
+        <partial name="Inventory/_Info" model="Model.BasicInfo" />
+
+        <div class="col-md-9 p-4 scrollable">
+
+            <h4 class="mb-4">Inventory value</h4>
+
+        </div>
+    </div>
+
+</div>
