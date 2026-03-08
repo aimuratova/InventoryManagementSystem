@@ -127,10 +127,8 @@ namespace InventoryManagementSystem.DAL.Repositories
                         command.CommandType = CommandType.StoredProcedure;
 
                         command.Parameters.Add(new SqlParameter("Id", valueModel.Id));
-                        command.Parameters.Add(new SqlParameter("@InventoryId", valueModel.InventoryId));
                         command.Parameters.Add(new SqlParameter("@RowNum", valueModel.RowNum));
-                        command.Parameters.Add(new SqlParameter("@CreatedBy", valueModel.CreatedBy));
-                        command.Parameters.Add(new SqlParameter("@CreatedAt", valueModel.CreatedAt));
+                        
                         command.Parameters.Add(new SqlParameter("@CustomId", valueModel.CustomId));
                         command.Parameters.Add(new SqlParameter("@Singleline1", valueModel.Singleline1));
                         command.Parameters.Add(new SqlParameter("@Singleline2", valueModel.Singleline2));

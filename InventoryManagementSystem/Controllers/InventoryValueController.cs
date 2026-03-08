@@ -45,9 +45,9 @@ namespace InventoryManagementSystem.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] RowValueViewModel rowValue)
+        public async Task<IActionResult> Save([FromBody] RowValueViewModel updateModel)
         {
-            var updateModelResult = await _inventoryValueManager.Update(rowValue);
+            var updateModelResult = await _inventoryValueManager.Update(updateModel);
             if (updateModelResult.Success)
             {
                 return Ok(updateModelResult);

@@ -59,49 +59,76 @@
                             @switch (field.TypeId)
                             {
                                 case (int)DataTypeEnum.Singleline1:
-                                    <input class="form-control" asp-for="MainInfo.Singleline1" />
+                                    <input class="form-control" id="singleline1" value="@Model.MainInfo.Singleline1" />
                                     break;
                                 case (int)DataTypeEnum.Singleline2:
-                                    <input class="form-control" asp-for="MainInfo.Singleline2" />
+                                    <input class="form-control" id="singleline2" value="@Model.MainInfo.Singleline2" />
                                     break;
                                 case (int)DataTypeEnum.Singleline3:
-                                    <input class="form-control" asp-for="MainInfo.Singleline3" />
+                                    <input class="form-control" id="singleline3" value="@Model.MainInfo.Singleline3" />
                                     break;
                                 case (int)DataTypeEnum.Multiline1:
-                                    <textarea class="form-control" rows="3" asp-for="MainInfo.Multiline1"></textarea>
+                                    <textarea class="form-control" rows="3" id="multiline1">@Model.MainInfo.Multiline1</textarea>
                                     break;
                                 case (int)DataTypeEnum.Multiline2:
-                                    <textarea class="form-control" rows="3" asp-for="MainInfo.Multiline2"></textarea>
+                                    <textarea class="form-control" rows="3" id="multiline2">@Model.MainInfo.Multiline2</textarea>
                                     break;
                                 case (int)DataTypeEnum.Multiline3:
-                                    <textarea class="form-control" rows="3" asp-for="MainInfo.Multiline3"></textarea>
+                                    <textarea class="form-control" rows="3" id="multiline3">@Model.MainInfo.Multiline3</textarea>
                                     break;
                                 case (int)DataTypeEnum.Num1:
-                                    <input type="number" class="form-control" asp-for="MainInfo.Num1" />
+                                    <input type="number" class="form-control" id="num1" value="@Model.MainInfo.Num1" />
                                     break;
                                 case (int)DataTypeEnum.Num2:
-                                    <input type="number" class="form-control" asp-for="MainInfo.Num2" />
+                                    <input type="number" class="form-control" id="num2" value="@Model.MainInfo.Num2" />
                                     break;
                                 case (int)DataTypeEnum.Num3:
-                                    <input type="number" class="form-control" asp-for="MainInfo.Num3" />
+                                    <input type="number" class="form-control" id="num3" value="@Model.MainInfo.Num3" />
                                     break;
                                 case (int)DataTypeEnum.Check1:
-                                    <div class="form-check"> <input class="form-check-input" asp-for="MainInfo.Check1" /> </div>
+                                    <div class="form-check">
+                                        @if (Model.MainInfo.Check1 != null && (Model.MainInfo.Check1 ?? false))
+                                        {
+                                            <input type="checkbox" class="form-check-input" id="check1" checked />
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" class="form-check-input" id="check1" />
+                                        }
+                                    </div>
                                     break;
                                 case (int)DataTypeEnum.Check2:
-                                    <div class="form-check"> <input class="form-check-input" asp-for="MainInfo.Check2" /> </div>
+                                    <div class="form-check">
+                                        @if (Model.MainInfo.Check2 != null && (Model.MainInfo.Check2 ?? false))
+                                        {
+                                            <input type="checkbox" class="form-check-input" id="check2" checked/>
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" class="form-check-input" id="check2" />
+                                        }
+                                    </div>
                                     break;
                                 case (int)DataTypeEnum.Check3:
-                                    <div class="form-check"> <input class="form-check-input" asp-for="MainInfo.Check3" /> </div>
+                                    <div class="form-check">
+                                        @if (Model.MainInfo.Check3 != null && (Model.MainInfo.Check3 ?? false))
+                                        {
+                                            <input type="checkbox" class="form-check-input" id="check3" checked/>
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" class="form-check-input" id="check3" />
+                                        }
+                                    </div>
                                     break;
                                 case (int)DataTypeEnum.Datetime1:
-                                    <input type="datetime-local" class="form-control" asp-for="MainInfo.Datetime1" />
+                                    <input type="datetime-local" class="form-control" id="datetime1" value="@Model.MainInfo.Datetime1" />
                                     break;
                                 case (int)DataTypeEnum.Datetime2:
-                                    <input type="datetime-local" class="form-control" asp-for="MainInfo.Datetime2" />
+                                    <input type="datetime-local" class="form-control" id="datetime2" value="@Model.MainInfo.Datetime2" />
                                     break;
                                 case (int)DataTypeEnum.Datetime3:
-                                    <input type="datetime-local" class="form-control" asp-for="MainInfo.Datetime3" />
+                                    <input type="datetime-local" class="form-control" id="datetime3" value="@Model.MainInfo.Datetime3" />
                                     break;
                                 case (int)DataTypeEnum.CreatedBy:
                                     <span>@Model.MainInfo.CreatedBy</span>
@@ -114,7 +141,7 @@
                     </div>
                 }
                 <div class="mt-4 d-flex justify-content-end"> 
-                    <button type="submit" class="btn btn-primary me-2"> Save </button> 
+                    <button type="submit" class="btn btn-primary me-2" id="updateBtn"> Save </button> 
                     <a class="btn btn-outline-secondary"> Cancel </a> 
                 </div>
 
@@ -122,3 +149,51 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#updateBtn').click(function() {
+                const token = localStorage.getItem('authToken');
+                let inventoryId = @Model.BasicInfo.Id;
+
+                let updateModel = {
+                    id: @Model.MainInfo.Id,
+                    singleline1: $('#singleline1').val(),
+                    singleline2: $('#singleline2').val(),
+                    singleline3: $('#singleline3').val(),
+                    multiline1: $('#multiline1').val(),
+                    multiline2: $('#multiline2').val(),
+                    multiline3: $('#multiline3').val(),
+                    num1: $('#num1').val(),
+                    num2: $('#num2').val(),
+                    num3: $('#num3').val(),
+                    check1: $('#check1').prop('checked'),
+                    check2: $('#check2').prop('checked'),
+                    check3: $('#check3').prop('checked'),
+                    datetime1: $('#datetime1').val(),
+                    datetime2: $('#datetime2').val(),
+                    datetime3: $('#datetime3').val(),
+                };
+
+                $.ajax({
+                    url: '@Url.Action("Save", "InventoryValue")',
+                    contentType: 'application/json',
+                    headers: {'Authorization': 'Bearer ' + token},
+                    method: 'POST',
+                    data:JSON.stringify(updateModel),
+                    success: function (response) {
+                        if(response.success) {
+                            window.location.href = '@Url.Action("Index", "Inventory")'+'?inventoryId='+inventoryId;
+                        }
+                    },
+                    error: function (error) {
+                        console.log('Failed to update value.' + error);
+                        $('body').prepend('<div class="alert alert-danger" role="alert">Failed to update value. Please try again. '+error.message+'</div>');
+                    }
+
+                });
+
+            });
+        });
+    </script>
+}

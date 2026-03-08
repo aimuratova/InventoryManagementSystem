@@ -1,7 +1,8 @@
 ﻿$(document).ready(function () { 
     $('#addValueButton').click(function () {
         let inputs = $('.addValue');
-        const inventoryId = $(this).data('inventoryId');
+        const inventoryId = $(this).data('inventoryid');
+        const token = localStorage.getItem('authToken');
 
         let listObject = []
 
