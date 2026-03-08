@@ -36,14 +36,6 @@ namespace InventoryManagementSystem.Controllers
             return View(model);
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpGet]
-        public async Task<IActionResult> GetAccessForValue(int valueId)
-        {
-            // TODO: implement logic here
-            return Ok(true);
-        }
-
         [HttpGet]
         public async Task<IActionResult> Edit(int id, int inventoryId)
         {
@@ -52,19 +44,30 @@ namespace InventoryManagementSystem.Controllers
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost]
+        public async Task<IActionResult> Save([FromBody] RowValueViewModel rowValue)
+        {
+            var updateModelResult = await _inventoryValueManager.Update(rowValue);
+            if (updateModelResult.Success)
+            {
+                return Ok(updateModelResult);
+            }
+            return BadRequest(updateModelResult);
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete]
         public async Task<IActionResult> Delete(int valueId)
         {
-            //var result = await _inventoryValueManager.Delete(inventoryId);
-            //if (result.Success)
-            //{
-            //    return Ok(result);
-            //}
-            //else
-            //{
-            //    return BadRequest(result.Message);
-            //}
-            return Ok(new { Success = true });
+            var result = await _inventoryValueManager.Delete(valueId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result.Message);
+            }
         }
     }
 }

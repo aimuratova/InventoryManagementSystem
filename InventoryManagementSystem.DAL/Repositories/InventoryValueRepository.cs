@@ -59,6 +59,21 @@ namespace InventoryManagementSystem.DAL.Repositories
             }
         }
 
+        public async Task Delete(int valueId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand("[dbo].[spDeleteInventoryItemValue]", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new SqlParameter("@Id", valueId));
+
+                    await connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
         public async Task<InventoryItemValueModel> GetInventoryValueById(int valueId)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -96,6 +111,56 @@ namespace InventoryManagementSystem.DAL.Repositories
                 }
             }
             return dataTable;
+        }
+
+        public async Task<ResultDbModel> Update(InventoryItemValueModel valueModel)
+        {
+            var updateResult = new ResultDbModel();
+            try
+            {
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    using (var command = new SqlCommand("dbo.[spUpdateInventoryValue]", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        command.Parameters.Add(new SqlParameter("Id", valueModel.Id));
+                        command.Parameters.Add(new SqlParameter("@InventoryId", valueModel.InventoryId));
+                        command.Parameters.Add(new SqlParameter("@RowNum", valueModel.RowNum));
+                        command.Parameters.Add(new SqlParameter("@CreatedBy", valueModel.CreatedBy));
+                        command.Parameters.Add(new SqlParameter("@CreatedAt", valueModel.CreatedAt));
+                        command.Parameters.Add(new SqlParameter("@CustomId", valueModel.CustomId));
+                        command.Parameters.Add(new SqlParameter("@Singleline1", valueModel.Singleline1));
+                        command.Parameters.Add(new SqlParameter("@Singleline2", valueModel.Singleline2));
+                        command.Parameters.Add(new SqlParameter("@Singleline3", valueModel.Singleline3));
+                        command.Parameters.Add(new SqlParameter("@Multiline1", valueModel.Multiline1));
+                        command.Parameters.Add(new SqlParameter("@Multiline2", valueModel.Multiline2));
+                        command.Parameters.Add(new SqlParameter("@Multiline3", valueModel.Multiline3));
+                        command.Parameters.Add(new SqlParameter("@Num1", valueModel.Num1));
+                        command.Parameters.Add(new SqlParameter("@Num2", valueModel.Num2));
+                        command.Parameters.Add(new SqlParameter("@Num3", valueModel.Num3));
+                        command.Parameters.Add(new SqlParameter("@Check1", valueModel.Check1));
+                        command.Parameters.Add(new SqlParameter("@Check2", valueModel.Check2));
+                        command.Parameters.Add(new SqlParameter("@Check3", valueModel.Check3));
+                        command.Parameters.Add(new SqlParameter("@Datetime1", valueModel.Datetime1));
+                        command.Parameters.Add(new SqlParameter("@Datetime2", valueModel.Datetime2));
+                        command.Parameters.Add(new SqlParameter("@Datetime3", valueModel.Datetime3));
+
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+
+                updateResult.IsUpdated = true;
+            }
+            catch (Exception ex) 
+            {
+                updateResult.IsUpdated = false;
+                updateResult.ErrorMessage = ex.Message;
+            }
+
+            return updateResult;
         }
     }
 }

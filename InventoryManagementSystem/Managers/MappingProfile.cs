@@ -37,7 +37,8 @@ namespace InventoryManagementSystem.Managers
 
             CreateMap<FieldTypeModel, FieldTypeViewModel>();
 
-            CreateMap<InventoryItemValueModel, RowValueViewModel>();
+            CreateMap<InventoryItemValueModel, RowValueViewModel>()
+                .ReverseMap();
         }
     }
 }

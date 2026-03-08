@@ -115,5 +115,18 @@ namespace InventoryManagementSystem.Managers
 
             return result;
         }
+
+        public async Task<ResultModel> Delete(int valueId)
+        {
+            return await _inventoryValueService.Delete(valueId);
+        }
+
+        public async Task<ResultModel> Update(RowValueViewModel rowValue)
+        {
+            var updateModel = _mapper.Map<InventoryItemValueModel>(rowValue);
+            var result = await _inventoryValueService.Update(updateModel);
+
+            return result;
+        }
     }
 }

@@ -2,6 +2,7 @@
 using InventoryManagementSystem.BLL.Models;
 using InventoryManagementSystem.DAL.Interfaces;
 using InventoryManagementSystem.DAL.Models;
+using InventoryManagementSystem.DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -24,6 +25,23 @@ namespace InventoryManagementSystem.BLL.Services
             await _valueRepository.AddValues(value);
         }
 
+        public async Task<ResultModel> Delete(int valueId)
+        {
+            var result = new ResultModel();
+            if (valueId == 0)
+            {
+                result.Success = false;
+                result.Message = "Id not provided";
+            }
+            else
+            {
+                await _valueRepository.Delete(valueId);
+                result.Success = true;
+            }
+
+            return result;
+        }
+
         public async Task<InventoryItemValueModel> GetInventoryValueById(int valueId)
         {
             var result = await _valueRepository.GetInventoryValueById(valueId);
@@ -35,6 +53,32 @@ namespace InventoryManagementSystem.BLL.Services
             var resultDt = await _valueRepository.GetInventoryValuesById(inventoryId);
 
             return resultDt;
+        }
+
+        public async Task<ResultModel> Update(InventoryItemValueModel updateModel)
+        {
+            var result = new ResultModel();
+
+            if (updateModel != null && updateModel.Id > 0)
+            {
+                var updateResult = await _valueRepository.Update(updateModel);
+                if (updateResult.IsUpdated)
+                {
+                    result.Success = true;
+                }
+                else
+                {
+                    result.Success = false;
+                    result.Message = updateResult.ErrorMessage;
+                }
+            }
+            else
+            {
+                result.Success = false;
+                result.Message = "Unable to update empty model";
+            }
+
+            return result;
         }
     }
 }

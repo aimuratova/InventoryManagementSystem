@@ -13,5 +13,7 @@ namespace InventoryManagementSystem.DAL.Interfaces
         Task<DataTable> GetInventoryValuesById(int inventoryId);
         Task AddValues(InventoryItemValueModel value);
         Task<InventoryItemValueModel> GetInventoryValueById(int valueId);
+        Task Delete(int valueId);
+        Task<ResultDbModel> Update(InventoryItemValueModel updateModel);
     }
 }
