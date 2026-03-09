@@ -43,55 +43,6 @@
 <div class="container-fluid full-height d-flex flex-column">
     <div class="row flex-grow-1">
         <partial name="Inventory/_Info" model="Model.BasicInfo"  />
-@* 
-        <div class="col-md-3 left-panel p-4 scrollable">
-            <h4 class="mb-4">Inventory Details</h4>
-            <div class="mt-3 text-end">
-                <a href="@string.Format("/{0}/{1}?inventoryId={2}", "Inventory", "Index", Model.Id)"
-                   class="btn btn-outline-secondary btn-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
-                    </svg>
-                </a>
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label text-muted">Title</label>
-                <div class="fw-bold" id="inventoryTitle">@Model.Title</div>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label text-muted">Category</label>
-                <div class="fw-bold" id="categoryTitle">@Model.CategoryTitle</div>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label text-muted">Access Status</label>
-                @if (Model.IsPublic)
-                {
-                    <span class="badge bg-success">Public</span>
-                }
-                else
-                {
-                    <span class="badge bg-secondary">Private</span>
-                }
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label text-muted">Author</label>
-                <div id="authorTitle">@Model.CreatedBy</div>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label text-muted">Created Date</label>
-                <div id="createDateTitle">@Model.CreatedAt.ToShortDateString()</div>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label text-muted">Description</label>
-                <div id="descriptionTitle">@Html.Raw(Markdown.ToHtml(Model.Description))</div>
-            </div>
-        </div> *@
 
         <div class="col-md-9 p-4 scrollable">
             <div class="d-flex align-items-start mb-4 gap-2">
@@ -164,140 +115,98 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-                        <div class="card shadow-sm">
-                            <div class="card-header bg-white">
-                                <h5 class="mb-0">Fields Table</h5>
-                            </div>
-
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <div class="card shadow-sm mb-3">
-                                        <div class="card-body d-flex gap-2">
-                                            <button class="btn btn-sm btn-outline-success me-2" type="button" id="btnAddField">
-                                                <i class="bi bi-plus-lg me-2"></i>
-                                                Add Field
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger me-2" type="button" id="btnDeleteSelected">
-                                                <i class="bi bi-trash3 me-2"></i>
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <table class="table table-bordered align-middle">
-                                        <thead class="table text-center">
-                                            <tr>
-                                                <th>
-                                                    <input type="checkbox" id="selectAll" />
-                                                </th>
-                                                <th>#</th>
-                                                <th>Field Type</th>
-                                                <th>Data Type</th>
-                                                <th>Title</th>
-                                                <th>Description</th>
-                                                <th>IsDisplayed</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody id="sortableFields">
-                                            @if (Model.Fields != null && Model.Fields.Count > 0)
-                                            {
-                                                @foreach (var field in Model.Fields)
-                                                {
-                                                    <tr data-id="@field.Id">
-                                                        <td class="text-center">
-                                                            <input type="checkbox" class="row-checkbox" />
-                                                        </td>
-                                                        <td class="order-num">@field.OrderNum
-                                                            <input type="hidden"
-                                                                   name="Fields[@field.Id].OrderNum"
-                                                                   value="@field.OrderNum"
-                                                                   class="order-input" />
-                                                        </td>
-                                                        <td>
-                                                            <select class="form-select fieldType"
-                                                                    name="Fields[@field.Id].TypeId">
-                                                            @foreach (var type in Model.FieldTypeOptions)
-                                                                {
-                                                                <option value="@type.Id" selected="@(type.Id == field.TypeId)" data-datatype="@type.DataType">
-                                                                        @type.Title
-                                                                    </option>
-                                                                }
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" disabled name="Fields[@field.Id].DataType" class="form-control dataTypeInput" value="@field.DataType" />
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" name="Fields[@field.Id].Title"
-                                                                   value="@field.Title"
-                                                                   class="form-control" />
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" name="Fields[@field.Id].Description"
-                                                                   value="@field.Description"
-                                                                   class="form-control" />
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <input type="checkbox"
-                                                                   name="Fields[@field.Id].IsDisplayed"
-                                                                   value="true"
-                                                                   @(field.IsDisplayed ? "checked" : "") />
-                                                        </td>
-                                                    </tr>
-
-                                                }
-                                            }
-                                        </tbody>
-                                    </table>
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Fields Table</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <div class="card shadow-sm mb-3">
+                                   <div class="card-body d-flex gap-2">
+                                       <button class="btn btn-sm btn-outline-success me-2" type="button" id="btnAddField">
+                                           <i class="bi bi-plus-lg me-2"></i>
+                                           Add Field
+                                       </button>
+                                       <button class="btn btn-sm btn-outline-danger me-2" type="button" id="btnDeleteSelected">
+                                           <i class="bi bi-trash3 me-2"></i>
+                                           Delete
+                                       </button>
+                                   </div>
                                 </div>
 
+                                <table class="table table-bordered align-middle">
+                                    <thead class="table text-center">
+                                       <tr>
+                                           <th>
+                                               <input type="checkbox" id="selectAll" />
+                                           </th>
+                                           <th>#</th>
+                                           <th>Field Type</th>
+                                           <th>Data Type</th>
+                                           <th>Title</th>
+                                           <th>Description</th>
+                                           <th>IsDisplayed</th>
+                                       </tr>
+                                    </thead>
+
+                                    <tbody id="sortableFields">
+                                       @if (Model.Fields != null && Model.Fields.Count > 0)
+                                       {
+                                           @foreach (var field in Model.Fields)
+                                           {
+                                               <tr data-id="@field.Id">
+                                                   <td class="text-center">
+                                                       <input type="checkbox" class="row-checkbox" />
+                                                   </td>
+                                                   <td class="order-num">@field.OrderNum
+                                                       <input type="hidden"
+                                                              name="Fields[@field.Id].OrderNum"
+                                                              value="@field.OrderNum"
+                                                              class="order-input" />
+                                                   </td>
+                                                   <td>
+                                                       <select class="form-select fieldType"
+                                                               name="Fields[@field.Id].TypeId">
+                                                       @foreach (var type in Model.FieldTypeOptions)
+                                                           {
+                                                           <option value="@type.Id" selected="@(type.Id == field.TypeId)" data-datatype="@type.DataType">
+                                                                   @type.Title
+                                                               </option>
+                                                           }
+                                                       </select>
+                                                   </td>
+                                                   <td>
+                                                       <input type="text" disabled name="Fields[@field.Id].DataType" class="form-control dataTypeInput" value="@field.DataType" />
+                                                   </td>
+                                                   <td>
+                                                       <input type="text" name="Fields[@field.Id].Title"
+                                                              value="@field.Title"
+                                                              class="form-control" />
+                                                   </td>
+                                                   <td>
+                                                       <input type="text" name="Fields[@field.Id].Description"
+                                                              value="@field.Description"
+                                                              class="form-control" />
+                                                   </td>
+                                                   <td class="text-center">
+                                                       <input type="checkbox"
+                                                              name="Fields[@field.Id].IsDisplayed"
+                                                              value="true"
+                                                              @(field.IsDisplayed ? "checked" : "") />
+                                                   </td>
+                                               </tr>
+
+                                           }
+                                       }
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
+                </div>
                 <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                        <div class="card shadow-sm">
-                            <div class="card-header bg-white">
-                                <h5 class="mb-0">Values Table</h5>
-                            </div>
-
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered align-middle">
-                                        <thead class="table text-center">
-                                            <tr>
-                                                @if (Model.ValuesDT != null && Model.ValuesDT.Columns != null)
-                                                {
-                                                    @foreach (DataColumn column in Model.ValuesDT.Columns)
-                                                    {
-                                                        <th>@column.ColumnName</th>
-                                                    }
-                                                }
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            @if (Model.ValuesDT != null && Model.ValuesDT.Rows != null)
-                                            {
-                                                @foreach (DataRow stock in Model.ValuesDT.Rows)
-                                                {
-                                                    <tr>
-                                                        @foreach (DataColumn column in Model.ValuesDT.Columns)
-                                                        {
-                                                            <td>@stock[column]</td>
-                                                        }
-                                                    </tr>
-                                                }
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="mt-3">
-                                    <button class="btn btn-primary">Add New Value</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <partial name="_Value" model="Model" />
+                </div>                        
                 <div class="tab-pane fade" id="access-tab-pane" role="tabpanel" aria-labelledby="access-tab" tabindex="0">
                     <div class="card shadow-sm">
                         <div class="card-header bg-white">
@@ -351,53 +260,51 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="custom-tab-pane" role="tabpanel" aria-labelledby="custom-tab" tabindex="0">
-                        <div class="card shadow-sm">
-                            <div class="card-header bg-white">
-                                <h5 class="mb-0">Custom ID</h5>
-                            </div>
-                            <div class="card-body"></div>
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Custom ID</h5>
                         </div>
-                    </div>
+                        <div class="card-body"></div>
+                    </div>                
+                </div>
                 <div class="tab-pane fade" id="discussion-tab-pane" role="tabpanel" aria-labelledby="discussion-tab" tabindex="0">
-                        <div class="card shadow-sm">
-                            <div class="card-header bg-white">
-                                <h5 class="mb-0">Comments</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="col-12">
-                                    <div class="list-group">
-                                        <a href="#" class="list-group-item list-group-item-action">
-                                            <div class="d-flex w-100 justify-content-between">
-                                                <h5 class="mb-1">Comment title</h5>
-                                                <small>3 days ago</small>
-                                            </div>
-                                            <p class="mb-1">Comment content goes here. This is a sample comment.</p>
-                                            <small>By User123</small>
-                                        </a>
-                                        <a href="#" class="list-group-item list-group-item-action">
-                                            <div class="d-flex w-100 justify-content-between">
-                                                <h5 class="mb-1">Comment title</h5>
-                                                <small>3 days ago</small>
-                                            </div>
-                                            <p class="mb-1">Comment content goes here. This is a sample comment.</p>
-                                            <small>By User123</small>
-                                        </a>
-                                    </div>
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Comments</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="col-12">
+                                <div class="list-group">
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">Comment title</h5>
+                                            <small>3 days ago</small>
+                                        </div>
+                                        <p class="mb-1">Comment content goes here. This is a sample comment.</p>
+                                        <small>By User123</small>
+                                    </a>
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">Comment title</h5>
+                                            <small>3 days ago</small>
+                                        </div>
+                                        <p class="mb-1">Comment content goes here. This is a sample comment.</p>
+                                        <small>By User123</small>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
                 <div class="tab-pane fade" id="stats-tab-pane" role="tabpanel" aria-labelledby="stats-tab" tabindex="0">
-                        <div class="card shadow-sm">
-                            <div class="card-header bg-white">
-                                <h5 class="mb-0">Statistics/Aggregation</h5>
-                            </div>
-                            <div class="card-body"></div>
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Statistics/Aggregation</h5>
                         </div>
+                        <div class="card-body"></div>
                     </div>
-            
-            </div>  
-            
+                </div>            
+            </div>              
         </div>            
     </div>
 </div>
@@ -668,4 +575,5 @@
             });
         }
     </script>
+    <script src="~/js/valuescript.js"></script>
 }

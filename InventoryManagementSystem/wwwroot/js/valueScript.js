@@ -27,7 +27,7 @@
         });
 
         $.ajax({
-            url: 'InventoryValue/Add', // Uses the form's action URL
+            url: '/InventoryValue/Add', // Uses the form's action URL
             type: 'POST',
             contentType: 'application/json',
             headers: {
@@ -48,11 +48,11 @@
                 var response = xhr.responseJSON;
 
                 if (response && !response.success) {
-                    $('#errorModalValue').prepend(response.message);
+                    $('#errorModalValue').prepend('<br/>' + response.message);
 
                     $.each(response.errors, function (index, item) {
                         console.log(item);
-                        $('#errorModalValue').prepend(item);
+                        $('#errorModalValue').prepend('<p>' + item + '</p>');
                     });
                 }
             }
