@@ -123,7 +123,7 @@ namespace InventoryManagementSystem.Managers
 
         public async Task<ResultModel> Save(InventoryEditViewModel inventory)
         {
-            var inventoryModel = _mapper.Map<InventoryItemModel>(inventory);
+            var inventoryModel = _mapper.Map<InventoryItemModel>(inventory.BasicInfo);
             var fieldListModel = _mapper.Map<List<InventoryFieldModel>>(inventory.Fields);
 
             var result = await _inventoryService.UpdateInventory(inventoryModel, inventory.SelectedUserIds, fieldListModel);

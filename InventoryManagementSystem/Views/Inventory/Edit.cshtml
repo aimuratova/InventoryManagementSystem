@@ -3,577 +3,582 @@
 @using Markdig;
 @model InventoryEditViewModel;
 @{
-    ViewBag.Title = "Inventory details";
+	ViewBag.Title = "Inventory details";
 }
 @section Styles {
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
 
-        .full-height {
-            height: 100vh;
-        }
+		.full-height {
+			height: 100vh;
+		}
 
-        .container {
-            margin-left: inherit;
-            padding: 0;
-        }
+		.container {
+			margin-left: inherit;
+			padding: 0;
+		}
 
-        .left-panel {
-            background-color: #f8f9fa;
-            border-right: 1px solid #dee2e6;
-        }
+		.left-panel {
+			background-color: #f8f9fa;
+			border-right: 1px solid #dee2e6;
+		}
 
-        .comment-section {
-            border-top: 1px solid #dee2e6;
-            background: #ffffff;
-        }
+		.comment-section {
+			border-top: 1px solid #dee2e6;
+			background: #ffffff;
+		}
 
-        .scrollable {
-            overflow-y: auto;
-        }
-    </style>
+		.scrollable {
+			overflow-y: auto;
+		}
+	</style>
+	<link href="~/css/customid.css" rel="stylesheet" />
 }
 
 <div class="container-fluid full-height d-flex flex-column">
-    <div class="row flex-grow-1">
-        <partial name="Inventory/_Info" model="Model.BasicInfo"  />
+	<div class="row flex-grow-1">
+		<partial name="Inventory/_Info" model="Model.BasicInfo" />
 
-        <div class="col-md-9 p-4 scrollable">
-            <div class="d-flex align-items-start mb-4 gap-2">
-                <h4 class="mb-0">Inventory</h4>
-                <div id="statusText"></div>
-            </div>          
-                    
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-tab-pane" type="button" role="tab" aria-controls="settings-tab-pane" aria-selected="true">General settings</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="false">Fields</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Values</button>
-                </li>       
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="access-tab" data-bs-toggle="tab" data-bs-target="#access-tab-pane" type="button" role="tab" aria-controls="access-tab-pane" aria-selected="false">Access settings</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="custom-tab" data-bs-toggle="tab" data-bs-target="#custom-tab-pane" type="button" role="tab" aria-controls="custom-tab-pane" aria-selected="false">Custom ID</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="discussion-tab" data-bs-toggle="tab" data-bs-target="#discussion-tab-pane" type="button" role="tab" aria-controls="discussion-tab-pane" aria-selected="false">Discussion</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats-tab-pane" type="button" role="tab" aria-controls="stats-tab-pane" aria-selected="false">Statistics/Aggregation</button>
-                </li>
-            </ul>
+		<div class="col-md-9 p-4 scrollable">
+			<div class="d-flex align-items-start mb-4 gap-2">
+				<h4 class="mb-0">Inventory</h4>
+				<div id="statusText"></div>
+			</div>
 
-            <div class="tab-content" id="myTabContent" style="min-height: 50%;">                
-                <div class="tab-pane fade show active" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab" tabindex="0">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">General settings</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row mb-3">
-                                <input type="hidden" value="@Model.BasicInfo.Id" id="idInpt"/>
-                                <div class="col-md-6">
-                                    <label class="form-label text-muted">Title</label>
-                                    <input type="text" class="form-control" name="Title" value="@Model.BasicInfo.Title" id="titleInpt" />
-                                </div>
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+				<li class="nav-item" role="presentation">
+					<button class="nav-link active" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-tab-pane" type="button" role="tab" aria-controls="settings-tab-pane" aria-selected="true">General settings</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="false">Fields</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Values</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="access-tab" data-bs-toggle="tab" data-bs-target="#access-tab-pane" type="button" role="tab" aria-controls="access-tab-pane" aria-selected="false">Access settings</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="custom-tab" data-bs-toggle="tab" data-bs-target="#custom-tab-pane" type="button" role="tab" aria-controls="custom-tab-pane" aria-selected="false">Custom ID</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="discussion-tab" data-bs-toggle="tab" data-bs-target="#discussion-tab-pane" type="button" role="tab" aria-controls="discussion-tab-pane" aria-selected="false">Discussion</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats-tab-pane" type="button" role="tab" aria-controls="stats-tab-pane" aria-selected="false">Statistics/Aggregation</button>
+				</li>
+			</ul>
 
-                                <div class="col-md-6">
-                                    <label class="form-label text-muted">Category</label>
-                                    <select class="form-select selectpicker" id="categorySelect"
-                                            name="CategoryId"
-                                            data-live-search="true"
-                                            data-width="100%">
-                                        @foreach (var category in Model.Categories)
-                                        {
-                                            @if(category.Key == Model.BasicInfo.CategoryId)
-                                            {
-                                                <option value="@category.Key" selected>@category.Value</option>
-                                            }
-                                            else {
-                                                <option value="@category.Key">@category.Value</option>
-                                            }
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label text-muted">Description</label>
-                                <textarea id="descriptionEditor" name="Description" class="form-control" rows="6" >@Model.BasicInfo.Description</textarea>
-                            </div>                                                        
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">Fields Table</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <div class="card shadow-sm mb-3">
-                                   <div class="card-body d-flex gap-2">
-                                       <button class="btn btn-sm btn-outline-success me-2" type="button" id="btnAddField">
-                                           <i class="bi bi-plus-lg me-2"></i>
-                                           Add Field
-                                       </button>
-                                       <button class="btn btn-sm btn-outline-danger me-2" type="button" id="btnDeleteSelected">
-                                           <i class="bi bi-trash3 me-2"></i>
-                                           Delete
-                                       </button>
-                                   </div>
-                                </div>
+			<div class="tab-content" id="myTabContent" style="min-height: 50%;">
+				<div class="tab-pane fade show active" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab" tabindex="0">
+					<div class="card shadow-sm">
+						<div class="card-header bg-white">
+							<h5 class="mb-0">General settings</h5>
+						</div>
+						<div class="card-body">
+							<div class="row mb-3">
+								<input type="hidden" value="@Model.BasicInfo.Id" id="idInpt" />
+								<div class="col-md-6">
+									<label class="form-label text-muted">Title</label>
+									<input type="text" class="form-control" name="Title" value="@Model.BasicInfo.Title" id="titleInpt" />
+								</div>
 
-                                <table class="table table-bordered align-middle">
-                                    <thead class="table text-center">
-                                       <tr>
-                                           <th>
-                                               <input type="checkbox" id="selectAll" />
-                                           </th>
-                                           <th>#</th>
-                                           <th>Field Type</th>
-                                           <th>Data Type</th>
-                                           <th>Title</th>
-                                           <th>Description</th>
-                                           <th>IsDisplayed</th>
-                                       </tr>
-                                    </thead>
+								<div class="col-md-6">
+									<label class="form-label text-muted">Category</label>
+									<select class="form-select selectpicker" id="categorySelect"
+											name="CategoryId"
+											data-live-search="true"
+											data-width="100%">
+										@foreach (var category in Model.Categories)
+										{
+											@if (category.Key == Model.BasicInfo.CategoryId)
+											{
+												<option value="@category.Key" selected>@category.Value</option>
+											}
+											else
+											{
+												<option value="@category.Key">@category.Value</option>
+											}
+										}
+									</select>
+								</div>
+							</div>
+							<div class="mb-3">
+								<label class="form-label text-muted">Description</label>
+								<textarea id="descriptionEditor" name="Description" class="form-control" rows="6">@Model.BasicInfo.Description</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane fade" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+					<div class="card shadow-sm">
+						<div class="card-header bg-white">
+							<h5 class="mb-0">Fields Table</h5>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<div class="card shadow-sm mb-3">
+									<div class="card-body d-flex gap-2">
+										<button class="btn btn-sm btn-outline-success me-2" type="button" id="btnAddField">
+											<i class="bi bi-plus-lg me-2"></i>
+											Add Field
+										</button>
+										<button class="btn btn-sm btn-outline-danger me-2" type="button" id="btnDeleteSelected">
+											<i class="bi bi-trash3 me-2"></i>
+											Delete
+										</button>
+									</div>
+								</div>
 
-                                    <tbody id="sortableFields">
-                                       @if (Model.Fields != null && Model.Fields.Count > 0)
-                                       {
-                                           @foreach (var field in Model.Fields)
-                                           {
-                                               <tr data-id="@field.Id">
-                                                   <td class="text-center">
-                                                       <input type="checkbox" class="row-checkbox" />
-                                                   </td>
-                                                   <td class="order-num">@field.OrderNum
-                                                       <input type="hidden"
-                                                              name="Fields[@field.Id].OrderNum"
-                                                              value="@field.OrderNum"
-                                                              class="order-input" />
-                                                   </td>
-                                                   <td>
-                                                       <select class="form-select fieldType"
-                                                               name="Fields[@field.Id].TypeId">
-                                                       @foreach (var type in Model.FieldTypeOptions)
-                                                           {
-                                                           <option value="@type.Id" selected="@(type.Id == field.TypeId)" data-datatype="@type.DataType">
-                                                                   @type.Title
-                                                               </option>
-                                                           }
-                                                       </select>
-                                                   </td>
-                                                   <td>
-                                                       <input type="text" disabled name="Fields[@field.Id].DataType" class="form-control dataTypeInput" value="@field.DataType" />
-                                                   </td>
-                                                   <td>
-                                                       <input type="text" name="Fields[@field.Id].Title"
-                                                              value="@field.Title"
-                                                              class="form-control" />
-                                                   </td>
-                                                   <td>
-                                                       <input type="text" name="Fields[@field.Id].Description"
-                                                              value="@field.Description"
-                                                              class="form-control" />
-                                                   </td>
-                                                   <td class="text-center">
-                                                       <input type="checkbox"
-                                                              name="Fields[@field.Id].IsDisplayed"
-                                                              value="true"
-                                                              @(field.IsDisplayed ? "checked" : "") />
-                                                   </td>
-                                               </tr>
+								<table class="table table-bordered align-middle">
+									<thead class="table text-center">
+										<tr>
+											<th>
+												<input type="checkbox" id="selectAll" />
+											</th>
+											<th>#</th>
+											<th>Field Type</th>
+											<th>Data Type</th>
+											<th>Title</th>
+											<th>Description</th>
+											<th>IsDisplayed</th>
+										</tr>
+									</thead>
 
-                                           }
-                                       }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                    <partial name="_Value" model="Model" />
-                </div>                        
-                <div class="tab-pane fade" id="access-tab-pane" role="tabpanel" aria-labelledby="access-tab" tabindex="0">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">Access settings</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-check mb-2">
-                                <input type="checkbox"
-                                       class="form-check-input"
-                                       id="isPublicCheckbox"
-                                       name="IsPublic"
-                                       value="@Model.BasicInfo.IsPublic" />
-                                <label class="form-check-label" for="isPublicCheckbox">
-                                    Make Inventory Public (any authenticated user can add items)
-                                </label>
-                            </div>
+									<tbody id="sortableFields">
+										@if (Model.Fields != null && Model.Fields.Count > 0)
+										{
+											@foreach (var field in Model.Fields)
+											{
+												<tr data-id="@field.Id">
+													<td class="text-center">
+														<input type="checkbox" class="row-checkbox" />
+													</td>
+													<td class="order-num">
+														@field.OrderNum
+														<input type="hidden"
+															   name="Fields[@field.Id].OrderNum"
+															   value="@field.OrderNum"
+															   class="order-input" />
+													</td>
+													<td>
+														<select class="form-select fieldType"
+																name="Fields[@field.Id].TypeId">
+															@foreach (var type in Model.FieldTypeOptions)
+															{
+																<option value="@type.Id" selected="@(type.Id == field.TypeId)" data-datatype="@type.DataType">
+																	@type.Title
+																</option>
+															}
+														</select>
+													</td>
+													<td>
+														<input type="text" disabled name="Fields[@field.Id].DataType" class="form-control dataTypeInput" value="@field.DataType" />
+													</td>
+													<td>
+														<input type="text" name="Fields[@field.Id].Title"
+															   value="@field.Title"
+															   class="form-control" />
+													</td>
+													<td>
+														<input type="text" name="Fields[@field.Id].Description"
+															   value="@field.Description"
+															   class="form-control" />
+													</td>
+													<td class="text-center">
+														<input type="checkbox"
+															   name="Fields[@field.Id].IsDisplayed"
+															   value="true"
+															   @(field.IsDisplayed ? "checked" : "") />
+													</td>
+												</tr>
 
-                            <div class="mb-3 d-none" id="userPickerSection">
-                                <label class="form-label text-muted">Add User</label>
-                                <select class="form-select" id="userPicker">
-                                    <option value="">-- Select user --</option>
-                                    @foreach (var user in Model.RegisteredUsers)
-                                    {
-                                        <option value="@user.Id">@user.UserName (@user.Email)</option>
-                                    }
-                                </select>
-                            </div>
+											}
+										}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+					<partial name="_Value" model="Model" />
+				</div>
+				<div class="tab-pane fade" id="access-tab-pane" role="tabpanel" aria-labelledby="access-tab" tabindex="0">
+					<div class="card shadow-sm">
+						<div class="card-header bg-white">
+							<h5 class="mb-0">Access settings</h5>
+						</div>
+						<div class="card-body">
+							<div class="form-check mb-2">
+								@if (Model.BasicInfo.IsPublic)
+								{
+									<input type="checkbox" class="form-check-input" id="isPublicCheckbox" name="IsPublic" checked />
+								}
+								else
+								{
+									<input type="checkbox" class="form-check-input" id="isPublicCheckbox" name="IsPublic" />
+								}
+								<label class="form-check-label" for="isPublicCheckbox">
+									Make Inventory Public (any authenticated user can add items)
+								</label>
+							</div>
 
-                            <!-- Selected Users Display -->
-                            <div class="mb-3" id="userAccessSection">
-                                <label class="form-label text-muted">Users With Access</label>
+							<div class="mb-3 d-none" id="userPickerSection">
+								<label class="form-label text-muted">Add User</label>
+								<select class="form-select" id="userPicker">
+									<option value="">-- Select user --</option>
+									@foreach (var user in Model.RegisteredUsers)
+									{
+										<option value="@user.Id">@user.UserName (@user.Email)</option>
+									}
+								</select>
+							</div>
 
-                                <div id="selectedUsers" class="d-flex flex-wrap gap-2 mb-2">
-                                    @foreach (var user in Model.RegisteredUsers
-                                                                        .Where(u => Model.SelectedUserIds.Contains(u.Id)))
-                                    {
-                                        <div class="btn btn-outline-primary btn-sm user-tag"
-                                             data-id="@user.Id">
-                                            @user.UserName
-                                            <span class="ms-2 remove-user" style="cursor:pointer;">&times;</span>
-                                            <input type="hidden" name="SelectedUserIds" value="@user.Id" />
-                                        </div>
-                                    }
-                                </div>
+							<!-- Selected Users Display -->
+							<div class="mb-3" id="userAccessSection">
+								<label class="form-label text-muted">Users With Access</label>
 
-                                <button type="button" class="btn btn-sm btn-secondary" id="showUserPicker">
-                                    + Add User
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="custom-tab-pane" role="tabpanel" aria-labelledby="custom-tab" tabindex="0">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">Custom ID</h5>
-                        </div>
-                        <div class="card-body"></div>
-                    </div>                
-                </div>
-                <div class="tab-pane fade" id="discussion-tab-pane" role="tabpanel" aria-labelledby="discussion-tab" tabindex="0">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">Comments</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="col-12">
-                                <div class="list-group">
-                                    <a href="#" class="list-group-item list-group-item-action">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <h5 class="mb-1">Comment title</h5>
-                                            <small>3 days ago</small>
-                                        </div>
-                                        <p class="mb-1">Comment content goes here. This is a sample comment.</p>
-                                        <small>By User123</small>
-                                    </a>
-                                    <a href="#" class="list-group-item list-group-item-action">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <h5 class="mb-1">Comment title</h5>
-                                            <small>3 days ago</small>
-                                        </div>
-                                        <p class="mb-1">Comment content goes here. This is a sample comment.</p>
-                                        <small>By User123</small>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="stats-tab-pane" role="tabpanel" aria-labelledby="stats-tab" tabindex="0">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">Statistics/Aggregation</h5>
-                        </div>
-                        <div class="card-body"></div>
-                    </div>
-                </div>            
-            </div>              
-        </div>            
-    </div>
+								<div id="selectedUsers" class="d-flex flex-wrap gap-2 mb-2">
+									@foreach (var user in Model.RegisteredUsers
+																		.Where(u => Model.SelectedUserIds.Contains(u.Id)))
+									{
+										<div class="btn btn-outline-primary btn-sm user-tag"
+											 data-id="@user.Id">
+											@user.UserName
+											<span class="ms-2 remove-user" style="cursor:pointer;">&times;</span>
+											<input type="hidden" name="SelectedUserIds" value="@user.Id" />
+										</div>
+									}
+								</div>
+
+								<button type="button" class="btn btn-sm btn-secondary" id="showUserPicker">
+									+ Add User
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane fade" id="custom-tab-pane" role="tabpanel" aria-labelledby="custom-tab" tabindex="0">
+					<partial name="_CustomID" />
+				</div>
+				<div class="tab-pane fade" id="discussion-tab-pane" role="tabpanel" aria-labelledby="discussion-tab" tabindex="0">
+					<div class="card shadow-sm">
+						<div class="card-header bg-white">
+							<h5 class="mb-0">Comments</h5>
+						</div>
+						<div class="card-body">
+							<div class="col-12">
+								<div class="list-group">
+									<a href="#" class="list-group-item list-group-item-action">
+										<div class="d-flex w-100 justify-content-between">
+											<h5 class="mb-1">Comment title</h5>
+											<small>3 days ago</small>
+										</div>
+										<p class="mb-1">Comment content goes here. This is a sample comment.</p>
+										<small>By User123</small>
+									</a>
+									<a href="#" class="list-group-item list-group-item-action">
+										<div class="d-flex w-100 justify-content-between">
+											<h5 class="mb-1">Comment title</h5>
+											<small>3 days ago</small>
+										</div>
+										<p class="mb-1">Comment content goes here. This is a sample comment.</p>
+										<small>By User123</small>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane fade" id="stats-tab-pane" role="tabpanel" aria-labelledby="stats-tab" tabindex="0">
+					<div class="card shadow-sm">
+						<div class="card-header bg-white">
+							<h5 class="mb-0">Statistics/Aggregation</h5>
+						</div>
+						<div class="card-body"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-    <script>
-        var easyMDE = new EasyMDE({
-            element: document.getElementById("descriptionEditor"),
-            spellChecker: false,
-            placeholder: "Write description using Markdown...",
-            status: false
-        });
+	<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+	<script>
+		var easyMDE = new EasyMDE({
+			element: document.getElementById("descriptionEditor"),
+			spellChecker: false,
+			placeholder: "Write description using Markdown...",
+			status: false
+		});
 
-        var fieldTypeOptions = @Html.Raw(Json.Serialize(Model.FieldTypeOptions));
+		var fieldTypeOptions = @Html.Raw(Json.Serialize(Model.FieldTypeOptions));
 
-        $(document).ready(function () {
+		$(document).ready(function () {
 
-            function toggleUserAccess() {
-                var isPublic = $("#isPublicCheckbox").is(":checked");
+			function toggleUserAccess() {
+				var isPublic = $("#isPublicCheckbox").is(":checked");
 
-                if (isPublic) {
-                    // Clear selected users
-                    $("#selectedUsers").empty();
-                    $("#userAccessSection").hide();
-                } else {
-                    $("#userAccessSection").show();
-                }
-            }
+				if (isPublic) {
+					// Clear selected users
+					$("#selectedUsers").empty();
+					$("#userAccessSection").hide();
+				} else {
+					$("#userAccessSection").show();
+				}
+			}
 
-            // On checkbox change
-            $("#isPublicCheckbox").on("change", function () {
-                toggleUserAccess();
-            });
+			// On checkbox change
+			$("#isPublicCheckbox").on("change", function () {
+				toggleUserAccess();
+			});
 
-            // Run on page load
-            toggleUserAccess();
+			// Run on page load
+			toggleUserAccess();
 
-            // Add new row
-            $("#btnAddField").click(function () {
+			// Add new row
+			$("#btnAddField").click(function () {
 
-                var optionsText = "";
+				var optionsText = "";
 
-                fieldTypeOptions.forEach(function(type) {
-                    // Assuming each type has Id and Title
-                    optionsText += `<option value="${type.id}" data-datatype="${type.dataType}">${type.title}</option>`;
-                });
+				fieldTypeOptions.forEach(function(type) {
+					// Assuming each type has Id and Title
+					optionsText += `<option value="${type.id}" data-datatype="${type.dataType}">${type.title}</option>`;
+				});
 
-                var rowCount = $("#sortableFields tr").length + 1;
+				var rowCount = $("#sortableFields tr").length + 1;
 
-                var newRow = `
-                    <tr>
-                        <td class="text-center">
-                            <input type="checkbox" class="row-checkbox" />
-                        </td>
-                        <td class="order-num">${rowCount}</td>
-                        <td>
-                            <select class="form-select fieldType">${optionsText}
-                            </select>
-                        </td>
-                        <td>
-                            <input type="text" class="form-control dataTypeInput" disabled />
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" />
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" />
-                        </td>
-                        <td class="text-center">
-                            <input type="checkbox" />
-                        </td>
-                    </tr>`;
+				var newRow = `
+					<tr>
+						<td class="text-center">
+							<input type="checkbox" class="row-checkbox" />
+						</td>
+						<td class="order-num">${rowCount}</td>
+						<td>
+							<select class="form-select fieldType">${optionsText}
+							</select>
+						</td>
+						<td>
+							<input type="text" class="form-control dataTypeInput" disabled />
+						</td>
+						<td>
+							<input type="text" class="form-control" />
+						</td>
+						<td>
+							<input type="text" class="form-control" />
+						</td>
+						<td class="text-center">
+							<input type="checkbox" />
+						</td>
+					</tr>`;
 
-                $("#sortableFields").append(newRow);
-            });
-        });
-        $(document).on("change", ".fieldType", function () {
+				$("#sortableFields").append(newRow);
+			});
+		});
+		$(document).on("change", ".fieldType", function () {
 
-            var selectedOption = $(this).find("option:selected");
-            var dataType = selectedOption.data("datatype");
+			var selectedOption = $(this).find("option:selected");
+			var dataType = selectedOption.data("datatype");
 
-            // Find the input in the same row
-            var input = $(this).closest("tr").find(".dataTypeInput");
+			// Find the input in the same row
+			var input = $(this).closest("tr").find(".dataTypeInput");
 
-            input.val(dataType);
-        });
-        $(function () {
+			input.val(dataType);
+		});
+		$(function () {
 
-            // Show dropdown when clicking "Add User"
-            $("#showUserPicker").on("click", function () {
-                $("#userPickerSection").removeClass("d-none");
-                $("#userPicker").focus();
-            });
+			// Show dropdown when clicking "Add User"
+			$("#showUserPicker").on("click", function () {
+				$("#userPickerSection").removeClass("d-none");
+				$("#userPicker").focus();
+			});
 
-            // When user selected from dropdown
-            $("#userPicker").on("change", function () {
+			// When user selected from dropdown
+			$("#userPicker").on("change", function () {
 
-                var userId = $(this).val();
-                var userText = $("#userPicker option:selected").text();
+				var userId = $(this).val();
+				var userText = $("#userPicker option:selected").text();
 
-                if (!userId) return;
+				if (!userId) return;
 
-                // Prevent duplicates
-                if ($(".user-tag[data-id='" + userId + "']").length > 0) {
-                    $(this).val("");
-                    return;
-                }
+				// Prevent duplicates
+				if ($(".user-tag[data-id='" + userId + "']").length > 0) {
+					$(this).val("");
+					return;
+				}
 
-                // Create user tag button
-                var userTag = `
-                    <div class="btn btn-outline-primary btn-sm user-tag"
-                         data-id="${userId}">
-                        ${userText}
-                        <span class="ms-2 remove-user" style="cursor:pointer;">&times;</span>
-                        <input type="hidden" name="SelectedUserIds" value="${userId}" />
-                    </div>
-                `;
+				// Create user tag button
+				var userTag = `
+					<div class="btn btn-outline-primary btn-sm user-tag"
+						 data-id="${userId}">
+						${userText}
+						<span class="ms-2 remove-user" style="cursor:pointer;">&times;</span>
+						<input type="hidden" name="SelectedUserIds" value="${userId}" />
+					</div>
+				`;
 
-                $("#selectedUsers").append(userTag);
+				$("#selectedUsers").append(userTag);
 
-                // Reset and hide picker
-                $(this).val("");
-                $("#userPickerSection").addClass("d-none");
-            });
+				// Reset and hide picker
+				$(this).val("");
+				$("#userPickerSection").addClass("d-none");
+			});
 
-            // Remove user when clicking ×
-            $(document).on("click", ".remove-user", function () {
-                $(this).closest(".user-tag").remove();
-            });
+			// Remove user when clicking ×
+			$(document).on("click", ".remove-user", function () {
+				$(this).closest(".user-tag").remove();
+			});
 
-        });
+		});
 
-        $(document).ready(function() {
-            var saveInterval = 120000;
+		$(document).ready(function() {
+			var saveInterval = 120000;
 
-            function autoSave() {
-                 var statusDiv = $('#statusText');
-                 const token = localStorage.getItem('authToken');
+			function autoSave() {
+				 var statusDiv = $('#statusText');
+				 const token = localStorage.getItem('authToken');
 
-                 var userIds = [];
+				 var userIds = [];
 
-                 $("#selectedUsers .user-tag").each(function () {
-                    userIds.push($(this).data("id"));
-                 });
+				 $("#selectedUsers .user-tag").each(function () {
+					userIds.push($(this).data("id"));
+				 });
 
-                 var fieldsTableData = [];
+				 var fieldsTableData = [];
 
-                // Iterate over each row in the table body
-                $('#sortableFields tr').each(function() {
-                    var $row = $(this);
-                    console.log($row);
-                                        
-                    // Create an object for the row data
-                    var rowObject = {
-                        id: $row.data('id') || 0, // or .val() if needed
-                        orderNum: parseInt($row.find('.order-num').text().trim()),
-                        typeId: parseInt($row.find('.fieldType').val()),
-                        title: $row.find('td:eq(4) input').val(),
-                        description: $row.find('td:eq(5) input').val(),
-                        isDisplayed: $row.find('td:eq(6) input[type="checkbox"]').is(':checked')
-                    };
+				// Iterate over each row in the table body
+				$('#sortableFields tr').each(function() {
+					var $row = $(this);
+					console.log($row);
 
-                    // Push the object into the array
-                    fieldsTableData.push(rowObject);
-                });
+					// Create an object for the row data
+					var rowObject = {
+						id: $row.data('id') || 0, // or .val() if needed
+						orderNum: parseInt($row.find('.order-num').text().trim()),
+						typeId: parseInt($row.find('.fieldType').val()),
+						title: $row.find('td:eq(4) input').val(),
+						description: $row.find('td:eq(5) input').val(),
+						isDisplayed: $row.find('td:eq(6) input[type="checkbox"]').is(':checked')
+					};
 
-                 var formData = {
-                     id:$('#idInpt').val(),
-                     title:$('#titleInpt').val(),
-                     categoryId:$('#categorySelect').val(),
-                     description:easyMDE.value(),
-                     selectedUserIds:userIds,
-                     isPublic:$('#isPublicCheckbox').prop("checked"),
-                     fields: fieldsTableData
-                 };
+					// Push the object into the array
+					fieldsTableData.push(rowObject);
+				});
 
-                 statusDiv.removeClass().addClass('badge bg-secondary rounded-pill small mt-1').text('Saving changes...').show().fadeIn();
-                 
-                 console.log(formData);
+				 var formData = {
+					 basicInfo: {
+						 id:$('#idInpt').val(),
+						 title:$('#titleInpt').val(),
+						 categoryId:$('#categorySelect').val(),
+						 description:easyMDE.value(),
+						 isPublic:$('#isPublicCheckbox').prop("checked"),
+					 },
+					 selectedUserIds:userIds,
+					 fields: fieldsTableData
+				 };
 
-                 $.ajax({
-                    url: 'Save', // Uses the form's action URL
-                    type: 'POST',
-                    contentType: 'application/json',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    },
-                    data: JSON.stringify(formData),
-                    success: function (response) {
-                        if (response.success) {
-                            statusDiv.removeClass().addClass('badge bg-success rounded-pill small mt-1').text('Synced').delay(2000).show().fadeIn();
-                        } else {
-                            statusDiv.removeClass().addClass('badge bg-danger rounded-pill small mt-1').text('Error:' + response.message).delay(3000).show().fadeIn();
-                        }
-                    },
-                    error: function (error) {
-                        statusDiv.removeClass().addClass('badge bg-danger rounded-pill small mt-1').text('Error:' + error.responseText).delay(3000).show().fadeIn();
-                        console.error(error);
-                    }
-                 });
+				 statusDiv.removeClass().addClass('badge bg-secondary rounded-pill small mt-1').text('Saving changes...').show().fadeIn();
 
-            }
+				 console.log(formData);
 
-            setInterval(autoSave, saveInterval);
-        });
-        $(function () {
+				 $.ajax({
+					url: 'Save', // Uses the form's action URL
+					type: 'POST',
+					contentType: 'application/json',
+					headers: {
+						'Authorization': 'Bearer ' + token
+					},
+					data: JSON.stringify(formData),
+					success: function (response) {
+						if (response.success) {
+							statusDiv.removeClass().addClass('badge bg-success rounded-pill small mt-1').text('Synced').delay(2000).show().fadeIn();
+						} else {
+							statusDiv.removeClass().addClass('badge bg-danger rounded-pill small mt-1').text('Error:' + response.message).delay(3000).show().fadeIn();
+						}
+					},
+					error: function (error) {
+						statusDiv.removeClass().addClass('badge bg-danger rounded-pill small mt-1').text('Error:' + error.responseText).delay(3000).show().fadeIn();
+						console.error(error);
+					}
+				 });
 
-            $("#sortableFields").sortable({
-                helper: fixWidthHelper,
-                update: function (event, ui) {
-                    updateOrderNumbers();
-                }
-            }).disableSelection();
+			}
 
+			setInterval(autoSave, saveInterval);
+		});
+		$(function () {
 
-            function updateOrderNumbers() {
-                $("#sortableFields tr").each(function (index) {
-
-                    var newOrder = index + 1;
-
-                    // Update visible number
-                    $(this).find(".order-num").text(newOrder);
-
-                    // If you have hidden input for posting to backend:
-                    $(this).find(".order-input").val(newOrder);
-                });
-            }
-
-            // Keeps column width while dragging
-            function fixWidthHelper(e, ui) {
-                ui.children().each(function () {
-                    $(this).width($(this).width());
-                });
-                return ui;
-            }
-
-        });
-        
-        $(document).on("click", "#btnDeleteSelected", function () {
-
-            var checkedRows = $(".row-checkbox:checked");
-
-            if (checkedRows.length === 0) {
-                alert("Please select at least one row to delete.");
-                return;
-            }
-
-            if (!confirm("Are you sure you want to delete selected fields?"))
-                return;
-
-            checkedRows.closest("tr").remove();
-
-            updateOrderNumbers();
-        });
+			$("#sortableFields").sortable({
+				helper: fixWidthHelper,
+				update: function (event, ui) {
+					updateOrderNumbers();
+				}
+			}).disableSelection();
 
 
-        // Select / Deselect All
-        $(document).on("change", "#selectAll", function () {
-            $(".row-checkbox").prop("checked", $(this).prop("checked"));
-        });
+			function updateOrderNumbers() {
+				$("#sortableFields tr").each(function (index) {
+
+					var newOrder = index + 1;
+
+					// Update visible number
+					$(this).find(".order-num").text(newOrder);
+
+					// If you have hidden input for posting to backend:
+					$(this).find(".order-input").val(newOrder);
+				});
+			}
+
+			// Keeps column width while dragging
+			function fixWidthHelper(e, ui) {
+				ui.children().each(function () {
+					$(this).width($(this).width());
+				});
+				return ui;
+			}
+
+		});
+
+		$(document).on("click", "#btnDeleteSelected", function () {
+
+			var checkedRows = $(".row-checkbox:checked");
+
+			if (checkedRows.length === 0) {
+				alert("Please select at least one row to delete.");
+				return;
+			}
+
+			if (!confirm("Are you sure you want to delete selected fields?"))
+				return;
+
+			checkedRows.closest("tr").remove();
+
+			updateOrderNumbers();
+		});
 
 
-        // Recalculate order numbers after delete
-        function updateOrderNumbers() {
-            $("#sortableFields tr").each(function (index) {
-                $(this).find(".order-num").text(index + 1);
-            });
-        }
-    </script>
-    <script src="~/js/valuescript.js"></script>
+		// Select / Deselect All
+		$(document).on("change", "#selectAll", function () {
+			$(".row-checkbox").prop("checked", $(this).prop("checked"));
+		});
+
+
+		// Recalculate order numbers after delete
+		function updateOrderNumbers() {
+			$("#sortableFields tr").each(function (index) {
+				$(this).find(".order-num").text(index + 1);
+			});
+		}
+	</script>
+	<script src="~/js/valuescript.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+	<script src="~/js/customid.js"></script>
 }

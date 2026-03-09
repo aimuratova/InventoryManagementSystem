@@ -1,0 +1,17 @@
+﻿.builder-area {
+	min-height: 120px;
+	background: #fafafa;
+}
+
+.builder-element {
+	padding: 6px 10px;
+	margin: 4px;
+	display: inline-block;
+	background: #e9ecef;
+	border-radius: 6px;
+	cursor: move;
+}
+
+.element-item {
+	cursor: grab;
+}
