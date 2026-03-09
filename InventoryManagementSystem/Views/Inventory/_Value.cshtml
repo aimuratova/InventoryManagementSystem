@@ -32,7 +32,7 @@
                                 @foreach (DataColumn column in Model.ValuesDT.Columns)
                                 {
                                     if (!string.Equals(column.ColumnName, "Id", StringComparison.InvariantCultureIgnoreCase)) {
-                                        <td>@stock[column]</td>
+                                        <td class="bigtext">@stock[column]</td>
                                     }                                
                                 }
                             </tr>

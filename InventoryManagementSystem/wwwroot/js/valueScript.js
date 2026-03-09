@@ -36,18 +36,25 @@
             data: JSON.stringify(listObject),
             success: function (response) {
                 window.location.reload();
-            },
-            error: function (error) {
-                $('#errorModalValue').prepend('Failed to add value. Please try again.').show();
+            },            
+            error: function (xhr, status, error) {
 
-                if (error.message) {
-                    $('#errorModalValue').prepend(error.message);
+                $('#errorModalValue')
+                    .prepend('Failed to add value. Please try again.')
+                    .show();
+
+                console.log(xhr);
+
+                var response = xhr.responseJSON;
+
+                if (response && !response.success) {
+                    $('#errorModalValue').prepend(response.message);
+
+                    $.each(response.errors, function (index, item) {
+                        console.log(item);
+                        $('#errorModalValue').prepend(item);
+                    });
                 }
-
-                $.each(error.errors, function (index, item) {
-                    console.log(item);
-                    $('#errorModalValue').prepend(item);
-                });
             }
         });
     });
@@ -59,4 +66,21 @@
         window.location.href = `/InventoryValue/Index?id=${rowId}&inventoryId=${inventoryId}`;
     });
 
+    $(".bigtext").each(function () {
+
+        var fullText = $(this).text();
+        var maxLength = 100;
+
+        if (fullText.length > maxLength) {
+
+            var shortText = fullText.substr(0, maxLength) + "...";
+
+            $(this).html(`
+            <span class="short-text">${shortText}</span>
+            <span class="full-text" style="display:none">${fullText}</span>
+            <a href="#" class="read-more-btn">Read more</a>
+        `);
+        }
+
+    });
 });
