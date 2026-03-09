@@ -259,7 +259,7 @@ namespace InventoryManagementSystem.DAL.Repositories
 
                             var parameter = command.Parameters.AddWithValue("@CustomIdsDataTable", customIdTable);
                             parameter.SqlDbType = SqlDbType.Structured;
-                            parameter.TypeName = "dbo.UserInventoryCustomIdsTableType";
+                            parameter.TypeName = "dbo.InventoryCustomIdsTableType";
 
                             command.Parameters.Add(new SqlParameter("@InventoryId", inventoryModel.InventoryItemId));
 
