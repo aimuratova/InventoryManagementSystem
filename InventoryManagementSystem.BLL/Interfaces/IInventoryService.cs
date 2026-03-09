@@ -15,7 +15,7 @@ namespace InventoryManagementSystem.BLL.Interfaces
         //Task<ResultModel<DataSet>> GetInventoryValues(List<int>? inventoryIds);
         Task<InventoryItemModel> GetInventoryItemById(int id);
         Task<ResultModel> UpdateInventory(InventoryItemModel inventory, List<string> inventoryUsers,
-            List<InventoryFieldModel> fieldsList);
+            List<InventoryFieldModel> fieldsList, List<InventoryCustomIdValueModel> customIdValueModels);
         Task<ResultModel<int>> AddInventory(InventoryItemModel inventory);
         Task<ResultModel> DeleteInventory(int inventoryId);
     }

@@ -6,6 +6,12 @@
 
     function addRow() {
         var number = $('#elementsContainer div.elementRow').length + 1;
+
+        var optionsText = "";
+        $.each(customIdOptions, function (index, item) {
+            optionsText += `<option value="${item.id}">${item.title}</option>`;
+        });
+
         var row = `
         <div class="row align-items-center mb-2 elementRow" data-customrow="${number}">
 			<div class="col-md-6">
@@ -16,10 +22,7 @@
 						</svg>
 					</span>
 					<select class="form-select typeSelect">
-						<option value="fixed">Fixed</option>
-						<option value="random">20-bit random</option>
-						<option value="sequence">Sequence</option>
-						<option value="date">Date/time</option>
+						`+ optionsText +`
 					</select>
 				</div>
 			</div>
@@ -53,20 +56,20 @@
             var type = $(this).find(".typeSelect").val();
             var value = $(this).find(".valueInput").val();
 
-            if (type === "fixed") {
+            if (type === 1) {
                 result += value;
             }
 
-            if (type === "random") {
+            if (type === 2) {
                 var rand = Math.floor(Math.random() * 99999);
                 result += value + rand;
             }
 
-            if (type === "sequence") {
+            if (type === 3) {
                 result += value + "001";
             }
 
-            if (type === "date") {
+            if (type === 4) {
                 var year = new Date().getFullYear();
                 result += year;
             }

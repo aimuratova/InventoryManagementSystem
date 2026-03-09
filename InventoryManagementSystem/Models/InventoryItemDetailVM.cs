@@ -2,7 +2,7 @@
 
 namespace InventoryManagementSystem.Models
 {
-    public class InventoryItemDetailVM //: InventoryItemViewModel
+    public class InventoryItemDetailVM
     {
         public InventoryItemViewModel BasicInfo { get; set; }
         public DataTable ValuesDT { get; set; }

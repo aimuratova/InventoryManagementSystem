@@ -14,7 +14,7 @@ namespace InventoryManagementSystem.DAL.Interfaces
         //Task<DataSet> GetInventoryValues(List<int>? inventoryIds);
         Task<InventoryItemModel?> GetInventoryItemById(int inventoryId);
         Task<ResultDbModel> UpdateInventoryItem(InventoryItemModel inventoryModel, List<string> inventoryUsers, 
-            List<InventoryFieldModel> fieldsList);
+            List<InventoryFieldModel> fieldsList, List<InventoryCustomIdValueModel> customIdValueModels);
         Task<int> Add(InventoryItemModel inventory);
         Task Delete(int inventoryId);
     }

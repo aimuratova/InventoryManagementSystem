@@ -454,8 +454,8 @@
 
 				 var fieldsTableData = [];
 
-				// Iterate over each row in the table body
-				$('#sortableFields tr').each(function() {
+				 // Iterate over each row in the table body
+				 $('#sortableFields tr').each(function() {
 					var $row = $(this);
 					console.log($row);
 
@@ -471,7 +471,21 @@
 
 					// Push the object into the array
 					fieldsTableData.push(rowObject);
-				});
+				 });
+
+				 var customIdTypeData = [];
+
+				 $('#elementsContainer.elementRow').each(function() {
+					 var $elementRow = $(this);
+
+					 var elementRowObject = {
+						 orderNum: $elementRow.data('customrow'),
+						 id: $elementRow.find('.typeSelect').val(),
+						 patternValue: $elementRow.find('.valueInput').val(),
+					 };
+
+					 customIdTypeData.push(elementRowObject);
+				 });
 
 				 var formData = {
 					 basicInfo: {
@@ -482,7 +496,8 @@
 						 isPublic:$('#isPublicCheckbox').prop("checked"),
 					 },
 					 selectedUserIds:userIds,
-					 fields: fieldsTableData
+					 fields: fieldsTableData,
+					 selectedCustomTypes: customIdTypeData
 				 };
 
 				 statusDiv.removeClass().addClass('badge bg-secondary rounded-pill small mt-1').text('Saving changes...').show().fadeIn();

@@ -131,7 +131,7 @@ namespace InventoryManagementSystem.DAL.Repositories
         //}
 
         public async Task<ResultDbModel> UpdateInventoryItem(InventoryItemModel inventoryModel, List<string> inventoryUsers, 
-            List<InventoryFieldModel> fieldsList)
+            List<InventoryFieldModel> fieldsList, List<InventoryCustomIdValueModel> customIdValueModels)
         {
             var result = new ResultDbModel();
             result.IsUpdated = false;
@@ -234,6 +234,40 @@ namespace InventoryManagementSystem.DAL.Repositories
 
                             await command.ExecuteNonQueryAsync();
                         }
+
+                        // custom type selected
+                        var customIdTable = new DataTable();
+                        customIdTable.Columns.Add("InventoryId", typeof(int));
+                        customIdTable.Columns.Add("CustomIdType", typeof(int));
+                        customIdTable.Columns.Add("OrderNum", typeof(int));
+                        customIdTable.Columns.Add("Value", typeof(string));
+
+                        foreach (var customType in customIdValueModels)
+                        {
+                            DataRow newRow = customIdTable.NewRow();                            
+                            newRow["InventoryId"] = inventoryModel.InventoryItemId;
+                            newRow["CustomIdType"] = customType.CustomIdType;
+                            newRow["OrderNum"] = customType.OrderNum;
+                            newRow["Value"] = customType.Value;
+
+                            customIdTable.Rows.Add(newRow);
+                        }
+
+                        using (var command = new SqlCommand("dbo.spInsertOrUpdateInventoryCustomIds", connection))
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+
+                            var parameter = command.Parameters.AddWithValue("@CustomIdsDataTable", customIdTable);
+                            parameter.SqlDbType = SqlDbType.Structured;
+                            parameter.TypeName = "dbo.UserInventoryCustomIdsTableType";
+
+                            command.Parameters.Add(new SqlParameter("@InventoryId", inventoryModel.InventoryItemId));
+
+                            command.Transaction = (SqlTransaction)transaction;
+
+                            await command.ExecuteNonQueryAsync();
+                        }
+
 
                         await transaction.CommitAsync();
 

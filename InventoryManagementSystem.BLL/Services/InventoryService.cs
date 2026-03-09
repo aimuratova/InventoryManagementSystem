@@ -90,15 +90,41 @@ namespace InventoryManagementSystem.BLL.Services
             };
             return result;
         }
-        
-        public async Task<ResultModel> UpdateInventory(InventoryItemModel inventory, List<string> inventoryUsers, List<InventoryFieldModel> fieldsList)
+
+        public async Task<ResultModel> UpdateInventory(InventoryItemModel inventory, List<string> inventoryUsers,
+            List<InventoryFieldModel> fieldsList, List<InventoryCustomIdValueModel> customIdValueModels)
         {
             var result = new ResultModel();
 
-            if (inventory != null && inventory.InventoryItemId > 0)
+            try
             {
-                var updateResult = await _inventoryRepository.UpdateInventoryItem(inventory, inventoryUsers, fieldsList);
-                if(updateResult.IsUpdated)
+                if (inventory == null || inventory.InventoryItemId > 0)
+                {
+                    throw new Exception("empty id");
+                }
+
+                if(inventory.CategoryId > 0)
+                {
+                    throw new Exception("category not chosen");
+                }
+
+                if(inventoryUsers.Any(x => string.IsNullOrEmpty(x)))
+                {
+                    throw new Exception("users were not specified in Access settings");
+                }
+
+                if(fieldsList.Any(x => x.ItemId <= 0 || x.TypeId <= 0 || string.IsNullOrEmpty(x.Title)))
+                {
+                    throw new Exception("field were not provided");
+                }
+
+                if(customIdValueModels.Any(x => x.CustomIdType <= 0))
+                {
+                    throw new Exception("custom id type were not chosen");
+                }
+
+                var updateResult = await _inventoryRepository.UpdateInventoryItem(inventory, inventoryUsers, fieldsList, customIdValueModels);
+                if (updateResult.IsUpdated)
                 {
                     result.Success = true;
                 }
@@ -108,13 +134,13 @@ namespace InventoryManagementSystem.BLL.Services
                     result.Message = updateResult.ErrorMessage;
                 }
             }
-            else
+            catch (Exception ex)
             {
                 result.Success = false;
-                result.Message = "Unable to update empty model";
+                result.Message = "Unable to update empty model: " + ex.Message;
             }
-            
+
             return result;
-        }                
+        }
     }
 }

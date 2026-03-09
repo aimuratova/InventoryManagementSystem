@@ -117,6 +117,12 @@ namespace InventoryManagementSystem.Managers
             result.RegisteredUsers = _mapper.Map<List<UserViewModel>>(allUsers);
             result.Categories = categories;
             result.FieldTypeOptions = _mapper.Map<List<FieldTypeViewModel>>(fieldTypes);
+            result.CustomIdTypeOptions = new List<CustomIdTypeViewModel>() { 
+                new CustomIdTypeViewModel() { Id = 1, Title = "Fixed Text", TooltipText = "A piece of unchanging text E.g., you can use Unicode emodji."},
+                new CustomIdTypeViewModel() { Id = 2, Title = "20-bit random number", TooltipText = "A piece of unchanging text E.g., you can use Unicode emodji."},
+                new CustomIdTypeViewModel() { Id = 3, Title = "32-bit random number", TooltipText = "A piece of unchanging text E.g., you can use Unicode emodji."},
+
+            };
 
             return result;
         }
@@ -125,8 +131,10 @@ namespace InventoryManagementSystem.Managers
         {
             var inventoryModel = _mapper.Map<InventoryItemModel>(inventory.BasicInfo);
             var fieldListModel = _mapper.Map<List<InventoryFieldModel>>(inventory.Fields);
+            var customTypesModel = _mapper.Map<List<InventoryCustomIdValueModel>>(inventory.SelectedCustomTypes);                
 
-            var result = await _inventoryService.UpdateInventory(inventoryModel, inventory.SelectedUserIds, fieldListModel);
+            var result = await _inventoryService.UpdateInventory(inventoryModel, inventory.SelectedUserIds, 
+                fieldListModel, customTypesModel);
 
             return result;
         }
