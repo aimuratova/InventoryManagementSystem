@@ -7,18 +7,15 @@ using System.Threading.Tasks;
 namespace InventoryManagementSystem.BLL.Models.CustomTypeGenerators
 {
     public class Bit32RandomNumberGenerator : ICustomGenerator
-    {
-        public string PatternValue { get; set; }
-        
-        public Bit32RandomNumberGenerator(string pattern) 
+    {        
+        public Bit32RandomNumberGenerator() 
         {
-            PatternValue = pattern;
         }
 
-        public string GenerateNew()
+        public string GenerateNew(string? value)
         {
-            uint value = BitConverter.ToUInt32(Guid.NewGuid().ToByteArray(), 0);
-            return string.Format("{0}{1}", PatternValue, value.ToString());
+            uint valueInt = BitConverter.ToUInt32(Guid.NewGuid().ToByteArray(), 0);
+            return string.Format("{0}{1}", value ?? string.Empty, valueInt);
         }
     }
 }

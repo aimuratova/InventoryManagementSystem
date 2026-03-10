@@ -13,7 +13,6 @@ namespace InventoryManagementSystem.BLL.Services
     public class InventoryCustomIdService : IInventoryCustomIdService
     {
         private readonly IInventoryCustomIdRepository _repository;
-        private CustomIdGenerator? _generator;
         private readonly IGeneratorService _generatorService;
 
         public InventoryCustomIdService(IInventoryCustomIdRepository repository, IGeneratorService generatorService)
@@ -25,19 +24,19 @@ namespace InventoryManagementSystem.BLL.Services
         public async Task<string?> GenerateId(int inventoryId)
         {
             var customSpecs = await GetSelectedCustomType(inventoryId);
-            var customGenerators = new List<ICustomGenerator>();
+            
+            var sb = new StringBuilder();
 
             foreach (var customType in customSpecs)
             {
-                customGenerators.Add(_generatorService.GetGeneratorType(customType.CustomIdType, customType.Value));
+                var generator = _generatorService.GetCustomGenerator(customType.CustomIdType);
+                if (generator != null)
+                {
+                    sb.Append(generator.GenerateNew(customType.Value));
+                }
             }
 
-            if (_generator == null)
-            {
-                _generator = new CustomIdGenerator(customGenerators.ToArray());
-            }
-
-            return _generator.GenerateId();
+            return sb.ToString();
         }
 
         public async Task<List<InventoryCustomIdValueModel>> GetSelectedCustomType(int inventoryId)

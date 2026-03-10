@@ -10,6 +10,6 @@ namespace InventoryManagementSystem.BLL.Interfaces
     public interface IGeneratorService
     {
         Task<string> Generate(int typeId, string value);
-        ICustomGenerator GetGeneratorType(int customIdType, string value);
+        ICustomGenerator? GetCustomGenerator(int typeId);
     }
 }

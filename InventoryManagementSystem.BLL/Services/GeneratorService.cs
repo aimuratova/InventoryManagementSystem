@@ -16,54 +16,40 @@ namespace InventoryManagementSystem.BLL.Services
         public GeneratorService()
         {
             listGenerators = new Dictionary<int, ICustomGenerator>();
+            PopulateListGenerators();
         }
 
-        public Task<string> Generate(int typeId, string value)
+        public async Task<string> Generate(int typeId, string value)
         {
-            if (listGenerators.Count == 0)
-            {
-                PopulateListGenerators(value);
-            }
-
             ICustomGenerator? generator = GetCustomGenerator(typeId);
             if (generator == null)
             {
                 // Возвращаем пустую строку, чтобы соответствовать Task<string> и избежать null
-                return Task.FromResult(string.Empty);
+                return string.Empty;
             }
 
-            string? result = generator.GenerateNew();
-            // Гарантируем, что возвращаемое значение не null
-            return Task.FromResult(result ?? string.Empty);
+            return generator.GenerateNew(value);
         }
 
-        private void PopulateListGenerators(string value)
+        private void PopulateListGenerators()
         {
-            listGenerators.Add((int)CustomTypeEnum.FixedText, new FixedTextGenerator(value));
-            listGenerators.Add((int)CustomTypeEnum.Bit20RandomNumber, new Bit20RandomGenerator(value));
-            listGenerators.Add((int)CustomTypeEnum.Bit32RandomNumber, new Bit32RandomNumberGenerator(value));
-            listGenerators.Add((int)CustomTypeEnum.SixDigitRandomNumber, new SixDigitRandomNumberGenerator(value));
-            listGenerators.Add((int)CustomTypeEnum.NineDigitRandomNumber, new NineDigitRandomNumberGenerator(value));
-            listGenerators.Add((int)CustomTypeEnum.Guid, new GuidGenerator(value));
-            listGenerators.Add((int)CustomTypeEnum.DateTime, new DateTimeGenerator(value));
-            listGenerators.Add((int)CustomTypeEnum.Sequence, new SequenceGenerator(value));
+            listGenerators.Add((int)CustomTypeEnum.FixedText, new FixedTextGenerator());
+            listGenerators.Add((int)CustomTypeEnum.Bit20RandomNumber, new Bit20RandomGenerator());
+            listGenerators.Add((int)CustomTypeEnum.Bit32RandomNumber, new Bit32RandomNumberGenerator());
+            listGenerators.Add((int)CustomTypeEnum.SixDigitRandomNumber, new SixDigitRandomNumberGenerator());
+            listGenerators.Add((int)CustomTypeEnum.NineDigitRandomNumber, new NineDigitRandomNumberGenerator());
+            listGenerators.Add((int)CustomTypeEnum.Guid, new GuidGenerator());
+            listGenerators.Add((int)CustomTypeEnum.DateTime, new DateTimeGenerator());
+            listGenerators.Add((int)CustomTypeEnum.Sequence, new SequenceGenerator());
         }
 
-        private ICustomGenerator? GetCustomGenerator(int typeId)
+        public ICustomGenerator? GetCustomGenerator(int typeId)
         {            
             if (listGenerators.ContainsKey(typeId))
             {
                 return listGenerators[typeId];
             }
             return null;
-        }
-
-        public ICustomGenerator GetGeneratorType(int customIdType, string value)
-        {
-            listGenerators.Clear();
-
-            PopulateListGenerators(value);            
-            return listGenerators[customIdType];
         }
     }
 }

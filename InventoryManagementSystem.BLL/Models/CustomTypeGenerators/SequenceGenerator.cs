@@ -8,19 +8,16 @@ namespace InventoryManagementSystem.BLL.Models.CustomTypeGenerators
 {
     public class SequenceGenerator : ICustomGenerator
     {
-        private long _current;
-        public string PatternValue { get; set; }
+        private long _current = 0;
 
-        public SequenceGenerator(string pattern, long current = 0)
+        public SequenceGenerator()
         {
-            PatternValue = pattern;
-            _current = current;
         }
 
-        public string GenerateNew()
+        public string GenerateNew(string? value)
         {
-            long value = Interlocked.Increment(ref _current);
-            return string.Format("{0}{1}", PatternValue, value.ToString());
+            long sequence = Interlocked.Increment(ref _current);
+            return string.Format("{0}{1}", value ?? string.Empty, sequence);
         }
     }
 }

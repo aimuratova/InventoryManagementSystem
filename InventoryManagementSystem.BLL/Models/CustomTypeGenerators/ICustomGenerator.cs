@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 namespace InventoryManagementSystem.BLL.Models.CustomTypeGenerators
 {
     public interface ICustomGenerator
-    {
-        public string PatternValue { get; set; }
-        string GenerateNew();
+    {        
+        string GenerateNew(string? value);
     }
 }

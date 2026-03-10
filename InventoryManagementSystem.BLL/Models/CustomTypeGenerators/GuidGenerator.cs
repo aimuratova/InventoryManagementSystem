@@ -8,17 +8,14 @@ namespace InventoryManagementSystem.BLL.Models.CustomTypeGenerators
 {
     public class GuidGenerator : ICustomGenerator
     {
-        public string PatternValue { get; set; }
-
-        public GuidGenerator(string value) 
+        public GuidGenerator() 
         { 
-            PatternValue = value; 
         }
 
-        public string GenerateNew()
+        public string GenerateNew(string? value)
         {
-            var value = Guid.NewGuid().ToString();
-            return string.Format("{0}{1}", PatternValue, value.ToString());
+            var guidStr = Guid.NewGuid().ToString();
+            return string.Format("{0}{1}", value ?? string.Empty, guidStr);
         }
     }
 }

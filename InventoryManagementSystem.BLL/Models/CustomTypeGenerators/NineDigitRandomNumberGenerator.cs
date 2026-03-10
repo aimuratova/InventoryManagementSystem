@@ -8,18 +8,16 @@ namespace InventoryManagementSystem.BLL.Models.CustomTypeGenerators
 {
     public class NineDigitRandomNumberGenerator : ICustomGenerator
     {
-        public string PatternValue { get; set; }
         private static readonly Random _random = new();
 
-        public NineDigitRandomNumberGenerator(string pattern)
+        public NineDigitRandomNumberGenerator()
         {
-            PatternValue = pattern;
         }
 
-        public string GenerateNew()
+        public string GenerateNew(string? value)
         {
-            var value = _random.Next(100000000, 1000000000).ToString();
-            return string.Format("{0}{1}", PatternValue, value.ToString());
+            var valueRandom = _random.Next(100000000, 1000000000).ToString();
+            return string.Format("{0}{1}", value ?? string.Empty, valueRandom);
         }
     }
 }

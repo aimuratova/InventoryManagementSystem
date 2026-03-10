@@ -8,16 +8,13 @@ namespace InventoryManagementSystem.BLL.Models.CustomTypeGenerators
 {
     public class FixedTextGenerator : ICustomGenerator
     {
-        public string PatternValue { get ; set; }
-
-        public FixedTextGenerator(string pattern)
+        public FixedTextGenerator()
         {
-            PatternValue = pattern;            
         }
 
-        public string GenerateNew()
+        public string GenerateNew(string? value)
         {
-            return PatternValue;
+            return value ?? string.Empty;
         }
     }
 }

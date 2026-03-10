@@ -9,15 +9,13 @@ namespace InventoryManagementSystem.BLL.Models.CustomTypeGenerators
 {
     public class DateTimeGenerator : ICustomGenerator
     {
-        public string PatternValue { get; set; }
-        public DateTimeGenerator(string pattern = "yyyyMMddHHmmss") 
+        public DateTimeGenerator() 
         { 
-            PatternValue = pattern;
         }
 
-        public string GenerateNew()
+        public string GenerateNew(string? value)
         {
-            return DateTime.UtcNow.ToString(PatternValue);
+            return DateTime.UtcNow.ToString(value);
         }
     }
 }
