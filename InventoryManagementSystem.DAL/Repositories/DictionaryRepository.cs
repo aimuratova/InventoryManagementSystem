@@ -41,6 +41,18 @@ namespace InventoryManagementSystem.DAL.Repositories
             }
         }
 
+        public async Task<List<InventoryCustomTypeModel>> GetCustomTypesAsync()
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                var result = (await connection.QueryAsync<InventoryCustomTypeModel>(
+                    "[dbo].[spGetCustomIdTypes]",
+                    commandType: CommandType.StoredProcedure)).ToList();
+
+                return result;
+            }
+        }
+
         public async Task<List<FieldTypeModel>> GetFieldTypesAsync()
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))

@@ -18,12 +18,14 @@ namespace InventoryManagementSystem.Managers
         private readonly IUserService _userService;
         private readonly IDictionaryService _dictionaryService;
         private readonly IInventoryUserService _inventoryUserService;
+        private readonly IInventoryCustomIdService _inventoryCustomIdService;
 
         private readonly IMapper _mapper;
 
         public InventoryManager(IInventoryService inventoryService, IInventoryFieldService inventoryFieldService, 
             IInventoryValueService valueService, IMapper mapper, 
-            IUserService userService, IDictionaryService dictionaryService, IInventoryUserService inventoryUserService)
+            IUserService userService, IDictionaryService dictionaryService, 
+            IInventoryUserService inventoryUserService, IInventoryCustomIdService inventoryCustomIdService)
         {
             _inventoryService = inventoryService;
             _inventoryFieldService = inventoryFieldService;
@@ -32,6 +34,7 @@ namespace InventoryManagementSystem.Managers
             _userService = userService;
             _dictionaryService = dictionaryService;
             _inventoryUserService = inventoryUserService;
+            _inventoryCustomIdService = inventoryCustomIdService;
         }
 
         public async Task<List<InventoryItemViewModel>> GetAllItemsAsync(string? userId = null, 
@@ -100,11 +103,13 @@ namespace InventoryManagementSystem.Managers
             
             //selected user ids
             var inventoryUsers = await _inventoryUserService.GetInventoryUsersByInventoryId(id);
+            var inventoryCustomIds = await _inventoryCustomIdService.GetSelectedCustomType(id);
 
             // dictionaries
             var allUsers = (await _userService.ListUsers()).Data;
-            var categories = (await _dictionaryService.GetCategoriesAsync());
-            var fieldTypes = (await _dictionaryService.GetFieldTypesAsync());
+            var categories = await _dictionaryService.GetCategoriesAsync();
+            var fieldTypes = await _dictionaryService.GetFieldTypesAsync();
+            var customTypes = await _dictionaryService.GetCustomTypesAsync();
 
             var result = new InventoryEditViewModel();
             result.BasicInfo = _mapper.Map<InventoryItemViewModel>(inventoryItem);
@@ -113,17 +118,13 @@ namespace InventoryManagementSystem.Managers
 
             result.SelectedUserIds = new List<string>();
             result.SelectedUserIds.AddRange(inventoryUsers);
+            result.SelectedCustomTypes = _mapper.Map<List<CustomIdSelectedTypeViewModel>>(inventoryCustomIds);
 
             result.RegisteredUsers = _mapper.Map<List<UserViewModel>>(allUsers);
             result.Categories = categories;
             result.FieldTypeOptions = _mapper.Map<List<FieldTypeViewModel>>(fieldTypes);
-            result.CustomIdTypeOptions = new List<CustomIdTypeViewModel>() { 
-                new CustomIdTypeViewModel() { Id = 1, Title = "Fixed Text", TooltipText = "A piece of unchanging text E.g., you can use Unicode emodji."},
-                new CustomIdTypeViewModel() { Id = 2, Title = "20-bit random number", TooltipText = "A piece of unchanging text E.g., you can use Unicode emodji."},
-                new CustomIdTypeViewModel() { Id = 3, Title = "32-bit random number", TooltipText = "A piece of unchanging text E.g., you can use Unicode emodji."},
-
-            };
-
+            result.CustomIdTypeOptions = _mapper.Map<List<CustomIdTypeViewModel>>(customTypes);
+            
             return result;
         }
 

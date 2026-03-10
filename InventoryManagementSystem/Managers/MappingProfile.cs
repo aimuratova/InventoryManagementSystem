@@ -40,9 +40,14 @@ namespace InventoryManagementSystem.Managers
             CreateMap<InventoryItemValueModel, RowValueViewModel>()
                 .ReverseMap();
 
-            CreateMap<CustomIdTypeViewModel, InventoryCustomIdValueModel>()
-                .ForMember(dest => dest.CustomIdType, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.PatternValue));
+            CreateMap<InventoryCustomIdValueModel, CustomIdSelectedTypeViewModel>()                
+                .ForMember(dest => dest.PatternValue, opt => opt.MapFrom(src => src.Value));
+
+            CreateMap<CustomIdSelectedTypeViewModel, InventoryCustomIdValueModel>()
+                .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.PatternValue))
+                .ForMember(dest => dest.InventoryId, opt => opt.Ignore());
+
+            CreateMap<InventoryCustomTypeModel, CustomIdTypeViewModel>();
         }
     }
 }

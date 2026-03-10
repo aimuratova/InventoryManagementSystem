@@ -23,6 +23,11 @@ namespace InventoryManagementSystem.BLL.Services
             return await _dictionaryRepository.GetCategoriesAsync();
         }
 
+        public async Task<List<InventoryCustomTypeModel>> GetCustomTypesAsync()
+        {
+            return await _dictionaryRepository.GetCustomTypesAsync();
+        }
+
         public async Task<List<FieldTypeModel>> GetFieldTypesAsync()
         {
             return await _dictionaryRepository.GetFieldTypesAsync();

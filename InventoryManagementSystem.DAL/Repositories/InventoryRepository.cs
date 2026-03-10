@@ -237,6 +237,7 @@ namespace InventoryManagementSystem.DAL.Repositories
 
                         // custom type selected
                         var customIdTable = new DataTable();
+                        customIdTable.Columns.Add("Id", typeof(int));
                         customIdTable.Columns.Add("InventoryId", typeof(int));
                         customIdTable.Columns.Add("CustomIdType", typeof(int));
                         customIdTable.Columns.Add("OrderNum", typeof(int));
@@ -244,7 +245,8 @@ namespace InventoryManagementSystem.DAL.Repositories
 
                         foreach (var customType in customIdValueModels)
                         {
-                            DataRow newRow = customIdTable.NewRow();                            
+                            DataRow newRow = customIdTable.NewRow();    
+                            newRow["Id"] = customType.Id;
                             newRow["InventoryId"] = inventoryModel.InventoryItemId;
                             newRow["CustomIdType"] = customType.CustomIdType;
                             newRow["OrderNum"] = customType.OrderNum;

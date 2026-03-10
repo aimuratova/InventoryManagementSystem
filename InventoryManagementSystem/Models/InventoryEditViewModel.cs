@@ -7,7 +7,7 @@
         public List<string> SelectedUserIds { get; set; }
         public List<FieldTypeViewModel> FieldTypeOptions { get; set; }
         public List<CustomIdTypeViewModel> CustomIdTypeOptions { get; set; }
-        public List<CustomIdTypeViewModel> SelectedCustomTypes { get; set; }
+        public List<CustomIdSelectedTypeViewModel> SelectedCustomTypes { get; set; }
     }
 
     public class FieldTypeViewModel
@@ -21,7 +21,13 @@
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public string TooltipText { get; set; }
+        public string TooltipText { get; set; }        
+    }
+
+    public class CustomIdSelectedTypeViewModel
+    {
+        public int Id { get; set; }
+        public int CustomTypeId { get; set; }
         public string PatternValue { get; set; }
         public int OrderNum { get; set; }
     }

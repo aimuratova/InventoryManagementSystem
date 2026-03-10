@@ -1,4 +1,5 @@
-﻿@model InventoryEditViewModel;
+﻿@using Newtonsoft.Json
+@model InventoryEditViewModel;
 <div class="card shadow-sm">
 	<div class="card-body">
 		<p class="text-muted small">
@@ -15,7 +16,7 @@
 			{
 				@foreach (var selectedCustom in Model.SelectedCustomTypes)
 				{
-					<div class="row align-items-center mb-2 elementRow" data-customrow="@selectedCustom.OrderNum">
+					<div class="row align-items-center mb-2 elementRow" data-customrow="@selectedCustom.OrderNum" data-customid="@selectedCustom.Id">
 						<div class="col-md-6">
 							<div class="input-group">
 								<span class="input-group-text" id="basic-addon1">
@@ -56,14 +57,10 @@
 			}
 		</div>
 
-		<button id="customIdAddBtn" class="btn btn-sm btn-outline-primary me-2 mt-2">
+		<button id="customIdAddBtn" class="btn btn-sm btn-outline-primary me-2 mt-2"
+				data-values='@Html.Raw(JsonConvert.SerializeObject(Model.CustomIdTypeOptions))'>
 			Add element
 		</button>
 	</div>
 </div>
-<script>
-	$(document).ready(function () {
-		var customIdOptions = @Model.CustomIdTypeOptions;
-	});
-</script>
 

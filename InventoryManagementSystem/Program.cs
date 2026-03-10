@@ -23,6 +23,7 @@ services.AddScoped<IInventoryUserRepository, InventoryUserRepository>();
 services.AddScoped<IDictionaryRepository, DictionaryRepository>();
 services.AddScoped<IInventoryFieldRepository, InventoryFieldRepository>();
 services.AddScoped<IInventoryValueRepository, InventoryValueRepository>();
+services.AddScoped<IInventoryCustomIdRepository, InventoryCustomIdRepository>();
 
 services.AddScoped<IDictionaryService, DictionaryService>();
 services.AddScoped<IUserService, UserService>();
@@ -31,6 +32,8 @@ services.AddScoped<IInventoryService, InventoryService>();
 services.AddScoped<IInventoryUserService, InventoryUserService>();
 services.AddScoped<IInventoryFieldService, InventoryFieldService>();
 services.AddScoped<IInventoryValueService, InventoryValueService>();
+services.AddScoped<IInventoryCustomIdService, InventoryCustomIdService>();
+services.AddScoped<IGeneratorService, GeneratorService>();
 
 services.AddScoped<UserManager>();
 services.AddScoped<InventoryManager>();

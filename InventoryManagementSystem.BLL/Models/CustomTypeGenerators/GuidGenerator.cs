@@ -10,6 +10,11 @@ namespace InventoryManagementSystem.BLL.Models.CustomTypeGenerators
     {
         public string PatternValue { get; set; }
 
+        public GuidGenerator(string value) 
+        { 
+            PatternValue = value; 
+        }
+
         public string GenerateNew()
         {
             var value = Guid.NewGuid().ToString();

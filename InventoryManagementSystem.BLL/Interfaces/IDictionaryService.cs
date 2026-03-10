@@ -13,5 +13,6 @@ namespace InventoryManagementSystem.BLL.Interfaces
         Task<Dictionary<int, string>> GetInventoriesAsync();
         Task<Dictionary<int, string>> GetCategoriesAsync();
         Task<List<FieldTypeModel>> GetFieldTypesAsync();
+        Task<List<InventoryCustomTypeModel>> GetCustomTypesAsync();
     }
 }

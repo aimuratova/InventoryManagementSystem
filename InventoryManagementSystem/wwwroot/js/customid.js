@@ -7,13 +7,15 @@
     function addRow() {
         var number = $('#elementsContainer div.elementRow').length + 1;
 
+        var customIdOptions = $("#customIdAddBtn").data('values');
+
         var optionsText = "";
         $.each(customIdOptions, function (index, item) {
-            optionsText += `<option value="${item.id}">${item.title}</option>`;
+            optionsText += `<option value="${item.Id}">${item.Title}</option>`;
         });
 
         var row = `
-        <div class="row align-items-center mb-2 elementRow" data-customrow="${number}">
+        <div class="row align-items-center mb-2 elementRow" data-customrow="${number}" data-customid="0">
 			<div class="col-md-6">
 				<div class="input-group">
 					<span class="input-group-text" id="basic-addon1">
@@ -22,7 +24,7 @@
 						</svg>
 					</span>
 					<select class="form-select typeSelect">
-						`+ optionsText +`
+						`+ optionsText + `
 					</select>
 				</div>
 			</div>
@@ -53,31 +55,24 @@
 
         $(".elementRow").each(function () {
 
-            var type = $(this).find(".typeSelect").val();
-            var value = $(this).find(".valueInput").val();
+            let type = $(this).find(".typeSelect").val();
+            let value = $(this).find(".valueInput").val();
 
-            if (type === 1) {
-                result += value;
-            }
-
-            if (type === 2) {
-                var rand = Math.floor(Math.random() * 99999);
-                result += value + rand;
-            }
-
-            if (type === 3) {
-                result += value + "001";
-            }
-
-            if (type === 4) {
-                var year = new Date().getFullYear();
-                result += year;
-            }
+            $.ajax({
+                url: `/Dictionary/GenerateCustomId?typeId=${type}&value=${value}`,
+                type: 'GET',
+                success: function (data) {
+                    console.log(data);
+                    result += data;
+                },
+                error: function () {
+                    console.log('Failed to load custom id generator.');
+                }
+            });
 
         });
 
         $("#examplePreview").text(result);
-
     }
 
 });
