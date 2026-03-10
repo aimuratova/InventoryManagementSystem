@@ -57,5 +57,13 @@ namespace InventoryManagementSystem.BLL.Services
             }
             return null;
         }
+
+        public ICustomGenerator GetGeneratorType(int customIdType, string value)
+        {
+            listGenerators.Clear();
+
+            PopulateListGenerators(value);            
+            return listGenerators[customIdType];
+        }
     }
 }

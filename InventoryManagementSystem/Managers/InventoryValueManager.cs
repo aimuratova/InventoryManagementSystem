@@ -13,13 +13,16 @@ namespace InventoryManagementSystem.Managers
         private readonly IInventoryValueService _inventoryValueService;
         private readonly IInventoryService _inventoryService;
         private readonly IInventoryFieldService _inventoryFieldService;
+        private readonly IInventoryCustomIdService _inventoryCustomIdService;
 
-        public InventoryValueManager(IMapper mapper, IInventoryValueService inventoryValueService, IInventoryService inventoryService, IInventoryFieldService inventoryFieldService)
+        public InventoryValueManager(IMapper mapper, IInventoryValueService inventoryValueService, 
+            IInventoryService inventoryService, IInventoryFieldService inventoryFieldService, IInventoryCustomIdService inventoryCustomIdService)
         {
             _mapper = mapper;
             _inventoryValueService = inventoryValueService;
             _inventoryService = inventoryService;
             _inventoryFieldService = inventoryFieldService;
+            _inventoryCustomIdService = inventoryCustomIdService;
         }
 
         public async Task<ResultModel> AddValue(List<ValueViewModel> values, string userId)
@@ -83,6 +86,14 @@ namespace InventoryManagementSystem.Managers
                             insertModel.Datetime3 = Convert.ToDateTime(row.Value.ToString()); break;
 
                     }
+                }
+
+                // check if there is custom id spec in fields
+                var fields = await _inventoryFieldService.GetInventoryItemFieldsById(insertModel.InventoryId);
+                if (fields.Any(x => x.TypeId == (int)DataTypeEnum.CustomId))
+                {
+                    // using generator service generate customid field
+                    insertModel.CustomId = await _inventoryCustomIdService.GenerateId(insertModel.InventoryId);
                 }
 
                 if (errors.Count == 0)

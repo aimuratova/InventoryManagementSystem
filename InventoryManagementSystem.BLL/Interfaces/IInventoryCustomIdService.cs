@@ -9,6 +9,7 @@ namespace InventoryManagementSystem.BLL.Interfaces
 {
     public interface IInventoryCustomIdService
     {
+        Task<string?> GenerateId(int inventoryId);
         Task<List<InventoryCustomIdValueModel>> GetSelectedCustomType(int inventoryId);
     }
 }
