@@ -62,17 +62,15 @@
                 url: `/Dictionary/GenerateCustomId?typeId=${type}&value=${value}`,
                 type: 'GET',
                 success: function (data) {
-                    console.log(data);
+                    //console.log(data);
                     result += data;
+                    $("#examplePreview").text(result);
                 },
                 error: function () {
                     console.log('Failed to load custom id generator.');
                 }
             });
-
-        });
-
-        $("#examplePreview").text(result);
+        });        
     }
 
 });

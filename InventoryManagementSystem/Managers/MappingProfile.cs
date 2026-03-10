@@ -45,6 +45,7 @@ namespace InventoryManagementSystem.Managers
 
             CreateMap<CustomIdSelectedTypeViewModel, InventoryCustomIdValueModel>()
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.PatternValue))
+                .ForMember(dest => dest.CustomIdType, opt => opt.MapFrom(src => src.CustomTypeId))
                 .ForMember(dest => dest.InventoryId, opt => opt.Ignore());
 
             CreateMap<InventoryCustomTypeModel, CustomIdTypeViewModel>();

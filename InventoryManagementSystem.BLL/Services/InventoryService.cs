@@ -98,22 +98,22 @@ namespace InventoryManagementSystem.BLL.Services
 
             try
             {
-                if (inventory == null || inventory.InventoryItemId > 0)
+                if (inventory == null || inventory.InventoryItemId <= 0)
                 {
                     throw new Exception("empty id");
                 }
 
-                if(inventory.CategoryId > 0)
+                if(inventory.CategoryId <= 0)
                 {
                     throw new Exception("category not chosen");
                 }
 
-                if(inventoryUsers.Any(x => string.IsNullOrEmpty(x)))
+                if(!inventory.IsPublic && inventoryUsers.Any(x => string.IsNullOrEmpty(x)))
                 {
                     throw new Exception("users were not specified in Access settings");
                 }
 
-                if(fieldsList.Any(x => x.ItemId <= 0 || x.TypeId <= 0 || string.IsNullOrEmpty(x.Title)))
+                if(fieldsList.Any(x => x.TypeId <= 0 || string.IsNullOrEmpty(x.Title)))
                 {
                     throw new Exception("field were not provided");
                 }

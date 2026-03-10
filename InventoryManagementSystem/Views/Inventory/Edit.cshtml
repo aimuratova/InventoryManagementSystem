@@ -457,8 +457,7 @@
 				 // Iterate over each row in the table body
 				 $('#sortableFields tr').each(function() {
 					var $row = $(this);
-					console.log($row);
-
+					
 					// Create an object for the row data
 					var rowObject = {
 						id: $row.data('id') || 0, // or .val() if needed
@@ -475,7 +474,7 @@
 
 				 var customIdTypeData = [];
 
-				 $('#elementsContainer.elementRow').each(function() {
+				 $('#elementsContainer .elementRow').each(function() {
 					 var $elementRow = $(this);
 
 					 var elementRowObject = {
