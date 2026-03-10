@@ -27,7 +27,7 @@
 								<select class="form-select typeSelect">
 									@foreach (var optionCustom in Model.CustomIdTypeOptions)
 									{
-										if (selectedCustom.Id.Equals(optionCustom.Id))
+										if (selectedCustom.CustomTypeId.Equals(optionCustom.Id))
 										{
 											<option value="@optionCustom.Id" selected>@optionCustom.Title</option>
 										}
@@ -36,7 +36,7 @@
 											<option value="@optionCustom.Id">@optionCustom.Title</option>
 										}
 									}
-								</select>
+								</select>								
 							</div>
 						</div>
 
@@ -51,8 +51,8 @@
 								</span>
 							</div>
 						</div>
-
 					</div>
+					<p class="text-muted small tooltipText"></p>
 				}
 			}
 		</div>

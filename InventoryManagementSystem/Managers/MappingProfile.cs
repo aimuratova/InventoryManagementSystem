@@ -41,7 +41,8 @@ namespace InventoryManagementSystem.Managers
                 .ReverseMap();
 
             CreateMap<InventoryCustomIdValueModel, CustomIdSelectedTypeViewModel>()                
-                .ForMember(dest => dest.PatternValue, opt => opt.MapFrom(src => src.Value));
+                .ForMember(dest => dest.PatternValue, opt => opt.MapFrom(src => src.Value))
+                .ForMember(dest => dest.CustomTypeId, opt => opt.MapFrom(src => src.CustomIdType));
 
             CreateMap<CustomIdSelectedTypeViewModel, InventoryCustomIdValueModel>()
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.PatternValue))

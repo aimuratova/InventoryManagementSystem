@@ -26,6 +26,7 @@
 					<select class="form-select typeSelect">
 						`+ optionsText + `
 					</select>
+                    <p class="text-muted small tooltipText"></p>
 				</div>
 			</div>
 			<div class="col-md-6">
@@ -72,5 +73,24 @@
             });
         });        
     }
+
+    $(document).on("change", ".typeSelect", function () {
+        var $select = $(this); // store reference
+        var selectedType = $select.val();
+
+        var customIdOptions = $("#customIdAddBtn").data('values');
+
+        var tooltipText = "";
+
+        $.each(customIdOptions, function (index, item) {
+
+            if (item.Id == selectedType) {
+                tooltipText = item.TooltipText;
+                console.log(tooltipText);
+
+                $select.closest(".elementRow").next(".tooltipText").text(tooltipText);
+            }
+        });
+    });
 
 });
