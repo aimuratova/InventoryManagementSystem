@@ -1,4 +1,5 @@
-﻿using InventoryManagementSystem.BLL.Interfaces;
+﻿using AutoMapper;
+using InventoryManagementSystem.BLL.Interfaces;
 using InventoryManagementSystem.BLL.Models;
 using InventoryManagementSystem.Models;
 
@@ -8,15 +9,18 @@ namespace InventoryManagementSystem.Managers
     {
         private readonly IUserService _userService;
         private readonly IRoleService _roleService;
-        private readonly IInventoryService _inventoryService;
         private readonly IInventoryUserService _inventoryUserService;
+        private readonly IDictionaryService _dictionaryService;
+        private readonly IMapper _mapper;
 
-        public UserManager(IUserService userService, IRoleService roleService, IInventoryService inventoryService, IInventoryUserService inventoryUserService)
+        public UserManager(IUserService userService, IRoleService roleService, IInventoryService inventoryService, IInventoryUserService inventoryUserService, 
+            IDictionaryService dictionaryService, IMapper mapper)
         {
             _userService = userService;
             _roleService = roleService;
-            _inventoryService = inventoryService;
             _inventoryUserService = inventoryUserService;
+            _dictionaryService = dictionaryService;
+            _mapper = mapper;
         }
 
         public async Task<ResultModel> UpdateUserAsync(UserInfoViewModel user)
@@ -69,16 +73,9 @@ namespace InventoryManagementSystem.Managers
             {
                 var inventoriesList = await _inventoryUserService.GetInventoryItemsUserModels();
 
-                var list = resultList.Data?
-                    .Select(x => new UserViewModel()
-                    {
-                        Id = x.Id,
-                        Email = x.Email,
-                        EmailConfirmed = x.EmailConfirmed ?? false,
-                        UserName = x.UserName,
-                        IsAdmin = x.IsAdmin,
-                        Inventories = string.Join(", ", inventoriesList?.Where(i => i.UserId == x.Id).Select(i => i.InventoryItemTitle) ?? new List<string>())
-                    }).ToList();
+                var list = _mapper.Map<List<UserViewModel>>(resultList.Data);
+                list.ForEach(x => x.Inventories =
+                    string.Join(", ", inventoriesList.Where(i => i.UserId == x.Id).Select(i => i.InventoryItemTitle)));
 
                 return new ResultModel<List<UserViewModel>>()
                 {
@@ -95,6 +92,23 @@ namespace InventoryManagementSystem.Managers
                 };
             }
 
+        }
+
+        public async Task<UserInfoViewModel?> GetUserInfo(string userId)
+        {
+            var result = await _userService.GetUserById(userId);
+            var resultInventories = await _dictionaryService.GetInventoriesAsync();
+            var selectedInventories = await _inventoryUserService.GetInventoryItemsUserModels(userId);
+
+            if (result.Success)
+            {
+                var userInfo = _mapper.Map<UserInfoViewModel>(result.Data);
+                userInfo.Inventories = resultInventories;
+                userInfo.SelectedInventories = selectedInventories.ToDictionary(i => i.InventoryItemId, i => i.InventoryItemTitle);
+                
+                return userInfo;
+            }
+            return null;
         }
     }
 }

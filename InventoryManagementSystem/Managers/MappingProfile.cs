@@ -20,11 +20,6 @@ namespace InventoryManagementSystem.Managers
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.InventoryItemTitle))
                 .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedByEmail));
 
-            //CreateMap<InventoryItemModel, InventoryEditViewModel>()
-            //    .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.InventoryItemId))
-            //    .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.InventoryItemTitle))
-            //    .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedByEmail));
-
             CreateMap<InventoryEditViewModel, InventoryItemModel>()
                 .ForMember(dest => dest.InventoryItemId, opt => opt.MapFrom(src => src.BasicInfo.Id))
                 .ForMember(dest => dest.InventoryItemTitle, opt => opt.MapFrom(src => src.BasicInfo.Title));
@@ -50,6 +45,15 @@ namespace InventoryManagementSystem.Managers
                 .ForMember(dest => dest.InventoryId, opt => opt.Ignore());
 
             CreateMap<InventoryCustomTypeModel, CustomIdTypeViewModel>();
+
+            CreateMap<UsersModel, UserInfoViewModel>()
+                .ForMember(dest => dest.Inventories, opt => opt.Ignore())
+                .ForMember(dest => dest.SelectedInventories, opt => opt.Ignore());
+
+            CreateMap<UsersModel, UserViewModel>()
+                .ForMember(dest => dest.Inventories, opt => opt.Ignore());
+
+
         }
     }
 }

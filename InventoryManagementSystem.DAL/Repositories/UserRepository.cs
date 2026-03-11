@@ -95,6 +95,18 @@ namespace InventoryManagementSystem.DAL.Repositories
             }
         }
 
+        public async Task<bool> IsInRoleAdmin(string? userId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                return await connection.QuerySingleOrDefaultAsync<bool>(
+                    "[dbo].[spCheckIsInRoleAdmin]",
+                    new { UserId = userId },
+                    commandType: CommandType.StoredProcedure
+                );
+            }
+        }
+
         public async Task UpdateAsync(UsersModel user)
         {
             using (var connection = new SqlConnection(_connectionString))

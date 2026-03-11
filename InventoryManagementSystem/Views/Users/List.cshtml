@@ -5,6 +5,7 @@
 }
 
 <h1>Users</h1>
+<div class="alert alert-danger" style="display:none" id="errorLabel"></div>
 <table class="table">
     <thead>
         <tr>
@@ -100,7 +101,8 @@
                     });
                 },
                 error: function (response) {
-                    console.log('Failed to load users.'+response.message);
+                    // console.log(response);                    
+                    $('#errorLabel').text(response.responseJSON.message).show();
                 }
             });
         });

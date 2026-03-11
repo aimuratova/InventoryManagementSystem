@@ -118,7 +118,12 @@ namespace InventoryManagementSystem.BLL.Services
             }
             return result;
         }
-        
+
+        public async Task<bool> IsInRoleAdmin(string? userId)
+        {
+            return await _userRepository.IsInRoleAdmin(userId);
+        }
+
         public async Task<ResultModel<List<UsersModel>>> ListUsers()
         {
             var list = await _userRepository.GetUsers();            

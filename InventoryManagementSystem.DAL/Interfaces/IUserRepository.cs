@@ -14,6 +14,7 @@ namespace InventoryManagementSystem.DAL.Interfaces
         Task<UsersModel?> GetByEmail(string email);
         Task<UsersModel?> GetUserById(string userId);
         Task<List<UsersModel>> GetUsers();
+        Task<bool> IsInRoleAdmin(string? userId);
         Task UpdateAsync(UsersModel user);
     }
 }

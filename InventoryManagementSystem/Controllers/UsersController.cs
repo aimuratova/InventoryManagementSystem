@@ -13,17 +13,11 @@ namespace InventoryManagementSystem.Controllers
     {
         private readonly IUserService _userService;
         private readonly UserManager _userManager;
-        private readonly IDictionaryService _dictionaryService;
-        private readonly IInventoryService _inventoryService;
-        private readonly IInventoryUserService _inventoryUserService;
 
-        public UsersController(IUserService userService, IDictionaryService dictionaryService, UserManager userManager,
-            IInventoryService inventoryService)
+        public UsersController(IUserService userService, UserManager userManager)
         {
             _userService = userService;
-            _dictionaryService = dictionaryService;
             _userManager = userManager;
-            _inventoryService = inventoryService;
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -56,16 +50,21 @@ namespace InventoryManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            var resultList = await _userManager.ListUsersAsync();
-            if (resultList.Success)
-            {               
-                return Ok(resultList.Data);
-            }
-            else
-            {
-                return BadRequest(resultList);
-            }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+            if (await _userService.IsInRoleAdmin(userId))
+            {
+                var resultList = await _userManager.ListUsersAsync();
+                if (resultList.Success)
+                {
+                    return Ok(resultList.Data);
+                }
+                else
+                {
+                    return BadRequest(resultList);
+                }
+            }
+            return BadRequest(new { Success = false, Message = "Not enough privileges to view this page" } );
         }
 
 
@@ -73,34 +72,21 @@ namespace InventoryManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUserInfo(string id)
         {
-            var result = await _userService.GetUserById(id);
-            var resultInventories = await _dictionaryService.GetInventoriesAsync();
-            var selectedInventories = await _inventoryUserService.GetInventoryItemsUserModels(id);
+            var result = await _userManager.GetUserInfo(id);
 
-            if (result.Success)
+            if (result != null)
             {
-                var userInfo = result.Data;
-                var userInfoViewModel = new UserInfoViewModel
-                {
-                    Id = userInfo.Id,
-                    Email = userInfo.Email,
-                    EmailConfirmed = userInfo.EmailConfirmed ?? false,
-                    UserName = userInfo.UserName,
-                    IsAdmin = userInfo.IsAdmin,
-                    Inventories = resultInventories,
-                    SelectedInventories = selectedInventories.ToDictionary(i => i.InventoryItemId, i => i.InventoryItemTitle)
-                };
-                return Ok(userInfoViewModel);
+                return Ok(result);
             }
             else
             {
-                return BadRequest(result);
+                return BadRequest(new { Success = false, Message = "User not found" });
             }
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
-        public async Task<IActionResult> UpdateUserInfo([FromBody]UserInfoViewModel userInfo)
+        public async Task<IActionResult> UpdateUserInfo([FromBody] UserInfoViewModel userInfo)
         {
             var result = await _userManager.UpdateUserAsync(userInfo);
             if (result.Success)
