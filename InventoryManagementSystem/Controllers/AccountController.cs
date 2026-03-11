@@ -34,6 +34,7 @@ namespace InventoryManagementSystem.Controllers
                     {
                         ViewBag.AccessToken = resultAuth.Data;
                         ViewBag.Message = "Account created successfully.";
+                        return View("LoginSuccess");
                     }
                 }
                 else
