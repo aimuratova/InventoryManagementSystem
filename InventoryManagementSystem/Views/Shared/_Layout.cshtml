@@ -22,11 +22,11 @@
 				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 					<ul class="navbar-nav flex-grow-1">
 						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+							<a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
 						</li>
 					</ul>
 					<ul class="navbar-nav ms-auto align-items-center gap-3">
-						<li class="nav-item">							
+						<li class="nav-item">
 							<div class="form-check form-switch m-0">
 								<input class="form-check-input" type="checkbox" id="themeToggle">
 								<label class="form-check-label small" for="themeToggle">Dark</label>
@@ -110,10 +110,28 @@
 
 				if ($("body").hasClass("light-mode")) {
 					$("body").removeClass("light-mode").addClass("dark-mode");
+
+					$("[class*='light']").each(function () {
+						let classes = $(this).attr("class").split(" ");
+
+						let newClasses = classes.map(c => c.replace(/light/g, "dark"));
+
+						$(this).attr("class", newClasses.join(" "));
+					});
+
 					localStorage.setItem("theme", "dark-mode");
 				}
 				else {
 					$("body").removeClass("dark-mode").addClass("light-mode");
+
+					$("[class*='dark']").each(function () {
+						let classes = $(this).attr("class").split(" ");
+
+						let newClasses = classes.map(c => c.replace(/dark/g, "light"));
+
+						$(this).attr("class", newClasses.join(" "));
+					});
+
 					localStorage.setItem("theme", "light-mode");
 				}
 
