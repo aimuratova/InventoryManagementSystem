@@ -1,0 +1,18 @@
+﻿body.light-mode {
+    background-color: #ffffff;
+    color: #212529;
+}
+
+body.dark-mode {
+    background-color: #121212;
+    color: #f8f9fa;
+}
+
+.dark-mode .card {
+    background-color: #1e1e1e;
+    color: white;
+}
+
+.dark-mode .navbar {
+    background-color: #1a1a1a !important;
+}
