@@ -130,6 +130,15 @@
                                 case (int)DataTypeEnum.Datetime3:
                                     <input type="datetime-local" class="form-control" id="datetime3" value="@Model.MainInfo.Datetime3" />
                                     break;
+                                case (int)DataTypeEnum.ImageUrl1:
+                                    <input type="file" class="form-control addValue" accept="image/*" id="imageurl1" value="@Model.MainInfo.ImageUrl1" disabled/>
+                                    break;
+                                case (int)DataTypeEnum.ImageUrl2:
+                                    <input type="file" class="form-control addValue" accept="image/*" id="imageurl2" value="@Model.MainInfo.ImageUrl2" disabled/>
+                                    break;
+                                case (int)DataTypeEnum.ImageUrl3:
+                                    <input type="file" class="form-control addValue" accept="image/*" id="imageurl3" value="@Model.MainInfo.ImageUrl3" disabled/>
+                                    break;
                                 case (int)DataTypeEnum.CreatedBy:
                                     <span>@Model.MainInfo.CreatedBy</span>
                                     break;

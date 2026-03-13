@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -27,12 +28,17 @@ namespace InventoryManagementSystem.BLL.Services
             _cloudinary = new Cloudinary(account);
         }
 
-        public async Task<string> UploadImage(string filePath)
+        public async Task<string> UploadImage(IFormFile file)
         {
-            var uploadParams = new ImageUploadParams()
+            if (file == null || file.Length == 0)
+                return null;
+
+            await using var stream = file.OpenReadStream();
+
+            var uploadParams = new ImageUploadParams
             {
-                File = new FileDescription(filePath),
-                PublicId = Path.GetFileNameWithoutExtension(filePath)
+                File = new FileDescription(file.FileName, stream),
+                PublicId = Path.GetFileNameWithoutExtension(file.FileName)
             };
 
             ImageUploadResult uploadResult = await _cloudinary.UploadAsync(uploadParams);

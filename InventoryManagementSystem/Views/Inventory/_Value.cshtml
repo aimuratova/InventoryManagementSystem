@@ -2,130 +2,133 @@
 @model InventoryItemDetailVM;
 
 <div class="card shadow-sm">
-    <div class="card-header bg-white">
-        <h5 class="mb-0">Values Table</h5>
-    </div>
+	<div class="card-header bg-white">
+		<h5 class="mb-0">Values Table</h5>
+	</div>
 
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered align-middle" id="valueDataTable">
-                <thead class="table text-center">
-                    <tr>
-                        @if (Model.ValuesDT != null && Model.ValuesDT.Columns != null)
-                        {
-                            @foreach (DataColumn column in Model.ValuesDT.Columns)
-                            {
-                                if(!string.Equals(column.ColumnName, "Id", StringComparison.InvariantCultureIgnoreCase)) {
-                                    <th>@column.ColumnName</th>
-                                }
-                            }
-                        }
-                    </tr>
-                </thead>
+	<div class="card-body">
+		<div class="table-responsive">
+			<table class="table table-bordered align-middle" id="valueDataTable">
+				<thead class="table text-center">
+					<tr>
+						@if (Model.ValuesDT != null && Model.ValuesDT.Columns != null)
+						{
+							@foreach (DataColumn column in Model.ValuesDT.Columns)
+							{
+								if (!string.Equals(column.ColumnName, "Id", StringComparison.InvariantCultureIgnoreCase))
+								{
+									<th>@column.ColumnName</th>
+								}
+							}
+						}
+					</tr>
+				</thead>
 
-                <tbody>
-                    @if (Model.ValuesDT != null && Model.ValuesDT.Rows != null)
-                    {
-                        @foreach (DataRow stock in Model.ValuesDT.Rows)
-                        {
-                            <tr data-rowid="@stock[0]" data-inventoryId="@Model.BasicInfo.Id">
-                                @foreach (DataColumn column in Model.ValuesDT.Columns)
-                                {
-                                    if (!string.Equals(column.ColumnName, "Id", StringComparison.InvariantCultureIgnoreCase)) {
-                                        <td class="bigtext">@stock[column]</td>
-                                    }                                
-                                }
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div class="mt-3">
-            <button type="button" class="btn btn-primary authenticate" data-bs-toggle="modal" data-bs-target="#addValueModal" data-inventoryId="@Model.BasicInfo.Id">Add New Value</button>
-            <div class="modal fade" id="addValueModal" tabindex="-1" aria-labelledby="addValueModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content" style="min-width:600px">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="addValueModalLabel">Add Value</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="alert alert-danger" role="alert" id="errorModalValue" style="display:none"></div>
-                            <div class="container-fluid">
+				<tbody>
+					@if (Model.ValuesDT != null && Model.ValuesDT.Rows != null)
+					{
+						@foreach (DataRow stock in Model.ValuesDT.Rows)
+						{
+							<tr data-rowid="@stock[0]" data-inventoryId="@Model.BasicInfo.Id">
+								@foreach (DataColumn column in Model.ValuesDT.Columns)
+								{
+									if (!string.Equals(column.ColumnName, "Id", StringComparison.InvariantCultureIgnoreCase))
+									{
+										<td class="bigtext">@stock[column]</td>
+									}
+								}
+							</tr>
+						}
+					}
+				</tbody>
+			</table>
+		</div>
+		<div class="mt-3">
+			<button type="button" class="btn btn-primary authenticate" data-bs-toggle="modal" data-bs-target="#addValueModal" data-inventoryId="@Model.BasicInfo.Id">Add New Value</button>
+			<div class="modal fade" id="addValueModal" tabindex="-1" aria-labelledby="addValueModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content" style="min-width:600px">
+						<div class="modal-header">
+							<h1 class="modal-title fs-5" id="addValueModalLabel">Add Value</h1>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<div class="alert alert-danger" role="alert" id="errorModalValue" style="display:none"></div>
+							<div class="container-fluid">
+								<form id="valueForm" enctype="multipart/form-data">
+									@foreach (var field in Model.Fields)
+									{
+										<div class="row mb-3">
 
-                                @foreach(var field in Model.Fields)
-                                {
-                                    <div class="row mb-3">
-                                    
-                                        @switch(field.TypeId)
-                                        {
-                                            case (int)DataTypeEnum.Singleline1:
-                                            case (int)DataTypeEnum.Singleline2:
-                                            case (int)DataTypeEnum.Singleline3:
-                                                <label for="title" class="col-3 col-form-label">@field.Title</label>
-                                                <div class="col-9">
-                                                    <input type="text" class="form-control addValue" placeholder="Enter value" data-field="@field.Id" data-type="@field.TypeId">
-                                                </div>
-                                                break;
-                                            case (int)DataTypeEnum.Multiline1:
-                                            case (int)DataTypeEnum.Multiline2:
-                                            case (int)DataTypeEnum.Multiline3:
-                                                <label class="col-3 col-form-label">@field.Title</label>
-                                                <div class="col-9">
-                                                    <textarea class="form-control addValue" rows="6" placeholder="Enter value" data-field="@field.Id" data-type="@field.TypeId"></textarea>
-                                                </div>
-                                                break;
-                                            case (int)DataTypeEnum.Num1:
-                                            case (int)DataTypeEnum.Num2:
-                                            case (int)DataTypeEnum.Num3:
-                                                <label for="quantity" class="col-3 col-form-label">@field.Title</label>
-                                                <div class="col-9">
-                                                    <input type="number" class="form-control addValue" id="quantity" step="1" min="0"
-                                                           placeholder="Enter integer" data-field="@field.Id" data-type="@field.TypeId">
-                                                </div>
-                                                break;
-                                            case (int)DataTypeEnum.ImageUrl1:
-                                            case (int)DataTypeEnum.ImageUrl2:
-                                            case (int)DataTypeEnum.ImageUrl3:
-                                                <label for="imageInput" class="col-3 col-form-label">@field.Title</label>
-                                                <div class="col-9">
-                                                    <input type="file" class="form-control addValue" accept="image/*" data-field="@field.Id" data-type="@field.TypeId">
-                                                </div>
-                                                break;
-                                            case (int)DataTypeEnum.Check1:
-                                            case (int)DataTypeEnum.Check2:
-                                            case (int)DataTypeEnum.Check3:
-                                                <label class="col-3 col-form-label">@field.Title</label>
-                                                <div class="col-9 d-flex align-items-center">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input addValue" type="checkbox" id="isActive" data-field="@field.Id" data-type="@field.TypeId">
-                                                        <label class="form-check-label" for="isActive">
-                                                            Enable
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                break;
-                                            case (int)DataTypeEnum.Datetime1:
-                                            case (int)DataTypeEnum.Datetime2:
-                                            case (int)DataTypeEnum.Datetime3:
-                                                <label for="eventDate" class="col-3 col-form-label">@field.Title</label>
-                                                <div class="col-9">
-                                                    <input type="date" class="form-control addValue" id="eventDate" name="eventDate" data-field="@field.Id" data-type="@field.TypeId">
-                                                </div>
-                                                break;
-                                        }
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" id="addValueButton" data-inventoryid="@Model.BasicInfo.Id">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+											@switch (field.TypeId)
+											{
+												case (int)DataTypeEnum.Singleline1:
+												case (int)DataTypeEnum.Singleline2:
+												case (int)DataTypeEnum.Singleline3:
+													<label for="title" class="col-3 col-form-label">@field.Title</label>
+													<div class="col-9">
+														<input type="text" class="form-control addValue" placeholder="Enter value" data-field="@field.Id" data-type="@field.TypeId">
+													</div>
+													break;
+												case (int)DataTypeEnum.Multiline1:
+												case (int)DataTypeEnum.Multiline2:
+												case (int)DataTypeEnum.Multiline3:
+													<label class="col-3 col-form-label">@field.Title</label>
+													<div class="col-9">
+														<textarea class="form-control addValue" rows="6" placeholder="Enter value" data-field="@field.Id" data-type="@field.TypeId"></textarea>
+													</div>
+													break;
+												case (int)DataTypeEnum.Num1:
+												case (int)DataTypeEnum.Num2:
+												case (int)DataTypeEnum.Num3:
+													<label for="quantity" class="col-3 col-form-label">@field.Title</label>
+													<div class="col-9">
+														<input type="number" class="form-control addValue" id="quantity" step="1" min="0"
+															   placeholder="Enter integer" data-field="@field.Id" data-type="@field.TypeId">
+													</div>
+													break;
+												case (int)DataTypeEnum.ImageUrl1:
+												case (int)DataTypeEnum.ImageUrl2:
+												case (int)DataTypeEnum.ImageUrl3:
+													<label for="imageInput" class="col-3 col-form-label">@field.Title</label>
+													<div class="col-9">
+														<input type="file" class="form-control addValue" accept="image/*" data-field="@field.Id" data-type="@field.TypeId">
+													</div>
+													break;
+												case (int)DataTypeEnum.Check1:
+												case (int)DataTypeEnum.Check2:
+												case (int)DataTypeEnum.Check3:
+													<label class="col-3 col-form-label">@field.Title</label>
+													<div class="col-9 d-flex align-items-center">
+														<div class="form-check">
+															<input class="form-check-input addValue" type="checkbox" id="isActive" data-field="@field.Id" data-type="@field.TypeId">
+															<label class="form-check-label" for="isActive">
+																Enable
+															</label>
+														</div>
+													</div>
+													break;
+												case (int)DataTypeEnum.Datetime1:
+												case (int)DataTypeEnum.Datetime2:
+												case (int)DataTypeEnum.Datetime3:
+													<label for="eventDate" class="col-3 col-form-label">@field.Title</label>
+													<div class="col-9">
+														<input type="date" class="form-control addValue" id="eventDate" name="eventDate" data-field="@field.Id" data-type="@field.TypeId">
+													</div>
+													break;
+											}
+										</div>
+									}
+								</form>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary" id="addValueButton" data-inventoryid="@Model.BasicInfo.Id">Save changes</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

@@ -23,9 +23,9 @@
         public int? Num1 { get; set; }
         public int? Num2 { get; set; }
         public int? Num3 { get; set; }
-        //ImageUrl1
-        //ImageUrl2
-        //ImageUrl3
+        public string? ImageUrl1 { get; set; }
+        public string? ImageUrl2 { get; set; }
+        public string? ImageUrl3 { get; set; }
         public bool? Check1 { get; set; }
         public bool? Check2 { get; set; }
         public bool? Check3 { get; set; }

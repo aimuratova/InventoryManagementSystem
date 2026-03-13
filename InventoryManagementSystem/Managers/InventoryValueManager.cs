@@ -29,7 +29,7 @@ namespace InventoryManagementSystem.Managers
             _cloudinaryUploaderService = cloudinaryUploaderService;
         }
 
-        public async Task<ResultModel> AddValue(List<ValueViewModel> values, string userId)
+        public async Task<ResultModel> AddValue(List<ValueViewModel>? values, string? userId, List<IFormFile>? files)
         {
             var result = new ResultModel();
             var errors = new List<string>();
@@ -39,7 +39,8 @@ namespace InventoryManagementSystem.Managers
             insertModel.CreatedBy = userId;
 
             try
-            {
+            {                
+                int fileId = 0;
 
                 foreach (var row in values)
                 {
@@ -48,13 +49,26 @@ namespace InventoryManagementSystem.Managers
                         errors.Add("Unable to add new value: not all parameter were provided");
                     }
 
-                    if (row.Value == null || string.IsNullOrEmpty(row.Value.ToString()))
+                    if ((row.TypeId != (int)DataTypeEnum.ImageUrl1 && row.TypeId != (int)DataTypeEnum.ImageUrl2 && row.TypeId != (int)DataTypeEnum.ImageUrl3) &&
+                        (row.Value == null || string.IsNullOrEmpty(row.Value.ToString())))
                     {
                         errors.Add("Unable to add new value: value were not provided");
                     }
 
                     insertModel.InventoryId = row.InventoryId;
                     insertModel.RowNum = row.RowNum;
+
+                    //check that we have necessary files
+                    if (row.TypeId == (int)DataTypeEnum.ImageUrl1 || 
+                        row.TypeId == (int)DataTypeEnum.ImageUrl2 || 
+                        row.TypeId == (int)DataTypeEnum.ImageUrl3)
+                    {
+                        if (files == null || files.Count < fileId || files.Count == 0)
+                        {
+                            errors.Add("File not chosen");
+                            throw new Exception("Not all parameters were specified");
+                        }
+                    }
 
                     switch (row.TypeId)
                     {
@@ -89,13 +103,16 @@ namespace InventoryManagementSystem.Managers
                         case (int)DataTypeEnum.Datetime3:
                             insertModel.Datetime3 = Convert.ToDateTime(row.Value.ToString()); break;
                         case (int)DataTypeEnum.ImageUrl1:
-                            insertModel.ImageUrl1 = await _cloudinaryUploaderService.UploadImage(row.Value.ToString());
+                            insertModel.ImageUrl1 = await _cloudinaryUploaderService.UploadImage(files[fileId]);
+                            fileId++;
                             break;
                         case (int)DataTypeEnum.ImageUrl2:
-                            insertModel.ImageUrl2 = await _cloudinaryUploaderService.UploadImage(row.Value.ToString());
+                            insertModel.ImageUrl2 = await _cloudinaryUploaderService.UploadImage(files[fileId]);
+                            fileId++;
                             break;
                         case (int)DataTypeEnum.ImageUrl3:
-                            insertModel.ImageUrl3 = await _cloudinaryUploaderService.UploadImage(row.Value.ToString());
+                            insertModel.ImageUrl3 = await _cloudinaryUploaderService.UploadImage(files[fileId]);
+                            fileId++;
                             break;
                     }
                 }

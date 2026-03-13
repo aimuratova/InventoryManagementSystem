@@ -4,6 +4,8 @@
         const inventoryId = $(this).data('inventoryid');
         const token = localStorage.getItem('authToken');
 
+        const formData = new FormData(); 
+
         let listObject = []
 
         const rowNum = $('#valueDataTable tbody tr').length + 1;
@@ -11,10 +13,20 @@
         $.each(inputs, function (index, item) {
             let fieldId = $(item).data('field');
             let typeId = $(item).data('type');
-            let value = $(item).val();
+            let value;
 
-            if ($(item).is(':checkbox')) {
+            if ($(item).attr('type') === 'file') {
+                // Append file(s) to FormData
+                if (item.files.length > 0) {
+                    for (let i = 0; i < item.files.length; i++) {
+                        formData.append('files', item.files[i]);
+                    }
+                }
+                value = null; // or you can store filename
+            } else if ($(item).is(':checkbox')) {
                 value = $(item).prop('checked');
+            } else {
+                value = $(item).val();
             }
 
             listObject.push({
@@ -26,14 +38,18 @@
             });
         });
 
+        // Append JSON values as a string
+        formData.append('values', JSON.stringify(listObject));
+
         $.ajax({
             url: '/InventoryValue/Add', // Uses the form's action URL
             type: 'POST',
-            contentType: 'application/json',
+            processData: false, // important for FormData
+            contentType: false, // important for FormData
             headers: {
                 'Authorization': 'Bearer ' + token
             },
-            data: JSON.stringify(listObject),
+            data: formData,
             success: function (response) {
                 window.location.reload();
             },            

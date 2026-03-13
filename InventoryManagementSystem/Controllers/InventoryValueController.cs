@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -18,10 +19,12 @@ namespace InventoryManagementSystem.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] List<ValueViewModel> values)
+        public async Task<IActionResult> Add([FromForm] List<IFormFile> files, [FromForm] string values)
         {
+            var valueList = JsonSerializer.Deserialize<List<ValueViewModel>>(values);
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var result = await _inventoryValueManager.AddValue(values, userId);
+
+            var result = await _inventoryValueManager.AddValue(valueList, userId, files);
             if (result.Success)
             {
                 return Ok();
