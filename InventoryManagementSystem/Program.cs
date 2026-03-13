@@ -38,6 +38,7 @@ services.AddScoped<IGeneratorService, GeneratorService>();
 services.AddScoped<UserManager>();
 services.AddScoped<InventoryManager>();
 services.AddScoped<InventoryValueManager>();
+services.AddScoped<CloudinaryUploaderService>();
 
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 

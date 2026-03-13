@@ -53,6 +53,9 @@ namespace InventoryManagementSystem.DAL.Repositories
                     command.Parameters.Add(new SqlParameter("@Datetime1",   value.Datetime1));
                     command.Parameters.Add(new SqlParameter("@Datetime2",   value.Datetime2));
                     command.Parameters.Add(new SqlParameter("@Datetime3",   value.Datetime3));
+                    command.Parameters.Add(new SqlParameter("@ImageUrl1",   value.ImageUrl1));
+                    command.Parameters.Add(new SqlParameter("@ImageUrl2",   value.ImageUrl2));
+                    command.Parameters.Add(new SqlParameter("@ImageUrl3",   value.ImageUrl3));
 
                     await command.ExecuteNonQueryAsync();
                 }

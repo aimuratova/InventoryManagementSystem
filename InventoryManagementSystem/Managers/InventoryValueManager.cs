@@ -15,14 +15,18 @@ namespace InventoryManagementSystem.Managers
         private readonly IInventoryFieldService _inventoryFieldService;
         private readonly IInventoryCustomIdService _inventoryCustomIdService;
 
+        private readonly CloudinaryUploaderService _cloudinaryUploaderService;
+
         public InventoryValueManager(IMapper mapper, IInventoryValueService inventoryValueService, 
-            IInventoryService inventoryService, IInventoryFieldService inventoryFieldService, IInventoryCustomIdService inventoryCustomIdService)
+            IInventoryService inventoryService, IInventoryFieldService inventoryFieldService, 
+            IInventoryCustomIdService inventoryCustomIdService, CloudinaryUploaderService cloudinaryUploaderService)
         {
             _mapper = mapper;
             _inventoryValueService = inventoryValueService;
             _inventoryService = inventoryService;
             _inventoryFieldService = inventoryFieldService;
             _inventoryCustomIdService = inventoryCustomIdService;
+            _cloudinaryUploaderService = cloudinaryUploaderService;
         }
 
         public async Task<ResultModel> AddValue(List<ValueViewModel> values, string userId)
@@ -84,7 +88,15 @@ namespace InventoryManagementSystem.Managers
                             insertModel.Datetime2 = Convert.ToDateTime(row.Value.ToString()); break;
                         case (int)DataTypeEnum.Datetime3:
                             insertModel.Datetime3 = Convert.ToDateTime(row.Value.ToString()); break;
-
+                        case (int)DataTypeEnum.ImageUrl1:
+                            insertModel.ImageUrl1 = await _cloudinaryUploaderService.UploadImage(row.Value.ToString());
+                            break;
+                        case (int)DataTypeEnum.ImageUrl2:
+                            insertModel.ImageUrl2 = await _cloudinaryUploaderService.UploadImage(row.Value.ToString());
+                            break;
+                        case (int)DataTypeEnum.ImageUrl3:
+                            insertModel.ImageUrl3 = await _cloudinaryUploaderService.UploadImage(row.Value.ToString());
+                            break;
                     }
                 }
 
