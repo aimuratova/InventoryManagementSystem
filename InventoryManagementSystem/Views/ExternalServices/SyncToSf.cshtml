@@ -1,0 +1,64 @@
+﻿@page
+@model SendToSalesforceModel
+@{
+	ViewBag.Title = "Send to Salesforce";
+}
+<div id="status"></div>
+<div class="container mt-5">
+	<div class="card shadow-sm">
+		<div class="card-header">
+			<h5>Send to Salesforce</h5>
+		</div>
+
+		<div class="card-body">
+			<div class="mb-3">
+				<label for="company" class="form-label">Company Name</label>
+				<input class="form-control" id="company" placeholder="Company Name" />
+			</div>
+
+			<div class="mb-3">
+				<label for="phone" class="form-label">Phone</label>
+				<input class="form-control" id="phone" placeholder="Phone" />
+			</div>
+
+			<button type="submit" class="btn btn-primary" id="sendToSfBtn">Submit</button>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+
+			var token = localStorage.getItem('authToken');
+			$("#sendToSfBtn").click(function () {
+				$.ajax({
+					url: '/ExternalServices/SyncToSf',
+					headers: {'Authorization': 'Bearer ' + token},
+					type: 'POST',
+					contentType: 'application/json',
+					data: JSON.stringify({
+						company: $("#company").val(),
+						phone: $("#phone").val()
+					}),
+					success: function () {
+						const msg = $('<div class="alert alert-success" role="alert">Synced OK!</div>');
+						$("#status").append(msg);
+						setTimeout(() => msg.fadeOut(() => msg.remove()), 3000);
+					},
+					error: function (xhr) {
+						let message = "Error occurred";
+
+						if (xhr.responseText) {
+							message = xhr.responseText;
+						}
+
+						$("#status").append(
+							`<div class="alert alert-danger" role="alert">${message}</div>`
+						);
+					}
+				});
+			});
+		});
+	</script>
+}

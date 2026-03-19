@@ -34,6 +34,7 @@ services.AddScoped<IInventoryFieldService, InventoryFieldService>();
 services.AddScoped<IInventoryValueService, InventoryValueService>();
 services.AddScoped<IInventoryCustomIdService, InventoryCustomIdService>();
 services.AddScoped<IGeneratorService, GeneratorService>();
+services.AddScoped<IExternalSyncService, ExternalSyncService>();
 
 services.AddScoped<UserManager>();
 services.AddScoped<InventoryManager>();
@@ -62,6 +63,10 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Add services to the container.
 services.AddControllersWithViews();
+
+// Register IHttpClientFactory
+services.AddHttpClient();
+
 services.AddHttpContextAccessor();
 
 var app = builder.Build();
