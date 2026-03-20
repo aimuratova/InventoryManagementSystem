@@ -6,8 +6,10 @@ using InventoryManagementSystem.DAL.Repositories;
 using InventoryManagementSystem.Managers;
 using InventoryManagementSystem.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Identity.Web;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +37,7 @@ services.AddScoped<IInventoryValueService, InventoryValueService>();
 services.AddScoped<IInventoryCustomIdService, InventoryCustomIdService>();
 services.AddScoped<IGeneratorService, GeneratorService>();
 services.AddScoped<IExternalSyncService, ExternalSyncService>();
+services.AddScoped<ISupportService, SupportService>();
 
 services.AddScoped<UserManager>();
 services.AddScoped<InventoryManager>();
@@ -60,6 +63,15 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]))
             };
         });
+
+builder.Services.AddHttpClient("Graph", client =>
+{
+    client.BaseAddress = new Uri("https://graph.microsoft.com/v1.0/");
+    client.DefaultRequestHeaders.Accept.Add(
+        new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+});
+
+
 
 // Add services to the container.
 services.AddControllersWithViews();

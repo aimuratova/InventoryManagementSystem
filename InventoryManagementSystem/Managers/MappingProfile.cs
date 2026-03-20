@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using InventoryManagementSystem.BLL.Models;
 using InventoryManagementSystem.DAL.Models;
 using InventoryManagementSystem.Models;
 
@@ -53,7 +54,7 @@ namespace InventoryManagementSystem.Managers
             CreateMap<UsersModel, UserViewModel>()
                 .ForMember(dest => dest.Inventories, opt => opt.Ignore());
 
-
+            CreateMap<SupportTicketViewModel, SupportTicketModel>();
         }
     }
 }
